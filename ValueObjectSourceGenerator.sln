@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AF36F164-DA64-4E7A-ACD4-84959132BEFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValueObjectSourceGenerator", "src\ValueObjectSourceGenerator\ValueObjectSourceGenerator.csproj", "{0415B141-DDAA-45B0-A441-2A0A2A6A954D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{79904E39-F5B4-4F9A-BBCB-0538CB62F140}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0415B141-DDAA-45B0-A441-2A0A2A6A954D} = {AF36F164-DA64-4E7A-ACD4-84959132BEFB}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0415B141-DDAA-45B0-A441-2A0A2A6A954D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0415B141-DDAA-45B0-A441-2A0A2A6A954D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0415B141-DDAA-45B0-A441-2A0A2A6A954D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0415B141-DDAA-45B0-A441-2A0A2A6A954D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
