@@ -6,12 +6,17 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace LanguageFileParser.Generator;
 
+// TODO: Convert to IIncrementalGenerator
+// TODO: Add option to select output partial class name
 [Generator]
 public class LanguageFileTransformGenerator : ISourceGenerator
 {
 	private const string Authors = "Kenneth Hoff";
+
+	private const string OutputPartialClassName = "Localizations"; 
 	private const string FileExtension = ".xml";
-	private const int TopLevelDepth = 0;
+	private const int TopLevelDepth = 1;
+
 
 	private static readonly Regex LanguageFileRegex = new(@"^.*Resources(\\|/)LanguageFiles(\\|/).*.xml$");
 	private static readonly Assembly ThisAssembly = typeof(LanguageFileTransformGenerator).Assembly;
@@ -29,14 +34,11 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 
 	public void Execute(GeneratorExecutionContext context)
 	{
-		// find anything that matches our files
-		// var myFiles = context.AdditionalFiles.Where(x => x.Path.Contains(".xml")).ToList();
-
-		var myFiles = context.AdditionalFiles
+		var languageFiles = context.AdditionalFiles
 			.Where(at => LanguageFileRegex.IsMatch(at.Path))
 			.ToImmutableList();
 
-		myFiles.ForEach(file =>
+		languageFiles.ForEach(file =>
 		{
 			var content = file.GetText(context.CancellationToken);
 			if (content is null)
@@ -59,13 +61,16 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 	#endregion
 
 	private static string CreateFile(string parsed, string nameSpace)
-		=> $"""
-			{ HeaderTemplate} 
+		=> $$"""
+			{{ HeaderTemplate}}
 
-			namespace { nameSpace};
+			namespace {{ nameSpace}};
 
-			{ parsed}
-			""" ;
+			public partial class {{OutputPartialClassName}}
+			{
+			{{parsed}}
+			}
+			""";
 
 	private static string Indent(int depth)
 		=> new('\t', depth);

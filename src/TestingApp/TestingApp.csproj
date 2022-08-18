@@ -11,6 +11,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <AdditionalFiles Include="Resources\LanguageFiles\*.xml"/>
+    <AdditionalFiles Include="Resources\LanguageFiles\*.xml" />
   </ItemGroup>
 </Project>
