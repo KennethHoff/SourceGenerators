@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<languages>
+  <language name="English" id="en">
+    <contenttypes>
+      <frontpage>
+        <name>Start Page</name>
+        <description>The home page of the website</description>
+      </frontpage>
+      <imagefile>
+        <name>Image</name>
+        <description>Used for image files (BMP, GIF, ICO, JPEG, PNG)</description>
+      </imagefile>
+      <videofile>
+        <name>Video</name>
+        <description>Used for video files (FLV, MP4, WEBM)</description>
+      </videofile>
+      <genericmedia>
+        <name>Generic File</name>
+        <description>Used for media which doesn't have a specific content type</description>
+      </genericmedia>
+    </contenttypes>
+  </language>
+</languages>

@@ -1,0 +1,1075 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<languages>
+  <!-- For static texts used in views -->
+  <language name="Norwegian" id="no">
+    <views>
+      <warning>
+        <savingPaymentChanges>Noen endringer kan generere en oppdatert faktura. Godkjenn og lagre?</savingPaymentChanges>
+        <deactivateConfirmand>OBS! Handlingen vil fjerne kobling til kurs og seremoni. Tildelte gjesteplasser vil bli fjernet. Er du sikker på at du vil sette konfirmanten som inaktiv?</deactivateConfirmand>
+        <deactivateFuneralOrder>OBS! Er du sikker på at du vil sette oppdrag som inaktiv?</deactivateFuneralOrder>
+        <deactivateNamepartyOrder>OBS! Handlingen vil fjerne kobling til seremoni. Tildelte gjesteplasser vil bli fjernet. Er du sikker på at du vil sette navnebarnet som inaktiv?</deactivateNamepartyOrder>
+        <changeCourseOnOrder>Endringer her kan medføre ny seremoni og/eller faktura. Tildelte gjesteplasser vil bli fjernet ved ny seremoni. Er du sikker på at du ønsker å lagre?</changeCourseOnOrder>
+        <changeConfirmationCeremonyOnOrder>Tildelte gjesteplasser vil bli fjernet ved ny seremoni. Er du sikker på at du ønsker å lagre?</changeConfirmationCeremonyOnOrder>
+        <changeNamePartyCeremonyOnOrder>Tildelte gjesteplasser vil bli fjernet ved ny seremoni. Er du sikker på at du ønsker å lagre?</changeNamePartyCeremonyOnOrder>
+        <saveCountySettings>Endringer på pris kan skape fakturaproblemer. Er du sikker på at du ønsker å lagre?</saveCountySettings>
+      </warning>
+      <exception>
+        <accessDenied>Du har ikke tilgang til dette.</accessDenied>
+      </exception>
+      <ceremonyType>
+        <settings>
+          <confirmation>Konfirmasjoninnstillinger</confirmation>
+          <nameparty>Navnefestinnstillinger</nameparty>
+          <marriage>Vigselinnstillinger</marriage>
+          <funeral>Gravferdinnstillinger</funeral>
+        </settings>
+        <name>
+          <confirmation>Konfirmasjon</confirmation>
+          <nameparty>Navnefest</nameparty>
+          <marriage>Vigsel</marriage>
+          <funeral>Gravferd</funeral>
+        </name>
+      </ceremonyType>
+      <eventType>
+        <confirmation>Konfirmasjon</confirmation>
+        <nameparty>Navnefest</nameparty>
+        <marriage>Vielse</marriage>
+        <funeral>Gravferd</funeral>
+        <course>Kurs</course>
+      </eventType>
+      <forgotPasswordPage>
+        <changePasswordException>Det oppstod en feil ved endring av passordet</changePasswordException>
+        <emailLabel>E-postadresse</emailLabel>
+        <forgotPasswordButton>Send</forgotPasswordButton>
+        <forgotPasswordButtonSent>E-post sendt</forgotPasswordButtonSent>
+        <invalidToken>Koden er ugyldig eller har gått ut på tid.</invalidToken>
+        <loginButton>Gå til forsiden</loginButton>
+        <pageReferenceError>Intern feil. Siden ble ikke funnet.</pageReferenceError>
+        <password2Label>Bekreft passord</password2Label>
+        <passwordLabel>Passord</passwordLabel>
+        <passwordRequirements>Passordet må være minst 6 tegn</passwordRequirements>
+        <resetPasswordButton>Endre passord</resetPasswordButton>
+        <sendEmailException>Det oppstod en feil ved sending av e-posten.</sendEmailException>
+        <unknownUser>E-postadressen ble ikke funnet i systemet.</unknownUser>
+        <passwordsNotEqual>Passordene du skrev inn er ikke like.</passwordsNotEqual>
+      </forgotPasswordPage>
+      <loginPage>
+        <forgotPasswordLinkText>Glemt passord</forgotPasswordLinkText>
+        <incorrectPassword>Feil brukernavn eller passord.</incorrectPassword>
+        <loginButton>Logg inn</loginButton>
+        <loginException>Det oppstod en ukjent feil ved påloggingen. Vennligst prøv igjen senere.</loginException>
+        <passwordLabel>Passord</passwordLabel>
+        <rememberMe>Husk meg</rememberMe>
+        <usernameLabel>Brukernavn</usernameLabel>
+        <userIsLockedOut>Du har skrevet feil passord for mange ganger. Kontoen er sperret.</userIsLockedOut>
+        <userNotFound>Feil brukernavn eller passord.</userNotFound>
+      </loginPage>
+      <shared>
+        <layout>
+          <search>Søk:</search>
+        </layout>
+        <loginform>
+          <labels>
+            <username>Brukernavn:</username>
+            <password>Passord:</password>
+          </labels>
+          <buttons>
+            <login>Logg inn</login>
+          </buttons>
+        </loginform>
+        <logoutform>
+          <buttons>
+            <logout>Logg ut</logout>
+          </buttons>
+        </logoutform>
+        <guestSize>Antall gjester</guestSize>
+        <preferredCeremonyLocation>Planlagt seremonisted/-lokale</preferredCeremonyLocation>
+        <sendNewVerificationSmsToOtherContact>Send ny verifiserings melding til annen foresatt</sendNewVerificationSmsToOtherContact>
+        <anonymization>Anonymisering</anonymization>
+        <anonymizationNoneCount>Ikke</anonymizationNoneCount>
+        <anonymizationActivityCompletedCount>1M</anonymizationActivityCompletedCount>
+        <anonymizationArchiveCount>31Des6M</anonymizationArchiveCount>
+        <anonymizationEconomicCount>ØK</anonymizationEconomicCount>
+        <anonymizationGovernmentReportingCount>FU</anonymizationGovernmentReportingCount>
+        <isArchived>Er arkivert</isArchived>
+        <acceptWaitingListCourseTitle>Tildel venteliste kurs</acceptWaitingListCourseTitle>
+        <acceptWaitingListCourseDescription>Foresatte har fått tilbud om ventelisteplass. Foresatt skal svare selv på min side, om de ikke har mulighet kan du svare på vegne av foresatt her. (betalingsnotat blir generert)</acceptWaitingListCourseDescription>
+        <acceptWaitingListCourse>Godta ventelistekurs</acceptWaitingListCourse>
+        <acceptWaitingListCourseWarning>Flytt konfirmant til ventelistekurs og send bekreftelse til foresatt?</acceptWaitingListCourseWarning>
+        <declineWaitingListCourse>Avslå ventelistekurs</declineWaitingListCourse>
+        <declineWaitingListCourseWarning>Avslå tilbud om ventelistekurs?</declineWaitingListCourseWarning>
+        <cancelledPaymentAmountText>Beløp etter endring på kurs/seremoni</cancelledPaymentAmountText>
+        <cancelledPaymentDateText>Sist generert endring på kurs/seremoni</cancelledPaymentDateText>
+        <funeralCeremonyOrderContractRate>Honorarsats</funeralCeremonyOrderContractRate>
+        <ceremonyOrderCompletionTitle>Ferdigstilling av oppdrag</ceremonyOrderCompletionTitle>
+        <confirmationEarlyRefundDeadline>Frist for gebyrfri avmelding (til og med)</confirmationEarlyRefundDeadline>
+        <confirmationNewOrdersRefundDeadlineDays>Frist for gebyrfri avmelding etter bestilling opprettet</confirmationNewOrdersRefundDeadlineDays>
+        <confirmationCourseChangeAdministrationFee>Standard administrasjonsgebyr ved endring av kurs</confirmationCourseChangeAdministrationFee>
+        <confirmationCourseCancellationAdministrationFee>Standard administrasjonsgebyr ved avlysing av kurs</confirmationCourseCancellationAdministrationFee>
+        <confirmationCeremonyCancellationRefundAmount>Standard beløp som refunderes ved avlyst seremoni</confirmationCeremonyCancellationRefundAmount>
+        <confirmationCancellationFee>Gebyr ved avbestilling før kursstart</confirmationCancellationFee>
+        <confirmationHumanStartedOrderExpirationHours>Tid før påbegynt kursbestilling utløper i timer</confirmationHumanStartedOrderExpirationHours>
+        <confirmationReplyToWaitingListOfferHours>Tilbud om ventelisteplass utløpstid i timer</confirmationReplyToWaitingListOfferHours>
+        <confirmationReminderToReplyToWaitingListOfferHoursBeforeExpiration>Påminnelse om å svare på tilbud om ventelisteplass, timer før utløp</confirmationReminderToReplyToWaitingListOfferHoursBeforeExpiration>
+        <administrationFee>Administrasjonsgebyr</administrationFee>
+        <refundAmount>Beløp som skal tilbakebetales</refundAmount>
+        <statusText>Status tekst</statusText>
+        <descriptionCustomerText>Beskrivelse til foresatt</descriptionCustomerText>
+        <statusActivitiesText>Status tilleggsaktivitet tekst</statusActivitiesText>
+        <sendRequestAsSMS>Send SMS</sendRequestAsSMS>
+        <sendRequestAsEmail>Send Epost</sendRequestAsEmail>
+        <requestAge>Forespørsel ble sendt:</requestAge>
+        <MyAnswer>Mitt svar</MyAnswer>
+        <IsCancelled>Avlyst</IsCancelled>
+        <CancelledActivities>Avlyste tilleggsaktiviteter</CancelledActivities>
+        <notCancelled>Ikke avlyst</notCancelled>
+        <HasStatusText>Endret</HasStatusText>
+        <wantAssignment>Ønsker oppdrag?</wantAssignment>
+        <placeYear>Hvor, når</placeYear>
+        <noRequestsSentWaitingListCourse>Ingen forespørsler sendt, klikk inn på kurset for å sende tilbud til kontaktperson</noRequestsSentWaitingListCourse>
+        <dateSent>Dato sendt</dateSent>
+        <lessThanAnHour>Mindre enn 1 time</lessThanAnHour>
+        <MyFuneralAssignmentRequests>Mine gravferdsforespørsler</MyFuneralAssignmentRequests>
+        <AssigmentResponse>Forespørsler gravferdsoppdrag</AssigmentResponse>
+        <isExpired>Er utløpt</isExpired>
+        <thisYearFuneralDescription>Antall gravferdsoppdrag siste 12 mnd.</thisYearFuneralDescription>
+        <thisYear>I år</thisYear>
+        <latestCeremonyFuneralDescription>Siste gravferdsoppdrag dato</latestCeremonyFuneralDescription>
+        <latestCeremony>Siste</latestCeremony>
+        <sameCeremonyDescription>Har seremoni samme dag (HK,HN,HG,HV)</sameCeremonyDescription>
+        <sameCeremony>Overlapp</sameCeremony>
+        <requestSentDate>Forespørsel sendt</requestSentDate>
+        <response>Svar</response>
+        <assignWaitingListToOrder>Tildeling</assignWaitingListToOrder>
+        <setAsCurrentLeader>Tildeling</setAsCurrentLeader>
+        <relationToDeceased>Tilknytning til avdøde</relationToDeceased>
+        <deactivated>deaktivert</deactivated>
+        <partnerContact>Kontaktperson i byrå</partnerContact>
+        <selectedPartnerContactNotSet>Kontaktperson ikke valgt</selectedPartnerContactNotSet>
+        <selectedPartner>Valgt byrå</selectedPartner>
+        <selectedPartnerNotSet>Byrå ikke valgt</selectedPartnerNotSet>
+        <findPartner>Finn byrå</findPartner>
+        <partnerNotSetNoContact>Du må velge byrå før kontaktperson</partnerNotSetNoContact>
+        <selectPartner>Velg byrå</selectPartner>
+        <partner>Byrå</partner>
+        <targetOrderId>Bytt for ordre id</targetOrderId>
+        <targetCeremonyId>Ny Seremoni id</targetCeremonyId>
+        <targetIntegrityRateSeasonId>Sesong id som skal ryddes</targetIntegrityRateSeasonId>
+        <targetIntegrityRateCountyId>Fylke id som skal ryddes (tomt felt tas alle fylker)</targetIntegrityRateCountyId>
+        <targetDownloadUserChangeLogId>Bruker id: (system: 00000000-0000-0000-0000-000000000000)</targetDownloadUserChangeLogId>
+        <targetCourseId>Ny full kurskode / kurs id</targetCourseId>
+        <isAnonymized>Anonymisert</isAnonymized>
+        <title>Tittel</title>
+        <subTitle>Undertittel</subTitle>
+        <bindingMission>Forpliktende oppdrag</bindingMission>
+        <and>og</and>
+        <between>Mellom</between>
+        <ratesTitle>Satser</ratesTitle>
+        <ratesType>Type</ratesType>
+        <rateDescription>Beskrivelse</rateDescription>
+        <rateAmount>Beløp</rateAmount>
+        <rateOrderIndex>Sortering</rateOrderIndex>
+        <leaderRate>Sats</leaderRate>
+        <addContractRate>Legg til ny sats</addContractRate>
+        <addPersonRemunerationRate>Legg til</addPersonRemunerationRate>
+        <CRMStatus>Sist synkronisert med CRM</CRMStatus>
+        <isVerified>Verifisert med BankId/Vipps</isVerified>
+        <courseCompletedEmailStatus>Kursattest sendt</courseCompletedEmailStatus>
+        <followUpStatus>Oppfølging</followUpStatus>
+        <commentFollowUpStatus>Oppfølging av kommentar</commentFollowUpStatus>
+        <isMerkedagCeremonyActive>Aktiv for seremoni</isMerkedagCeremonyActive>
+        <isMerkedagCeremonyEditListTitle>Din Merkedag aktiv for seremoni</isMerkedagCeremonyEditListTitle>
+        <isMerkedagLocalAreaActive>Din Merkedag aktiv for lokallag</isMerkedagLocalAreaActive>
+        <merkedagIsActiveForLocalArea>Din Merkedag aktivert i lokallaginstillinger</merkedagIsActiveForLocalArea>
+        <merkedagIsNotActiveForLocalArea>Din Merkedag er deaktiver i lokallaginstillinger. Du kan aktivere for denne seremonien.</merkedagIsNotActiveForLocalArea>
+        <ceremonyForm>Seremoniform</ceremonyForm>
+        <ceremonyOrderForm>Oppdragstype</ceremonyOrderForm>
+        <CertificatesConfirmation>kursbevis</CertificatesConfirmation>
+        <CertificatesNameParty>navnetavler</CertificatesNameParty>
+        <ShowList>Se liste</ShowList>
+        <!--communicatons-->
+        <attachmentsTitle>Vedlegg</attachmentsTitle>
+        <chooseFiles>Velg filer</chooseFiles>
+        <addAttachments>Legg til flere vedlegg</addAttachments>
+        <SMSOptionsTitle>Innstillinger</SMSOptionsTitle>
+        <SMSsenderNumber>Avsender</SMSsenderNumber>
+        <SMSDefaultSender>human.no</SMSDefaultSender>
+        <SendSMS>Send SMS</SendSMS>
+        <smsTitle>Send SMS</smsTitle>
+        <courseIsFull>Ikke ledig plass</courseIsFull>
+        <sendWaitingListOffer>Send tilbud</sendWaitingListOffer>
+        <smsTextLabel>Tekst</smsTextLabel>
+        <smsTextPlaceHolder>Skriv inn melding...</smsTextPlaceHolder>
+        <CommunicationTitle>Kommunikasjon</CommunicationTitle>
+        <optionsTitle>Innstillinger</optionsTitle>
+        <sendEmailCopyTo>Send blindkopi til (bruk semikolon som skilletegn)</sendEmailCopyTo>
+        <sendSMSNotification>Send SMS-varsel</sendSMSNotification>
+        <EmailsenderAddress>Avsender</EmailsenderAddress>
+        <EmailDefaultSender>Human-Etisk Forbund</EmailDefaultSender>
+        <replyToEmailAddress>Svaradresse</replyToEmailAddress>
+        <emailSubjectLabel>Emne</emailSubjectLabel>
+        <emailSubjectPlaceHolder>Skriv inn emne...</emailSubjectPlaceHolder>
+        <emailBodyLabel>Tekst</emailBodyLabel>
+        <emailBodyPlaceHolder>Skriv inn tekst...</emailBodyPlaceHolder>
+        <mergeField>Flettefelt</mergeField>
+        <mergeFieldInsert>Sett inn</mergeFieldInsert>
+        <CommunicatioEmailTitle>Send e-post</CommunicatioEmailTitle>
+        <!--end communicatons-->
+        <county>Fylke</county>
+        <isCheckedIn>Sjekket inn</isCheckedIn>
+        <close>Lukk</close>
+        <Count>Antall</Count>
+        <LocalArea>Lokallag</LocalArea>
+        <assignmentRequests>Forespørseler</assignmentRequests>
+        <assignmentRequest>Forespørsel</assignmentRequest>
+        <activeRequestCount>Antall aktive</activeRequestCount>
+        <requestYesCount>Antall ja</requestYesCount>
+        <requestNoCount>Antall nei</requestNoCount>
+        <requestNoneCount>Antall ingen svar</requestNoneCount>
+        <requestResponseDate>Svardato</requestResponseDate>
+        <isFederationUser>Er adfs bruker</isFederationUser>
+        <orderCreateDate>Påmelding mottatt</orderCreateDate>
+        <orderReceivedDate>Oppdrag mottatt</orderReceivedDate>
+        <createdBy>Opprettet av</createdBy>
+        <createdDate>Opprettet dato</createdDate>
+        <tripletexId>Tripletex ID</tripletexId>  <!-- TODO: Use data/tripletex instead-->
+        <tripletexContactId>Tripletex person ID</tripletexContactId>  <!-- TODO: Use data/tripletex instead-->
+        <invoiceDueDate>Betalingsfrist</invoiceDueDate>
+        <amountPayed>Betalt</amountPayed>
+        <ApprovedReducedPayoutForTaxBenefits>Ønsker honorarer rett over 10.000 skal justeres ned</ApprovedReducedPayoutForTaxBenefits>
+        <BankAccountNumber>Kontonummer</BankAccountNumber>
+        <bankAccount>Kontonummer</bankAccount>
+        <informationSentStatus>Informasjon sendt</informationSentStatus>
+        <isEmailSentToHEF>Epost til HEF</isEmailSentToHEF>
+        <isEmailSentToContacts>Epost til Kontaktpersoner</isEmailSentToContacts>
+        <resendEmailSentToContacts>Send e-post om reservert kurs på nytt</resendEmailSentToContacts>
+        <isSMSSentToContacts>SMS til Kontaktperson</isSMSSentToContacts>
+        <latestNote>Siste notat</latestNote>
+        <paymentInformation>Betalingsinformasjon</paymentInformation>
+        <getPaymentInformation>Hent betalingsinformasjon</getPaymentInformation>
+        <active>Aktiv</active>
+        <orderStatus>Bestillingsstatus</orderStatus>
+        <ceremonyOrderReservationStatus>Registreringsprosess</ceremonyOrderReservationStatus>
+        <wantToContribute>Ønsker å bidra</wantToContribute>
+        <ssnStatus>Personnummer status</ssnStatus>
+        <crmId>CRM id</crmId>
+        <age>Alder</age>
+        <accessToCounties>Tilgang til fylker</accessToCounties>
+        <accessToLocalAreas>Tilgang til lokallag</accessToLocalAreas>
+        <accountNumber>Kontonummer</accountNumber>
+        <activeLocalArea>Aktivt lokallag</activeLocalArea>
+        <activities>Tilleggsaktiviteter</activities>
+        <addAllToList>Alle</addAllToList>
+        <addToList>Legg til</addToList>
+        <address>Adresse</address>
+        <addressFieldset>Adresse</addressFieldset>
+        <amount>Beløp</amount>
+        <approved>Godkjent</approved>
+        <attendees>Påmeldte konfirmanter</attendees>
+        <availableInCeremonyTypeList>Tilgjengelig for seremonitype</availableInCeremonyTypeList>
+        <availableInCountyAndLocalAreaList>Tilgjengelig for fylker og lokallag</availableInCountyAndLocalAreaList>
+        <availableInLocalAreaList>Tilgjengelig for lokallag</availableInLocalAreaList>
+        <availableInWorkAreaList>Velg bruksområde</availableInWorkAreaList>
+        <birthDate>Fødselsdato</birthDate>
+        <birthDateChild>Fødselsdato/Termindato</birthDateChild>
+        <boys>Gutter</boys>
+        <cancel>Avbryt</cancel>
+        <sendEmail>Send e-post</sendEmail>
+        <sendTestEmail>Send test e-post til meg</sendTestEmail>
+        <capacity>Kapasitet</capacity>
+        <ceremony>Seremoni</ceremony>
+        <ceremonyDate>Seremoni dato</ceremonyDate>
+        <assignment>Oppdrag</assignment>
+        <notes>Notater</notes>
+        <ceremonyLeader>Seremoniansvarlig</ceremonyLeader>
+        <ceremonyLocation>Seremonilokale</ceremonyLocation>
+        <changeCourseCode>Endre kurskode</changeCourseCode>
+        <changeText>Endre tekst</changeText>
+        <choices>Valg</choices>
+        <chooseAll>Velg alle</chooseAll>
+        <chooseFromList>Velg</chooseFromList>
+        <chooseStartTime>Startdato</chooseStartTime>
+        <chooseTime>Tid</chooseTime>
+        <city>Poststed</city>
+        <claimsMembership>Påstår medlemskap</claimsMembership>
+        <membershipStatus>Medlemsstatus</membershipStatus>
+        <clearList>Fjern alle</clearList>
+        <clockHours>Klokketimer</clockHours>
+        <closedForGenderProperty>Steng påmelding for kjønn</closedForGenderProperty>
+        <combineLocalAreas>Slå sammen lokallag</combineLocalAreas>
+        <comment>Kommentar</comment>
+        <commentAboutDeceased>Informasjon om avdøde</commentAboutDeceased>
+        <commentFromWeb>Kommentar fra påmeldingsskjema</commentFromWeb>
+        <confirmand>Konfirmant</confirmand>
+        <confirmands>Konfirmanter</confirmands>
+        <LastGenerated>Sist generert</LastGenerated>
+        <child>Navnebarn</child>
+        <confirmandComment>Kommentar konfirmant</confirmandComment>
+        <waitingListCreateDate>På v.liste</waitingListCreateDate>
+        <childComment>Kommentar navnebarn</childComment>
+        <funeralComment>Kommentar gravferd</funeralComment>
+        <funeralSpeaker>Gravferdstaler</funeralSpeaker>
+        <funeralNotSigned>Ikke signert</funeralNotSigned>
+        <funeralSpeakerSigned>Ferdigstillt av</funeralSpeakerSigned>
+        <funeralOrSigned>Godkjent av</funeralOrSigned>
+        <speakerDoNotWantRate>Ønsker ikke honorar for oppdraget</speakerDoNotWantRate>
+        <ceremonyWasLongerThanEightHours>Utvidet honorar - Medgått mer enn 8 timer på seremonidagen</ceremonyWasLongerThanEightHours>
+        <confirmationStatus>Konfirmasjon status</confirmationStatus>
+        <confirmed>Bekreftet</confirmed>
+        <contactFieldset>Kontaktinformasjon</contactFieldset>
+        <contactPerson>Hovedkontakt</contactPerson>
+        <contactPersons>Kontaktpersoner</contactPersons>
+        <countyCode>Fylkeskode</countyCode>
+        <course>Kurs</course>
+        <courseAttendance>Frammøte</courseAttendance>
+        <courseAttendanceMobileLink>Gå til mobilvennlig frammøte</courseAttendanceMobileLink>
+        <courseCode>Kurskode</courseCode>
+        <courseLeader>Kursleder</courseLeader>
+        <courseStatus>Oppdragsstatus</courseStatus>
+        <assistants>Kursleder 2</assistants>
+        <funeralAssistants>Hjelpere</funeralAssistants>
+        <funeralPreviousLeaders>Tidligere gravferdstaler</funeralPreviousLeaders>
+        <ceremonyAssistants>Seremoniansvarlig 2</ceremonyAssistants>
+        <substitutes>Vikarer</substitutes>
+        <substitute>Vikar</substitute>
+        <courseLocation>Kurslokale</courseLocation>
+        <courseType>Kurskategori</courseType>
+        <courseTypes>Kurskategorier</courseTypes>
+        <participants>Påmeldte</participants>
+        <date>Dato</date>
+        <day>Dag</day>
+        <deathDate>Død</deathDate>
+        <deceased>Avdøde</deceased>
+        <deceasedIsMember>Avdøde var medlem</deceasedIsMember>
+        <isPartnerInvoice>Faktura til byrå</isPartnerInvoice>
+        <invoiceTargetStatus>Faktura mottaker</invoiceTargetStatus>
+        <invoice>Faktura</invoice>
+        <delete>Slett</delete>
+        <duplicateConfirmand>Duplikate etternavn og fødselsdato</duplicateConfirmand>
+        <economy>Økonomi</economy>
+        <email>E-post</email>
+        <emailMerge>Epost (til fletting)</emailMerge>
+        <emailSender>Kopi v/epostutsendelser</emailSender>
+        <emailSenderRegistration>Kopi v/reg</emailSenderRegistration>
+        <employeeCounty>Tilhører fylke</employeeCounty>
+        <employeeLocalArea>Tilhører lokallag</employeeLocalArea>
+        <employeeNumber>HEF ansatt nummer</employeeNumber>
+        <employees>Medarbeidere</employees>
+        <export>Last ned</export>
+        <changeView>Vis</changeView>
+        <contactInformation>kontaktinformasjon</contactInformation>
+        <attendeesInformation>deltagere</attendeesInformation>
+        <facilityPlaceCategoriesList>Kategorier</facilityPlaceCategoriesList>
+        <facilityPlaceType>Kategori</facilityPlaceType>
+        <firstname>Fornavn</firstname>
+        <gender>Kjønn</gender>
+        <genderBalance>Kjønnsfordeling</genderBalance>
+        <girls>Jenter</girls>
+        <guardians>Foresatte</guardians>
+        <guestSeats>Gjesteplasser</guestSeats>
+        <seats>Plasser</seats>
+        <hasSignedAgreement>Avtale signert</hasSignedAgreement>
+        <hefComment>Kommentar HEF</hefComment>
+        <hour>Time</hour>
+        <hours>Timer</hours>
+        <isAccountActive>Pålogging tillatt</isAccountActive>
+        <isActive>Aktiv</isActive>
+        <isDefault>Standardvalg</isDefault>
+        <isDeleted>Er slettet</isDeleted>
+        <isDisabled>Sett inaktiv</isDisabled>
+        <isExportedToTripletex>Er eksportert til Tripletex</isExportedToTripletex>
+        <isInactive>Sett konfirmanten inaktiv</isInactive>
+        <isMember>Bekreftet medlemskap</isMember>
+        <keepCeremony>Behold seremoni</keepCeremony>
+        <localAreaCode>Lokallagkode</localAreaCode>
+        <localAreaLegalName>Navn i kontrakt</localAreaLegalName>
+        <municipal>Kommune</municipal>
+        <municipalCode>Kommunenummer</municipalCode>
+        <tripletexDivision>Virksomhetsnummer (Tripletex)</tripletexDivision>
+        <validZipCodes>Gyldige postnummer</validZipCodes>
+        <location>Sted</location>
+        <membership>Medlemskap</membership>
+        <membershipNumber>Medlemsnummer</membershipNumber>
+        <membershipPrice>Medlemspris</membershipPrice>
+        <mobile>Mobil</mobile>
+        <move>Flytt</move>
+        <moveConfirmands>Flytt konfirmanter</moveConfirmands>
+        <name>Navn</name>
+        <nameFieldset>Navn</nameFieldset>
+        <nameInNewspaper>Ønsker navn i avis</nameInNewspaper>
+        <nextOfKin>Pårørende</nextOfKin>
+        <relatives>Pårørende</relatives>
+        <noCeremonies>Ingen seremonier</noCeremonies>
+        <noCeremony>Ingen seremoni</noCeremony>
+        <noConfirmands>Ingen konfirmanter</noConfirmands>
+        <noConfirmandsSeasonArchived>Alle konfirmanter er arkivert</noConfirmandsSeasonArchived>
+        <noChildren>Ingen navnebarn</noChildren>
+        <children>Navnebarn</children>
+        <noContactPersons>Ingen kontaktpersoner</noContactPersons>
+        <noCourses>Ingen kurs</noCourses>
+        <noFacilityPlaces>Ingen lokaler</noFacilityPlaces>
+        <noFacilityRooms>Ingen rom</noFacilityRooms>
+        <noLocalAreas>Ingen lokallag</noLocalAreas>
+        <noOrders>Ingen ordre</noOrders>
+        <noContracts>Ingen kontrakter</noContracts>
+        <noRemunerations>Ingen honorarer</noRemunerations>
+        <notSelected>Ikke satt</notSelected>
+        <numberOfSeats>Antall plasser</numberOfSeats>
+        <numberOfSeatsAndGenderBalance>Antall plasser og kjønnsfordeling</numberOfSeatsAndGenderBalance>
+        <of>av</of>
+        <orderInfo>Bestilling</orderInfo>
+        <orderNumber>RegNr</orderNumber>
+        <otherGender>Annen kjønnsidentitet</otherGender>
+        <otherInfo>Annen informasjon</otherInfo>
+        <otherParent>Foresatt 2</otherParent>
+        <otherPerson>Annen kontakt</otherPerson>
+        <overrideGenderBalance>Overstyr lokallag kjønnsfordeling</overrideGenderBalance>
+        <password>Passord</password>
+        <paymentStatus>Betalingsstatus</paymentStatus>
+        <payout>Utbetaling</payout>
+        <personalInformation>Personinformasjon</personalInformation>
+        <postcode>Postnummer</postcode>
+        <preferredNumberOfGuestSeats>Ønsket gjesteplasser</preferredNumberOfGuestSeats>
+        <grantedNumberOfGuestSeats>Tildelte gjesteplasser</grantedNumberOfGuestSeats>
+        <price>Pris</price>
+        <priceAddition>Tillegg</priceAddition>
+        <prisolveId>Prisolve Id</prisolveId>
+        <quantity>Antall</quantity>
+        <remaining>Gjennstående</remaining>
+        <remove>Fjern</remove>
+        <removeFromDatabase>Slett fra database</removeFromDatabase>
+        <removeFromList>Fjern</removeFromList>
+        <rooms>Rom</rooms>
+        <saleStart>Salgsstart</saleStart>
+        <saleStartMembers>Salgsstart for medlemmer</saleStartMembers>
+        <confirmationMemberSaleStart>Konfirmasjon salgsstart for medlemmer (Ikke i bruk for 2022)</confirmationMemberSaleStart>
+        <confirmationDisableChangeCourseAfterDate>Konfirmasjon deaktiver bytte av kurs på min side etter dato</confirmationDisableChangeCourseAfterDate>
+        <confirmationExportPaymentStartDate>Tidligste dato for overføring til Tripletex</confirmationExportPaymentStartDate>
+        <save>Lagre</save>
+        <sbSettingsTitle>Seremonibase</sbSettingsTitle>
+        <school>Skole</school>
+        <schoolHours>Skoletimer</schoolHours>
+        <securityLevel>Tilgangsnivå</securityLevel>
+        <selectOtherCourse>Velg annet kurs</selectOtherCourse>
+        <selectOtherWaitingListCourse>Velg annet ventelistekurs kurs</selectOtherWaitingListCourse>
+        <selectedFromList>Valgt</selectedFromList>
+        <selectedSchool>Skole</selectedSchool>
+        <selectOtherSchool>Velg skole</selectOtherSchool>
+        <selfEmployed>Selvstendig næringsdrivende</selfEmployed>
+        <setActive>Aktiver</setActive>
+        <setInactive>Sett som inaktiv</setInactive>
+        <setNewPassword>Sett nytt passord</setNewPassword>
+        <showContribution>Foresatt ønsker å bidra</showContribution>
+        <showNameInNewspaper>Vis navn i avis</showNameInNewspaper>
+        <showNrOfGuestSeats>Ønsket antall gjester på seremoni</showNrOfGuestSeats>
+        <confirmationAcceptsOtherLocalAreas>Tar i mot konfirmanter fra andre lokallag</confirmationAcceptsOtherLocalAreas>
+        <confirmationShowApproveGroupImages>Gruppebilde av konfirmanten f.eks. på kurs/seremoni</confirmationShowApproveGroupImages>
+        <confirmationShowApproveInternalImages>Bilder av konfirmanten til intern bruk f.eks. i kurs/leir/seremoni</confirmationShowApproveInternalImages>
+        <confirmationShowApprovePublicSocialMediaImages>Bilder/film av konfirmant på våre nettsider eller sosiale medier</confirmationShowApprovePublicSocialMediaImages>
+        <confirmationShowApprovePublicHEFImages>Bilder/film av konfirmant på egenproduserte trykksaker</confirmationShowApprovePublicHEFImages>
+        <confirmationShowApproveStreaming>Video strømming av konfirmant i seremoni.</confirmationShowApproveStreaming>
+        <approveInternalImages>Bilder av konfirmanten til intern bruk f.eks. i kurs/leir/seremoni</approveInternalImages>
+        <approveGroupImages>Gruppebilde av konfirmanten f.eks. på kurs/seremoni</approveGroupImages>
+        <consentImageConfirmand>Konfirmant samtykker</consentImageConfirmand>
+        <consentImageGroup>Det er greit at det tas gruppebilde av konfirmanten på kurs/seremoni</consentImageGroup>
+        <consentImageGroupShort>Gruppebilde</consentImageGroupShort>
+        <consentImageInternal>Det er greit at det tas bilder av konfirmanten til bruk i gruppen, f. eks. på kurs/leir/seremoni</consentImageInternal>
+        <consentImageInternalShort>Internt</consentImageInternalShort>
+        <consentImagePublicSosialMedia>Det er greit at bilder/film av konfirmanten publiseres på våre nettsider eller i sosiale medier (f. eks. Facebook og Instagram) i forbindelse med profilering av Humanistisk konfirmasjon hos Human-Etisk Forbund.</consentImagePublicSosialMedia>
+        <consentImagePublicSosialMediaShort>Nettside/sosiale medier</consentImagePublicSosialMediaShort>
+        <consentImagePublicHEF>Det er greit at bilder/film av konfirmanten publiseres i egenproduserte trykksaker om Humanistisk konfirmasjon hos Human-Etisk Forbund.</consentImagePublicHEF>
+        <consentImagePublicHEFShort>HEF publikasjoner</consentImagePublicHEFShort>
+        <consentStreaming>Det er greit at konfirmanten blir filmet i forbindelse av strømming av seremonien.</consentStreaming>
+        <consentStreamingShort>Strømming</consentStreamingShort>
+        <showSchools>Skole</showSchools>
+        <sibling>Søsken</sibling>
+        <siblingDiscount>Søsken</siblingDiscount>
+        <siblingStatus>Søsken status</siblingStatus>
+        <signupFormTitle>Påmeldingsskjema</signupFormTitle>
+        <ssn>Fødselsnummer</ssn>
+        <startTime>Startdato / tid</startTime>
+        <ceremonyTime>Seremonidato / tid</ceremonyTime>
+        <status>Status</status>
+        <streetAddress>Gate</streetAddress>
+        <surname>Etternavn</surname>
+        <telephone>Telefon</telephone>
+        <theme>Tema</theme>
+        <total>Total</total>
+        <totally>Totalt</totally>
+        <useNameFromFacilityPlace>Samme navn som lokalet</useNameFromFacilityPlace>
+        <userInfo>Brukerinformasjon</userInfo>
+        <username>Brukernavn</username>
+        <visible>Aktiv</visible>
+        <visibleSB>Synlig i seremonibase</visibleSB>
+        <visibleWeb>Synlig i påmeldingsskjema</visibleWeb>
+        <waitingList>Venteliste</waitingList>
+        <waitingListStatus>Venteliste status</waitingListStatus>
+        <wantInformation>Ønsker informasjon</wantInformation>
+        <changeCeremony>Endre seremoni</changeCeremony>
+        <wantToBecomeMember>Ønsker medlemskap</wantToBecomeMember>
+        <webAddress>Nettadresse</webAddress>
+        <workArea>Arbeidsområde</workArea>
+        <workAreas>Arbeidsområder</workAreas>
+        <year>År</year>
+        <totalCount>Totalt</totalCount>
+        <activeFilter>Aktive</activeFilter>
+        <allCounties>Alle fylker</allCounties>
+        <allLocalAreas>Alle lokallag</allLocalAreas>
+        <chooseCountyFirst>Velg fylke først</chooseCountyFirst>
+        <chooseWorkAreaFirst>Velg arbeidsområde først</chooseWorkAreaFirst>
+        <searchTextLabel>Søk</searchTextLabel>
+        <searchTextPlaceHolder>Søk</searchTextPlaceHolder>
+        <copyAvailableForOtherLocalAreas>Tilgjengelig for andre lokallag</copyAvailableForOtherLocalAreas>
+        <copyCeremony>Kopier</copyCeremony>
+        <copyCeremonyFacilityRoom>Seremonilokalet</copyCeremonyFacilityRoom>
+        <copyCeremonyLeader>Seremonileder</copyCeremonyLeader>
+        <copyCourse>Kopier</copyCourse>
+        <copyCourseActivities>Tilleggsaktiviteter</copyCourseActivities>
+        <copyCourseCeremony>Seremoni</copyCourseCeremony>
+        <copyCourseDays>Kursplan</copyCourseDays>
+        <copyCourseLeader>Kursleder</copyCourseLeader>
+        <copyCourseType>Kurskategori</copyCourseType>
+        <copyFacilityRoom>Kurslokale</copyFacilityRoom>
+        <copyNumberOfSeats>Antall plasser</copyNumberOfSeats>
+        <copyTime>Dato, ukedag og klokkeslett</copyTime>
+        <copyTimeSeason>Ukenr, ukedag og klokkeslett</copyTimeSeason>
+        <copyChosenCourse>Kopier valgte kurs</copyChosenCourse>
+        <copyChosenCeremony>Kopier valgte seremonier</copyChosenCeremony>
+        <deleteCourse>Slett kurs</deleteCourse>
+        <deleteChosenCourse>Slett valgte kurs</deleteChosenCourse>
+        <fieldsToCopyCourse>Kurs</fieldsToCopyCourse>
+        <fieldsToCopyCeremony>Seremoni</fieldsToCopyCeremony>
+        <hideCeremony>Skjul/Vis</hideCeremony>
+        <hideCourse>Skjul/Vis</hideCourse>
+        <hideChosenCourse>Skjul kurs</hideChosenCourse>
+        <showChosenCourse>Vis kurs</showChosenCourse>
+        <hideChosenCeremony>Skjul seremoni</hideChosenCeremony>
+        <showChosenCeremony>Vis seremoni</showChosenCeremony>
+        <refundOrders>Refusjon datauttrekk</refundOrders>
+        <Reports>Rapporter</Reports>
+        <accessToSignContracts>Kontraktsansvarlige</accessToSignContracts>
+        <lastPoliceCertificateDate>Godkjent politiattest</lastPoliceCertificateDate>
+        <lastCertificationDate>Sist sertifisert</lastCertificationDate>
+        <startDate>Start</startDate>
+        <endDate>Slutt</endDate>
+        <signatures>Underskrifter</signatures>
+        <confidentiality>Taushetsplikt</confidentiality>
+        <attachments>Vedlegg</attachments>
+        <contractAttachments>Vedlegg til kontrakter</contractAttachments>
+        <addAttachment>Legg til vedlegg</addAttachment>
+        <description>Beskrivelse</description>
+        <download>Last ned</download>
+        <undo>Angre</undo>
+        <upload>Last opp</upload>
+        <betweenParties>Mellom partene</betweenParties>
+        <filename>Filnavn</filename>
+        <cancelSigning>Avbryt signering</cancelSigning>
+        <acceptSigning>Signer</acceptSigning>
+        <saveDraft>Lagre utkast</saveDraft>
+        <sendToSigning>Lagre og send til signering</sendToSigning>
+        <signatureByHEF>Human-Etisk Forbund</signatureByHEF>
+        <signChosenContracts>Signer valgte kontrakter</signChosenContracts>
+        <contractsToSign>Signere</contractsToSign>
+        <addToSigningQueue>Legg til signering</addToSigningQueue>
+        <partners>Gravferdsbyrå</partners>
+        <funeralAgency>Gravferdsbyrå</funeralAgency>
+        <phone>Telefon</phone>
+        <worksInCounties>Tar oppdrag i fylker</worksInCounties>
+        <ratesFromContract>Satser fra kontrakt</ratesFromContract>
+        <ratesFromOrder>Honorarsats fra bestilling</ratesFromOrder>
+        <approveRemunerations>Godkjenn honorarer</approveRemunerations>
+        <downloadExport>Last ned eksport</downloadExport>
+        <exported>Eksporterte</exported>
+        <exportedDate>Eksportert dato</exportedDate>
+        <remuneration>Honorar</remuneration>
+        <remunerations>Honorarer</remunerations>
+        <in>i</in>
+        <newRemuneration>Lag nytt honorar</newRemuneration>
+        <text>Tekst</text>
+        <remunerationTitle>Honorar tittel</remunerationTitle>
+        <maxNumberOfConfirmandsOnWaitingList>Maks antall på venteliste for kurs</maxNumberOfConfirmandsOnWaitingList>
+        <onWaitingList>På venteliste</onWaitingList>
+        <requestSentTo>Forespørsler sendt til</requestSentTo>
+        <courseActionTitle>Kurs med venteliste og ledig plass</courseActionTitle>
+        <role>Rolle</role>
+        <personOverviewSearch>Personoversikt søk</personOverviewSearch>
+        <ceremonyType>Sermonitype</ceremonyType>
+        <personOverview>Personoversikt</personOverview>
+        <verifiedWithBankId>Verifisert med BankId</verifiedWithBankId>
+        <relatedContactInformation>Relatert kontaktinformasjon</relatedContactInformation>
+        <ssnShort>F.nr</ssnShort>
+        <MarriageContactPerson>Hovedkontakt</MarriageContactPerson>
+        <MarriagePerson2>Person 2</MarriagePerson2>
+        <bridalCouple>Brudepar</bridalCouple>
+        <MarriageSpeaker>Vigsler</MarriageSpeaker>
+        <previousAssignees>Tidligere tildelt</previousAssignees>
+        <sendRequests>Send forespørsler</sendRequests>
+        <addFromAnotherCounty>Legg til fra annet fylke</addFromAnotherCounty>
+        <confirm>Bekreft</confirm>
+        <Yes>Ja</Yes>
+        <No>Nei</No>
+        
+        <MyMarriageAssignmentRequests>Mine vigselsforespørsler</MyMarriageAssignmentRequests>
+        <NoActiveMarriageRequests>Ingen aktive vigselforespørsler</NoActiveMarriageRequests>
+        <NoActiveFuneralRequests>Ingen aktive gravferdsforespørsler</NoActiveFuneralRequests>
+        
+        <FuneralAssignmentTypes>Gravferd oppdragstyper</FuneralAssignmentTypes>
+        <MarriageAssignmentTypes>Vigsel oppdragstyper</MarriageAssignmentTypes>
+        
+        <visitingAddress>Besøksaddresse</visitingAddress>
+        
+        <organizationId>Org. nr</organizationId>
+        <displayName>Profileringsnavn</displayName>
+        <primary>Primær</primary>
+        <secondary>Sekundær</secondary>
+        <resendEmail>Send epost på ny</resendEmail>
+        <removeSigningOrder>Fjern godkjenning av oppdrag</removeSigningOrder>
+        <humanSortIndex>Sortering på skjema.human.no</humanSortIndex>
+        <CourseDate>Kursdato</CourseDate>
+        <Filter>Filter</Filter>
+        <WebDescription>Web beskrivelse</WebDescription>
+        <CommunicationLog>Kommunikasjonslogg</CommunicationLog>
+        <Invoices>Fakturaer</Invoices>
+      </shared>
+
+      <ceremonySeatDistribution>
+        <title>Gjesteplasser og plassfordeling</title>
+        <capasity>Kapasitet</capasity>
+        <confirmands>Konfirmanter</confirmands>
+        <reservedByHef>Plasser reservert HEF</reservedByHef>
+        <reserve>Reserveplasser</reserve>
+        <guestSeats>Gjesteplasser</guestSeats>
+        <guestSeatsPrConfirmand>Gjesteplasser per konfirmant</guestSeatsPrConfirmand>
+        <confirmandsOnStage>på scenen</confirmandsOnStage>
+        <otherCourses>Andre kurs</otherCourses>
+        <seatDistribution>Plassfordeling</seatDistribution>
+        <chooseAll>Velg alle</chooseAll>
+        <membership>Medlem</membership>
+        <total>Totalt</total>
+        <forDistribution>Til fordeling</forDistribution>
+        <autoDistributeGuestSeats>Fordel til alle</autoDistributeGuestSeats>
+        <autoDistributeGuestSeatsMembers>Fordel til medlemmer</autoDistributeGuestSeatsMembers>
+        <autoDistributeGuestsSeatsPerOrder>Maks plasser</autoDistributeGuestsSeatsPerOrder>
+        <execute>Utfør</execute>
+        <children>Navnebarn</children>
+        <confirmand>Konfirmant</confirmand>
+        <guestSeatsPerChild>Gjesteplasser per barn</guestSeatsPerChild>
+        <availableSeats>Tilgjengelig</availableSeats>
+        <availableSeatsShort>Tilgj.</availableSeatsShort>
+        <waitingListSeats>Venteliste</waitingListSeats>
+        <freeSeatsDraft>Ledig utkast</freeSeatsDraft>
+        <freeSeatsConfirmed>Ledig bekreftet</freeSeatsConfirmed>
+        <freeSeats>Ledig</freeSeats>
+        <preferredSeats>Ønsket</preferredSeats>
+        <grantedSeatsDraft>Utkast</grantedSeatsDraft>
+        <grantedSeats>Tildelt</grantedSeats>
+
+        <sendDistribution>Send plassfordeling</sendDistribution>
+        <newGuestSeats>Ny/Tidl.</newGuestSeats>
+        <sentGrantedSeats>Tildelt</sentGrantedSeats>
+        <sentGrantedSeatsTitle>Bekreftet tildelte gjesteplasser</sentGrantedSeatsTitle>
+        <merkedagGrantedSeats>Benyttet</merkedagGrantedSeats>
+        <merkedagGrantedSeatsTitle>Benyttet antall gjesteplasser i din merkedag.</merkedagGrantedSeatsTitle>
+        <saveDraft>Lagre utkast</saveDraft>
+        <resetDraft>Nullstill utkast</resetDraft>
+        <saveDraftWarning>Du lagrer nå et utkast til plassfordeling. Plassene fordeles til foresatte når du trykker "Lagre og bekreft til foresatt"</saveDraftWarning>
+      </ceremonySeatDistribution>
+
+      <data>
+        <unknown>
+          <order>Ukjent ordre</order>
+          <ceremonyType>Ukjent seremonitype</ceremonyType>
+          <courseType>Ukjent kurstype</courseType>
+          <season>Ukjent år</season>
+          <person>Ukjent person</person>
+          <course>Ukjent kurs</course>
+          <ceremony>Ukjent seremoni</ceremony>
+          <facilityRoom>Ukjent rom</facilityRoom>
+          <facilityPlace>Ukjent lokale</facilityPlace>
+          <county>Ukjent fylke</county>
+          <localArea>Ukjent lokallag</localArea>
+          <activity>Ukjent aktivitet</activity>          
+        </unknown>
+        <calendar>
+          <title>Aktivitetskalender</title>
+          <absenceButton>Registrer fravær</absenceButton>
+          <addEventButton>Legg til</addEventButton>
+          <name>Tittel</name>
+          <description>Beskrivelse</description>
+          <editEvent>Rediger</editEvent>
+          <eventType>Type</eventType>
+        </calendar>
+        <nameParty>
+          <NamePartyCeremonyOrderListData>
+            <totalCount>Totalt:</totalCount>
+            <filter>
+              <active>Aktive</active>
+              <allCounties>Alle fylker</allCounties>
+              <allLocalAreas>Alle lokallag</allLocalAreas>
+              <bothActiveAndInactive>Både aktive og inaktive</bothActiveAndInactive>
+              <chooseCountyFirst>Velg fylke først</chooseCountyFirst>
+              <inactive>Inaktive</inactive>
+              <paymentStatus>Betalingsstatus</paymentStatus>
+              <orderStatus>Ordrestatus</orderStatus>
+              <searchTextLabel>Søk</searchTextLabel>
+              <searchTextPlaceHolder>Søk</searchTextPlaceHolder>
+              <hasComment>Har kommentar</hasComment>
+              <inactive>Vis kun inaktive</inactive>
+              <waitingList>Venteliste</waitingList>
+              <nameInNewspaper>Ønsker ikke navn i avis</nameInNewspaper>
+              <approvedSiblingDiscount>Godkjent søskenrabatt</approvedSiblingDiscount>
+            </filter>
+          </NamePartyCeremonyOrderListData>
+          <statistics>
+            <numberOfParticipants>Antall påmeldte</numberOfParticipants>
+            <numberOfFemaleParticipants>Jenter</numberOfFemaleParticipants>
+            <numberOfMaleParticipants>Gutter</numberOfMaleParticipants>
+            <numberOfOtherGenderParticipants>Annet kjønn</numberOfOtherGenderParticipants>
+            <numberOfMemberParticipants>Bekreftet medlem</numberOfMemberParticipants>
+            <numberOfNonMemberParticipants>Ikke medlem / ubekreftet</numberOfNonMemberParticipants>
+            <numberOfFullCeremonies>Antall fulle seremonier</numberOfFullCeremonies>
+            <numberOfAvailableCeremonies>Antall ledige seremonier</numberOfAvailableCeremonies>
+            <numberOfSeats>Antall plasser</numberOfSeats>
+            <numberOfCeremonies>Antall seremonier</numberOfCeremonies>
+            <paymentAmount>Sum til innbetaling</paymentAmount>
+            <paidAmount>Sum innbetalt</paidAmount>
+            <paymentRest>Sum gjenstår til innbetaling</paymentRest>
+            <title>Navnefest</title>
+            <titleParticipants>Påmeldte</titleParticipants>
+            <titleCapacity>Kapasitet</titleCapacity>
+            <titlePayment>Betaling</titlePayment>
+            <titlePaymentDistribution>Betalingsfordeling</titlePaymentDistribution>
+          </statistics>
+        </nameParty>
+        <funeral>
+          <statistics>
+            <numberOfParticipants>Antall ordre</numberOfParticipants>
+            <numberOfFemaleParticipants>Damer</numberOfFemaleParticipants>
+            <numberOfMaleParticipants>Menn</numberOfMaleParticipants>
+            <numberOfOtherGenderParticipants>Annet kjønn</numberOfOtherGenderParticipants>
+            <numberOfMemberParticipants>Bekreftet medlem</numberOfMemberParticipants>
+            <numberOfNonMemberParticipants>Ikke medlem / ubekreftet</numberOfNonMemberParticipants>
+            <paymentAmount>Sum til innbetaling</paymentAmount>
+            <paidAmount>Sum innbetalt</paidAmount>
+            <paymentRest>Sum gjenstår til innbetaling</paymentRest>
+            <title>Gravferd</title>
+            <titleParticipants>Ordre</titleParticipants>
+            <titleCapacity>Kapasitet</titleCapacity>
+            <titlePayment>Betaling</titlePayment>
+            <titlePaymentDistribution>Betalingsfordeling</titlePaymentDistribution>
+          </statistics>
+          <communication>
+            <SendConfirmationAssignedSpeaker>Send bekreftelse om tildelt GFT</SendConfirmationAssignedSpeaker>
+          </communication>
+        </funeral>
+        <confirmation>
+          <confirmand>
+            <confirmationConfirmandList>
+              <filter>
+                <!--<active>Aktive</active>
+								<allCounties>Alle fylker</allCounties>
+								<allLocalAreas>Alle lokallag</allLocalAreas>
+								<bothActiveAndInactive>Både aktive og inaktive</bothActiveAndInactive>
+								<chooseCountyFirst>Velg fylke først</chooseCountyFirst>
+								
+								<paymentStatus>Betalingsstatus</paymentStatus>
+								<orderStatus>Ordrestatus</orderStatus>
+								<searchTextLabel>Søk</searchTextLabel>
+								<searchTextPlaceHolder>Søk</searchTextPlaceHolder>
+								-->
+                <!--<hasComment>Har kommentar</hasComment>-->
+              </filter>
+            </confirmationConfirmandList>
+          </confirmand>
+          <course>
+            <confirmationCourseOverview>
+              <title>Oversikt</title>
+              <ceremony>Seremoni</ceremony>
+              <status>Status</status>
+              <attending>Påmeldte</attending>
+              <waitinglist>Venteliste</waitinglist>
+              <distribution>Kjønnsfordeling</distribution>
+              <off>av</off>
+              <girls>jenter</girls>
+              <boys>gutter</boys>
+              <otherGender>Annen kjønnsidentitet</otherGender>
+            </confirmationCourseOverview>
+          </course>
+          <statistics>
+            <numberOfParticipants>Antall påmeldte</numberOfParticipants>
+            <numberOfFemaleParticipants>Jenter</numberOfFemaleParticipants>
+            <numberOfMaleParticipants>Gutter</numberOfMaleParticipants>
+            <numberOfOtherGenderParticipants>Annet kjønn</numberOfOtherGenderParticipants>
+            <numberOfMemberParticipants>Bekreftet medlem</numberOfMemberParticipants>
+            <numberOfNonMemberParticipants>Ikke medlem / ubekreftet</numberOfNonMemberParticipants>
+            <numberOfFullCourses>Antall fulle kurs</numberOfFullCourses>
+            <numberOfEmptyCourses>Antall tomme kurs</numberOfEmptyCourses>
+            <numberOfAvailableCourses>Antall ledige kurs</numberOfAvailableCourses>
+            <numberOfCourses>Antall kurs</numberOfCourses>
+            <numberOfSeats>Antall plasser</numberOfSeats>
+            <numberOfCeremonies>Antall seremonier</numberOfCeremonies>
+            <paymentAmount>Sum til innbetaling</paymentAmount>
+            <paidAmount>Sum innbetalt</paidAmount>
+            <paymentRest>Sum gjenstår til innbetaling</paymentRest>
+            <title>Konfirmasjon</title>
+            <titleParticipants>Påmeldte</titleParticipants>
+            <titleCapacity>Kapasitet</titleCapacity>
+            <titlePayment>Betaling</titlePayment>
+            <titlePaymentDistribution>Betalingsfordeling</titlePaymentDistribution>
+          </statistics>
+        </confirmation>
+        <Marriage>
+          <General>
+            <PrimaryContactIsMember>Hovedkontakt er medlem</PrimaryContactIsMember>
+            <SecondaryContactIsMember>Person 2 er medlem</SecondaryContactIsMember>
+          </General>
+          <Statistics>
+            <Title>Vigsel</Title>
+            <TitleParticipants>Ordre</TitleParticipants>
+            <TitlePayment>Betaling</TitlePayment>
+
+            <paymentAmount>Sum til innbetaling</paymentAmount>
+            <paidAmount>Sum innbetalt</paidAmount>
+            <paymentRest>Sum gjenstår til innbetaling</paymentRest>
+
+            <numberOfParticipants>Antall ordre</numberOfParticipants>
+            <numberOfMemberParticipants>Bekreftet medlem</numberOfMemberParticipants>
+            <numberOfNonMemberParticipants>Ikke medlem / ubekreftet</numberOfNonMemberParticipants>
+          </Statistics>
+        </Marriage>
+        <admin>
+          <facilityPlace>
+            <basicInfoTitle>Basisinformasjon lokale</basicInfoTitle>
+            <eventList>
+              <minifiedTitle>Se kalender for lokalet</minifiedTitle>
+              <title>Kalender for lokalet</title>
+            </eventList>
+          </facilityPlace>
+          <facilityPlaceList>
+            <sort>
+              <name>Navn</name>
+            </sort>
+            <filter>
+              <allWorkAreas>Alle bruksområder</allWorkAreas>
+              <capacity>Kapasitet</capacity>
+            </filter>
+          </facilityPlaceList>
+          <facilityRoom>
+            <basicInfoTitle>Basisinformasjon rom</basicInfoTitle>
+            <workArea>
+              <None></None>
+              <ConfirmationCeremonyLeader>Konfirmasjonsseremoni</ConfirmationCeremonyLeader>
+              <ConfirmationCourseLeader>Kurslokale</ConfirmationCourseLeader>
+              <MarriageCeremonyLeader>Vigsel</MarriageCeremonyLeader>
+              <FuneralSpeaker>Gravferd</FuneralSpeaker>
+              <NamepartyCeremonyLeader>Navnefest</NamepartyCeremonyLeader>
+              <OtherRole>Annen rolle</OtherRole>
+            </workArea>
+          </facilityRoom>
+          <county>
+            <countyList>
+              <title>Fylker</title>
+            </countyList>
+          </county>
+          <emailTemplateOverview>
+            <emailTitleLabel>Emne</emailTitleLabel>
+          </emailTemplateOverview>
+          <employeeAssignments>
+            <title>Oppdrag</title>
+            <noAssignments>Ingen oppdrag</noAssignments>
+            <name>Navn</name>
+            <date>Dato</date>
+            <time>Tid</time>
+            <description>Lokale</description>
+          </employeeAssignments>
+          <employeeList>
+            <sort>
+              <name>Navn</name>
+              <mobile>Mobil</mobile>
+              <email>E-post</email>
+              <lastCertificationDate>Siste politiattest</lastCertificationDate>
+            </sort>
+            <filter>
+              <active>Aktive</active>
+              <allCounties>Alle fylker</allCounties>
+              <allLocalAreas>Alle lokallag</allLocalAreas>
+              <allRoles>Alle roller</allRoles>
+              <allWorkAreas>Alle arbeidsområder</allWorkAreas>
+              <allSeasons>Alle år</allSeasons>
+              <bothActiveAndInactive>Både aktive og inaktive</bothActiveAndInactive>
+              <chooseCountyFirst>Velg fylke først</chooseCountyFirst>
+              <inactive>Inaktive</inactive>
+              <searchTextPlaceHolder>Søk</searchTextPlaceHolder>
+              <searchTextLabel>Søk etter navn, telefon eller e-post</searchTextLabel>
+              <allContractStatus>Velg kontraktstatus</allContractStatus>
+              <contractStatus>
+                <active>Har aktiv kontrakt</active>
+                <noContracts>Har ikke kontrakt</noContracts>
+                <requiresSignatur>Mangler signatur</requiresSignatur>
+                <requiresHEFSignatur>Mangler signatur fra HEF</requiresHEFSignatur>
+              </contractStatus>
+              <searchIsMCD>Mangler e-post, mobil, personnummer eller banknummer</searchIsMCD>
+              <searchIsETT>Ikke eksportert til Tripletex</searchIsETT>
+            </filter>
+          </employeeList>
+          <employeeWorkAreaListEditData>
+            <ConfirmationCeremonyLeader>
+              <title>Konfirmasjonsansvarlig</title>
+              <workAreaTitle>Arbeidssted</workAreaTitle>
+              <localAreaTitle>Lokallag</localAreaTitle>
+            </ConfirmationCeremonyLeader>
+            <ConfirmationCourseLeader>
+              <title>Kursleder</title>
+              <workAreaTitle>Arbeidssted</workAreaTitle>
+              <localAreaTitle>Lokallag</localAreaTitle>
+            </ConfirmationCourseLeader>
+            <MarriageCeremonyLeader>
+              <title>Vigsler</title>
+              <workAreaTitle>Arbeidssted</workAreaTitle>
+              <yearlyWorkRequirement>Krav til antall vielser årlig</yearlyWorkRequirement>
+            </MarriageCeremonyLeader>
+            <FuneralSpeaker>
+              <title>Gravferdstaler</title>
+              <workAreaTitle>Arbeidssted</workAreaTitle>
+              <yearlyWorkRequirement>Krav til antall gravferder årlig</yearlyWorkRequirement>
+            </FuneralSpeaker>
+            <NamepartyCeremonyLeader>
+              <title>Seremoniansvarlig navnefest</title>
+              <workAreaTitle>Arbeidssted</workAreaTitle>
+              <localAreaTitle>Lokallag</localAreaTitle>
+            </NamepartyCeremonyLeader>
+            <OtherRole>
+              <title>Annen rolle</title>
+              <workAreaTitle>Arbeidssted</workAreaTitle>
+              <localAreaTitle>Lokallag</localAreaTitle>
+            </OtherRole>
+          </employeeWorkAreaListEditData>
+          <localArea>
+            <confirmationLocalAreaSettings>
+              <acceptsOtherLocalAreas>Tar i mot konfirmanter fra andre lokallag</acceptsOtherLocalAreas>
+            </confirmationLocalAreaSettings>
+            <namePartyLocalAreaSettings>
+              <acceptsOtherLocalAreas>Tar i mot navnebarn fra andre lokallag</acceptsOtherLocalAreas>
+            </namePartyLocalAreaSettings>
+          </localArea>
+          <roleApplicationRight>
+            <roleApplicationRightListData>
+              <title>Roller</title>
+            </roleApplicationRightListData>
+            <roleApplicationRightListEditData>
+              <basicInfoTitle>Generelt</basicInfoTitle>
+              <roleName>Navn</roleName>
+              <applicationRightArea>Område</applicationRightArea>
+              <permissions>Rettigheter</permissions>
+              <ownersPermissions>Rettigheter hvis eier</ownersPermissions>
+              <archivePermissions>Rettigheter hvis arkivert</archivePermissions>
+              <read>Lese</read>
+              <write>Skrive</write>
+              <delete>Slette</delete>
+            </roleApplicationRightListEditData>
+          </roleApplicationRight>
+          <partnerSearch>
+            <filter>
+              <searchTextLabel>Søk etter navn</searchTextLabel>
+              <searchTextPlaceHolder>Søk</searchTextPlaceHolder>
+            </filter>
+            <sort>
+              <name>Navn</name>
+            </sort>
+          </partnerSearch>
+        </admin>
+        <fileListData>
+          <title>Filer</title>
+          <add>Legg til fil</add>
+          <deleteFile>Slett</deleteFile>
+          <confirmDelete>Er du sikker på at du vil slette filen?</confirmDelete>
+          <save>Last opp</save>
+          <cancel>Avbryt</cancel>
+          <fileLabel>Velg fil</fileLabel>
+          <descriptionLabel>Kommentar</descriptionLabel>
+          <descriptionPlaceholder>...</descriptionPlaceholder>
+        </fileListData>
+        <noteListData>
+          <title>Notater</title>
+          <ConfirmationCeremonyOrderPaymentTitle>Betalingsnotater (slettes ikke)</ConfirmationCeremonyOrderPaymentTitle>
+          <NamePartyCeremonyOrderPaymentTitle>Betalingsnotater (slettes ikke)</NamePartyCeremonyOrderPaymentTitle>
+          <FuneralCeremonyOrderPaymentTitle>Betalingsnotater (slettes ikke)</FuneralCeremonyOrderPaymentTitle>
+          <MarriageCeremonyOrderPaymentTitle>Betalingsnotater (slettes ikke)</MarriageCeremonyOrderPaymentTitle>
+          <add>Nytt notat</add>
+          <deleteNote>Slett</deleteNote>
+          <confirmDelete>Er du sikker på at du vil slette notatet?</confirmDelete>
+          <save>Lagre</save>
+          <cancel>Avbryt</cancel>
+          <textLabel>Beskjed</textLabel>
+          <textPlaceholder>...</textPlaceholder>
+        </noteListData>
+        <noteListEditData>
+          <deleteNote>Slett</deleteNote>
+          <textLabel>Beskjed</textLabel>
+          <textPlaceholder>...</textPlaceholder>
+        </noteListEditData>
+        <sendMessageData>
+          <title>Kommunikasjon</title>
+          <send>Send</send>
+          <emailTitle>Send e-post</emailTitle>
+          <emailSubjectLabel>Emne</emailSubjectLabel>
+          <emailSubjectPlaceHolder>Skriv inn emne...</emailSubjectPlaceHolder>
+          <emailBodyLabel>Tekst</emailBodyLabel>
+          <emailBodyPlaceHolder>Skriv inn tekst...</emailBodyPlaceHolder>
+          <smsTitle>Send SMS</smsTitle>
+          <smsTextLabel>Tekst</smsTextLabel>
+          <smsTextPlaceHolder>Skriv inn melding...</smsTextPlaceHolder>
+          <close>Lukk</close>
+          <parents>Foreldre</parents>
+          <confirmands>Konfirmanter</confirmands>
+          <all>-Alle-</all>
+          <chooseReceipients>Velg mottakere</chooseReceipients>
+          <receiversTitle>Mottakere</receiversTitle>
+          <optionsTitle>Innstillinger</optionsTitle>
+          <attachmentsTitle>Vedlegg</attachmentsTitle>
+          <sendSMSNotification>Send SMS-varsel</sendSMSNotification>
+          <includeLatestInvoice>Legg ved siste faktura</includeLatestInvoice>
+          <sendEmailCopyTo>Send blindkopi til (bruk semikolon som skilletegn)</sendEmailCopyTo>
+          <sendSMSCopyTo>Send kopi til (bruk semikolon som skilletegn)</sendSMSCopyTo>
+          <onlyOneCopy>Kun blindkopi av første e-post ved flere mottakere</onlyOneCopy>
+          <blindCopyToCourseLeaders>Send blindkopi av første e-post til kursleder(e)</blindCopyToCourseLeaders>
+          <replyToEmailAddress>Svaradresse</replyToEmailAddress>
+          <sendToConfirmand>Send kopi til konfirmantens mobilnr</sendToConfirmand>
+          <SMSsenderNumber>Avsender</SMSsenderNumber>
+          <SMSDefaultSender>human.no</SMSDefaultSender>
+          <EmailsenderAddress>Avsender</EmailsenderAddress>
+          <EmailDefaultSender>Human-Etisk Forbund</EmailDefaultSender>
+          <chooseFiles>Velg filer</chooseFiles>
+          <addAttachments>Legg til flere vedlegg</addAttachments>
+        </sendMessageData>
+        <changelog>
+          <getChanges>Hent endringer</getChanges>
+          <changes>Endringer</changes>
+        </changelog>
+        <dashboard>
+          <myAssignments>
+            <title>Mine oppdrag</title>
+            <noAssignments>Du har ingen oppdrag</noAssignments>
+            <name>Navn</name>
+            <date>Dato</date>
+            <time>Tid</time>
+            <description>Lokale</description>
+          </myAssignments>
+        </dashboard>
+        <tripletex>
+          <Id>Tripletex ID</Id>
+          <ContactId>Tripletex person ID</ContactId>
+          <PartnerId>Tripletex byrå ID</PartnerId>
+          <export>Eksporter til Tripletex</export>
+          <sendToAutomatedControl>Send til automatisk kontroll</sendToAutomatedControl>
+        </tripletex>
+        <invoice>
+          <update>Endre faktura</update>
+          <status>Faktura status</status>
+          <receiver>Fakturamottaker</receiver>
+          <notReceiver>Ikke fakturamottaker</notReceiver>
+        </invoice>
+      </data>
+    </views>
+  </language>
+</languages>

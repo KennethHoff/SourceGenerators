@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<languages>
+  <!-- For static texts used in views for enums -->
+  <language name="Norwegian" id="no">
+    <enums>
+      <MarriageGuestSize>
+        <Unknown>Ukjent</Unknown>
+        <S>&lt;25</S>
+        <M>25-50</M>
+        <L>50-75</L>
+        <XL>75-100</XL>
+        <XXL>&gt;100</XXL>
+      </MarriageGuestSize>
+      <CeremonyOrderCompletionStatus>
+        <None>Ingen status</None>
+        <SpeakerNotRequested>Taler ikke forespurt</SpeakerNotRequested>
+        <SpeakerRequested>Taler forespurt</SpeakerRequested>
+        <SpeakerAssigned>Taler tildelt, ikke bekreftet til byrå</SpeakerAssigned>
+        <SpeakerConfirmedToContact>Taler bekreftet til byrå</SpeakerConfirmedToContact>
+        <SpeakerHasCompletedCeremony>Taler har ferdigstilt oppdrag</SpeakerHasCompletedCeremony>
+        <ORHasCompletedCeremony>OR har godkjent oppdrag</ORHasCompletedCeremony>
+      </CeremonyOrderCompletionStatus>
+      <ConsentResponse>
+        <None>Ingen svar</None>
+        <Yes>Ja</Yes>
+        <No>Nei</No>
+      </ConsentResponse>
+      <ExportCategory>
+        <ReportConfirmationAnnual>Årsrapport til Folkeuniversitetet</ReportConfirmationAnnual>
+        <ChangeLogForUser>Endringslog for burker</ChangeLogForUser>
+        <ContactList>Kontaktliste</ContactList>
+        <CeremonyOrderSearchList>Søkeside</CeremonyOrderSearchList>
+        <RoomDistribution>Romfordeling</RoomDistribution>
+        <SeatDistribution>Plassfordeling</SeatDistribution>
+        <CourseList>Kursliste</CourseList>
+        <CeremonyPlan>Seremoniplan</CeremonyPlan>
+        <CourseAttendees>Kursdeltakere</CourseAttendees>
+        <EmployeeSearchList>Ansatteliste</EmployeeSearchList>
+        <RemunerationList>Honorarer</RemunerationList>
+        <ConfirmationRemunerationList>Konfirmasjon honorarer</ConfirmationRemunerationList>
+        <NamePartyRemunerationList>Navnefest honorarer</NamePartyRemunerationList>
+        <OrderStatistics>Bestilling statistikk</OrderStatistics>
+        <SeasonStatistics>Antall statistikk</SeasonStatistics>
+        <CeremonyCapacityStatistics>Kapasitet seremoni statistikk</CeremonyCapacityStatistics>
+        <CourseCapacityStatistics>Kapasitet kurs statistikk</CourseCapacityStatistics>
+        <MerkedagCeremonyAccess>Merkedag tilgangsdokument</MerkedagCeremonyAccess>
+        <MerkedagCeremonyGuestList>Merkedag gjesteliste</MerkedagCeremonyGuestList>
+        <MerkedagCeremonyContactList>Merkedag kontaktliste (sporing)</MerkedagCeremonyContactList>
+        <ConfirmationCeremonyCertificate>Kursbevis</ConfirmationCeremonyCertificate>
+        <NamePartyCeremonyCertificate>Navnetavler</NamePartyCeremonyCertificate>
+        <RefundOrders>Refusjon datauttrekk</RefundOrders>
+      </ExportCategory>
+      <AnonymizationStatus>
+        <Active>Ikke anonymisert</Active>
+        <ActivityCompleted>1M</ActivityCompleted>
+        <NonEssential>3M</NonEssential>
+        <Archive>31Des6M</Archive>
+        <Economic>ØK</Economic>
+        <GovermentReporting>FU</GovermentReporting>
+      </AnonymizationStatus>
+      <FollowUpStatus>
+        <None>Ingen oppfølging</None>
+        <Operator>Må følges opp av OR</Operator>
+        <Local>Må følges opp lokalt</Local>
+        <Economics>Betalingsoppfølging</Economics>
+        <Accounting>Må følges opp av regnskap</Accounting>
+        <Completed>Fulgt opp</Completed>
+      </FollowUpStatus>
+      <ApplicationRightArea>
+        
+        <!-- Various (0-2999) -->
+        <AdminTools>Administrator verktøy</AdminTools>
+        <ConfirmationReports>Konfirmasjon rapporter</ConfirmationReports>
+        <ReportConfirmationAnnual>Årsrapport til Folkeuniversitetet</ReportConfirmationAnnual>
+        <NamePartyCeremonyChangeLog>Navnefest seremoni endringslogg</NamePartyCeremonyChangeLog>
+        <NamePartyCeremonyCommunication>Navnefest seremoni kommunikasjon</NamePartyCeremonyCommunication>
+        <NamePartyCeremonyFiles>Navnefest seremoni filer</NamePartyCeremonyFiles>
+        <NamePartyCeremonyList>Navnefest seremoni liste</NamePartyCeremonyList>
+        <NamePartyCeremonyNotes>Navnefest seremoni notater</NamePartyCeremonyNotes>
+        <NamePartyCeremonyMerkedag>Navnefest seremoni merkedag</NamePartyCeremonyMerkedag>
+        <NamePartyCeremonySeatDistribution>Navnefest seremoni plassfordeling</NamePartyCeremonySeatDistribution>
+        <NamePartyCeremonyWaitingList>Navnefest seremoni venteliste</NamePartyCeremonyWaitingList>
+        <NamePartyCeremonyOverview>Navnefest seremoni oversikt</NamePartyCeremonyOverview>
+        <NamePartyOrderPayment>Navnefestordre betalingsinformasjon</NamePartyOrderPayment>
+        <NamePartyOrderOverview>Navnefestordre oversikt</NamePartyOrderOverview>
+        <NamePartyOrderList>Navnefestordre liste</NamePartyOrderList>
+        <NamePartyOrderListCommunication>Navnefestordre liste kommunikasjon</NamePartyOrderListCommunication>
+        <NamePartyOrderCeremony>Navnefestordre seremoni</NamePartyOrderCeremony>
+        <NamePartyOrderChangeLog>Navnefestordre endringslogg</NamePartyOrderChangeLog>
+        <NamePartyOrderCommunication>Navnefestordre kommunikasjon</NamePartyOrderCommunication>
+        <NamePartyOrderFiles>Navnefestordre filer</NamePartyOrderFiles>
+        <NamePartyOrderNotes>Navnefestordre notes</NamePartyOrderNotes>
+        <NamePartyOrderContactPersons>Navnefestordre kontaktpersoner</NamePartyOrderContactPersons>
+        <NamePartyStatistics>Navnefest statistikk</NamePartyStatistics>
+        <ConfirmandListInLocalArea>Konfirmasjonsordre liste</ConfirmandListInLocalArea>
+        <ConfirmandListInLocalAreaCommunication>Konfirmasjonsordre liste kommunikasjon</ConfirmandListInLocalAreaCommunication>
+        <ConfirmationOrderConsent>Konfirmasjonsordre samtykker</ConfirmationOrderConsent>
+        <ConfirmationOrderOverview>Konfirmasjonsordre oversikt</ConfirmationOrderOverview>
+        <ConfirmationOrderCourse>Konfirmasjonsordre kurs</ConfirmationOrderCourse>
+        <ConfirmationOrderCeremony>Konfirmasjonsordre seremoni</ConfirmationOrderCeremony>
+        <ConfirmationOrderNotes>Konfirmasjonsordre notater</ConfirmationOrderNotes>
+        <ConfirmationOrderPayment>Konfirmasjonsordre betalingsinformasjon</ConfirmationOrderPayment>
+        <ConfirmationOrderContactPersons>Konfirmasjonsordre kontaktpersoner</ConfirmationOrderContactPersons>
+        <ConfirmationOrderChangelog>Konfirmasjonsordre endringslogg</ConfirmationOrderChangelog>
+        <ConfirmationOrderCommunication>Konfirmasjonsordre kommunikasjon</ConfirmationOrderCommunication>
+        <EmployeeList>Ansatte liste</EmployeeList>
+        <EmployeeOverview>Ansatte oversikt</EmployeeOverview>
+        <EmployeeOverview2>Ansatte oversikt kolonne 2</EmployeeOverview2>
+        <EmployeeLogin>Ansatte påloggingsinfo</EmployeeLogin>
+        <EmployeeWorkAreas>Ansatte arbeidsområder</EmployeeWorkAreas>
+        <EmployeeNotes>Ansatte notater</EmployeeNotes>
+        <EmployeeFiles>Ansatte filer</EmployeeFiles>
+        <EmployeeAssignments>Ansatte oppdrag</EmployeeAssignments>
+        <EmployeeChangeLog>Ansatte endringslogg</EmployeeChangeLog>
+        <EmployeeCommunication>Ansatte kommunikasjon</EmployeeCommunication>
+        <EmployeeListCommunication>Ansatte liste kommunikasjon</EmployeeListCommunication>
+        <EmployeeContract>Ansatte kontraktsmodul</EmployeeContract>
+        <EmployeeContractDraft>Ansatte kontraktsutkast</EmployeeContractDraft>
+        <EmployeeContractTemplate>Ansatte kontraktsmal</EmployeeContractTemplate>
+        <EmployeeContractSigning>Ansatte kontrakt signering</EmployeeContractSigning>
+        <ConfirmationCertificate>Konfirmasjon seremoni kursbevis</ConfirmationCertificate>
+        <NamePartyCertificate>Navnefest seremoni navnetavler</NamePartyCertificate>
+        <ConfirmationCourseListInLocalArea>Kurs liste</ConfirmationCourseListInLocalArea>
+        <ConfirmationCourseOverview>Kurs oversikt</ConfirmationCourseOverview>
+        <ConfirmationCourseFiles>Kurs filer</ConfirmationCourseFiles>
+        <ConfirmationCourseNotes>Kurs notater</ConfirmationCourseNotes>
+        <ConfirmationCourseCommunication>Kurs kommunikasjon</ConfirmationCourseCommunication>
+        <ConfirmationCourseCourseDays>Kurs kursdager</ConfirmationCourseCourseDays>
+        <ConfirmationCourseConfirmands>Kurs konfirmanter</ConfirmationCourseConfirmands>
+        <ConfirmationCourseChangeLog>Kurs endringslogg</ConfirmationCourseChangeLog>
+        <ConfirmationCourseAttendence>Kurs frammøte</ConfirmationCourseAttendence>
+        <ConfirmationCourseWaitingConfirmands>Kurs venteliste</ConfirmationCourseWaitingConfirmands>
+        <ConfirmationCancelCourse>Kurs avbestilling/endre pris</ConfirmationCancelCourse>
+        <ConfirmationCourseCompletion>Kurs ferdigstilling</ConfirmationCourseCompletion>
+        <ConfirmationCourseActionList>Kurs trenger handling</ConfirmationCourseActionList>
+        <ConfirmationCeremonyListInLocalArea>Konfirmasjon seremoni liste</ConfirmationCeremonyListInLocalArea>
+        <ConfirmationCeremonyOverview>Konfirmasjon seremoni oversikt</ConfirmationCeremonyOverview>
+        <ConfirmationCeremonySeatDistribution>Konfirmasjon seremoni plassfordeling</ConfirmationCeremonySeatDistribution>
+        <ConfirmationCeremonyCourseList>Konfirmasjon seremoni tilknyttede kurs</ConfirmationCeremonyCourseList>
+        <ConfirmationCeremonyCommunication>Konfirmasjon seremoni kommunikasjon</ConfirmationCeremonyCommunication>
+        <ConfirmationCeremonyChangeLog>Konfirmasjon seremoni endringslogg</ConfirmationCeremonyChangeLog>
+        <ConfirmationCeremonyNotes>Konfirmasjon seremoni notater</ConfirmationCeremonyNotes>
+        <ConfirmationCeremonyFiles>Konfirmasjon seremoni filer</ConfirmationCeremonyFiles>
+        <ConfirmationCeremonyMerkedag>Konfirmasjon seremoni merkedag</ConfirmationCeremonyMerkedag>
+        <ConfirmationCancelCeremony>Konfirmasjon seremoni avbestilling</ConfirmationCancelCeremony>
+        <RefundOrders>Refusjons liste modul</RefundOrders>
+        <ProfileInformation>Profil oversikt</ProfileInformation>
+        <MyContractInformation>Profil kontrakt informasjon</MyContractInformation>
+        <MyRemunations>Profil mine honorarer</MyRemunations>
+        <ProfilePreferredSettings>Profil foretrukkede innstillinger</ProfilePreferredSettings>
+        <ActivityList>Tilleggsaktiviteter liste</ActivityList>
+        <ActivityOverview>Tilleggsaktiviteter oversikt</ActivityOverview>
+        <SeasonList>År liste</SeasonList>
+        <Season>År oversikt</Season>
+        <SchoolList>Skole liste</SchoolList>
+        <School>Skole oversikt</School>
+        <RoleApplicationRightList>Rolletilganger liste</RoleApplicationRightList>
+        <CountyList>Fylke liste</CountyList>
+        <County>Fylke oversikt</County>
+        <CountyChangeLog>Fylke endringslogg</CountyChangeLog>
+        <LocalAreaList>Lokallag</LocalAreaList>
+        <LocalArea>Lokallag oversikt</LocalArea>
+        <FacilityPlaceList>Lokale liste</FacilityPlaceList>
+        <FacilityPlaceOverview>Lokale oversikt</FacilityPlaceOverview>
+        <FacilityPlaceCalendar>Lokale kalender</FacilityPlaceCalendar>
+        <FacilityPlaceChangeLog>Lokale endringslogg</FacilityPlaceChangeLog>
+        <FacilityRoomList>Lokale rom liste</FacilityRoomList>
+        <FacilityRoomOverview>Lokale rom oversikt</FacilityRoomOverview>
+        <EmailTemplateList>E-postmal liste</EmailTemplateList>
+        <EmailTemplateOverview>E-postmal oversikt</EmailTemplateOverview>
+        <EmailTemplateChangeLog>E-postmal endringslogg</EmailTemplateChangeLog>
+        <CourseTypeList>Kurstype liste</CourseTypeList>
+        <CourseTypeOverview>Kurstype oversikt</CourseTypeOverview>
+        <CountySettings>Fylkeinnstillinger</CountySettings>
+        <CountySystemSettings>Fylkeinnstillinger (system)</CountySystemSettings>
+        <CountyRateSettings>Fylkes satser</CountyRateSettings>
+        <CountySettingsContractAttachments>Fylke kontraktvedlegg</CountySettingsContractAttachments>
+        <LocalAreaSettings>Lokallaginnstillinger</LocalAreaSettings>
+        <LocalAreaSystemSettings>Lokallaginntillinger (system)</LocalAreaSystemSettings>
+        <LocalAreaRateSettings>Lokallag satser</LocalAreaRateSettings>
+        <LocalAreaSettingsContractAttachments>Lokallag kontraktvedlegg</LocalAreaSettingsContractAttachments>
+        <AbsenceCalendar>Dashboard aktivitetskalender</AbsenceCalendar>
+        <AbsenceCalendarEvent>Dashboard aktivitetskalender hendelse</AbsenceCalendarEvent>
+        <ChangelogModule>Endringslogg</ChangelogModule>
+        <MyAssignmentsList>Dashboard mine oppdrag</MyAssignmentsList>
+        <ConfirmationStatistics>Konfirmasjon statistikk</ConfirmationStatistics>
+        <Unknown>Ukjent</Unknown>
+        
+        <!-- Export Log (3xxx) -->
+        <ExportLogList>Eksport logg</ExportLogList>
+
+        <!-- Funeral (4xxx) -->
+        <FuneralOrderCeremony>Gravferdordre seremoni</FuneralOrderCeremony>
+        <FuneralOrderChangelog>Gravferdordre endringslogg</FuneralOrderChangelog>
+        <FuneralOrderCommunication>Gravferdordre kommunikasjon</FuneralOrderCommunication>
+        <FuneralOrderContactPersons>Gravferdordre kontaktpersoner</FuneralOrderContactPersons>
+        <FuneralOrderFiles>Gravferdordre filer</FuneralOrderFiles>
+        <FuneralOrderList>Gravferdordre liste</FuneralOrderList>
+        <FuneralOrderNotes>Gravferdordre notater</FuneralOrderNotes>
+        <FuneralOrderOverview>Gravferdordre oversikt</FuneralOrderOverview>
+        <FuneralOrderPayment>Gravferdordre betalingsinformasjon</FuneralOrderPayment>
+        <FuneralStatistics>Gravferd statistikk</FuneralStatistics>
+        <FuneralCeremonyForm>Gravferd seremoniform</FuneralCeremonyForm>
+        <FuneralCeremonyFormList>Gravferd seremoniform liste</FuneralCeremonyFormList>
+        <FuneralCeremonyOrderForm>Gravferd oppdragstype</FuneralCeremonyOrderForm>
+        <FuneralCeremonyOrderFormList>Gravferd oppdragstype liste</FuneralCeremonyOrderFormList>
+        <FuneralCeremonyOrderCompletion>Gravferdordre ferdigstilling Leder</FuneralCeremonyOrderCompletion>
+        <FuneralCeremonyOrderCompletionOR>Gravferdordre ferdigstilling OR</FuneralCeremonyOrderCompletionOR>
+        <FuneralCeremonyOrderCompletionEconomics>Gravferdordre ferdigstilling Økonomi</FuneralCeremonyOrderCompletionEconomics>
+        <FuneralOrderPartner>Gravferdordre byrå</FuneralOrderPartner>
+        <FuneralMembershipCheck>Gravferd medlemssjekk</FuneralMembershipCheck>
+        <FuneralCeremonyOrderAssignment>Gravferdstaler</FuneralCeremonyOrderAssignment>
+        <FuneralCeremonyOrderAssignmentResponse>Gravferd svar på forespørsel</FuneralCeremonyOrderAssignmentResponse>
+        <FuneralCeremonyOrderCommunicationSendAssignmentConfirmation>Gravferd send bekreftelse til GFT(Kun skrive)</FuneralCeremonyOrderCommunicationSendAssignmentConfirmation>
+        
+        <!-- Partner (5xxx)-->
+        <PartnerList>Gravferdsbyrå liste</PartnerList>
+        <PartnerOverview>Gravferdsbyrå oversikt</PartnerOverview>
+        <PartnerContactList>Gravferdsbyrå kontaktpersoner</PartnerContactList>
+        
+        
+        <!-- Remuneration (6xxx) -->
+        <MarriageRemunerationList>Vigsel honorarer liste</MarriageRemunerationList>
+        <FuneralRemunerationList>Gravferd honorarer liste</FuneralRemunerationList>
+        <ConfirmationRemunerationListInLocalArea>Konfirmasjon honorarer liste</ConfirmationRemunerationListInLocalArea>
+        <NamePartyRemunerationListInLocalArea>Navnefest honorarer liste</NamePartyRemunerationListInLocalArea>
+
+
+        <!-- Person Overview (7xxx) -->
+        <PersonOverviewSearch>Personoversikt søk</PersonOverviewSearch>
+        <PersonOverview>Personoversikt</PersonOverview>
+
+        <!-- Marriage (8xxx) -->
+        
+          <!-- Search (80xx) -->
+        <MarriageCeremonyOrderSearch>Vigsel oppdragsliste</MarriageCeremonyOrderSearch>
+        
+          <!-- Individual (81xx) -->
+        <MarriageCeremonyOrderOverview>Vigselordre oversikt</MarriageCeremonyOrderOverview>
+        <MarriageCeremonyOrderCeremony>Vigselordre seremoni</MarriageCeremonyOrderCeremony>
+        <MarriageCeremonyOrderNotes>Vigselordre notater</MarriageCeremonyOrderNotes>
+        <MarriageCeremonyOrderFiles>Vigselordre filer</MarriageCeremonyOrderFiles>
+        <MarriageCeremonyOrderCommunication>Vigselordre kommunikasjon</MarriageCeremonyOrderCommunication>
+        <MarriageCeremonyOrderChangelog>Vigselordre endringslogg</MarriageCeremonyOrderChangelog>
+        <MarriageCeremonyOrderPayment>Vigselordre betalingsinformasjon</MarriageCeremonyOrderPayment>
+        <MarriageCeremonyOrderSpeakerRequest>Vigsler</MarriageCeremonyOrderSpeakerRequest>
+        
+          <!-- Frontpage (86xx) -->
+        <MarriageStatistics>Vigsel statistikk</MarriageStatistics>
+        
+          <!-- Non-editors (88xx) -->
+        <MarriageCeremonyOrderSpeakerResponse>Vigsel svar på forespørsel</MarriageCeremonyOrderSpeakerResponse>
+        
+          <!-- Admin-only (89xx) -->
+        <MarriageCeremonyOrderForm>Vigsel oppdragstype</MarriageCeremonyOrderForm>
+        <MarriageCeremonyOrderFormList>Vigsel oppdragstype liste</MarriageCeremonyOrderFormList>
+
+        
+      </ApplicationRightArea>
+      <MembershipStatus>
+        <NotSet>Ikke satt</NotSet>
+        <NotMember>Ikke medlem</NotMember>
+        <MemberPaymentApproved>Betalt medlemskap</MemberPaymentApproved>
+        <MemberPaymentNotApproved>Ikke betalt medlemskap</MemberPaymentNotApproved>
+        <MemberNotFound>Medlemskap ikke funnet</MemberNotFound>
+        <WantToBecomeMember>Ønsker medlemskap</WantToBecomeMember>
+        <ClaimsMembership>Påstår medlemskap</ClaimsMembership>
+        <DuplicateFound>Duplikat medlem</DuplicateFound>
+      </MembershipStatus>
+      <CeremonyOrderStatus>
+        <Incomplete>Ikke ferdigstilt</Incomplete>
+        <Pending>Avventer automatisk kontroll</Pending>
+        <Unresolved>Uavklart pris</Unresolved>
+        <Resolved>Avventer automatisk utregning av pris</Resolved>
+        <Approved>Pris er beregnet og venter på eksport</Approved>
+        <Exported>Eksportert til Tripletex</Exported>
+      </CeremonyOrderStatus>
+      <ConfirmationYearStatus>
+        <Planning>Planlegging</Planning>
+        <Sale>Salg</Sale>
+        <Completed>Gjennomført</Completed>
+        <Archived>Arkivert</Archived>
+      </ConfirmationYearStatus>
+      <EmailTemplateLanguage>
+        <NorwegianBokml>Bokmål</NorwegianBokml>
+        <NorwegianNynorsk>Nynorsk</NorwegianNynorsk>
+      </EmailTemplateLanguage>
+      <MessageTemplateType>
+
+        <!-- General / Generell -->
+        <UserInformationRegistered>Generell: 01 Personvern ved lagring av personer som ikke mottar informasjon</UserInformationRegistered>
+
+        <!-- Cancellation / Avbestilling -->
+        <RefundRegisteredHK>Avbestilling: HK: 00 bekreftelse på avbestilling konfirmasjon</RefundRegisteredHK>
+        <RefundRegisteredHN>Avbestilling: HN: 01 bekreftelse på avbestilling navnefest</RefundRegisteredHN>
+
+        <!-- Employees / Ansatte -->
+        <ContractTerminated>Ansatte: Avsluttet kontrakt</ContractTerminated>
+        <ContractSignedByHEF>Ansatte: Kontrakt venter din signatur</ContractSignedByHEF>
+
+        <!-- Confirmation / Konfirmasjon -->
+        <ConfirmationUserInformationRegistered>HK: 00 (ikke i bruk) Personvern ved lagring av personer som ikke mottar informasjon</ConfirmationUserInformationRegistered>
+        <ReservedCoursePaymentConfirmed>HK: 01 Reservert kurs, kursavgift avklart (ikke medlem)</ReservedCoursePaymentConfirmed>
+        <ReservedCoursePaymentConfirmedMember>HK: 01 Reservert kurs, kursavgift avklart (medlem)</ReservedCoursePaymentConfirmedMember>
+        <ReservedCoursePaymentConfirmedWithWaitinglist>HK: 02 Reservert kurs med venteliste, kursavgift avklart (ikke medlem)</ReservedCoursePaymentConfirmedWithWaitinglist>
+        <ReservedCoursePaymentConfirmedWithWaitinglistMember>HK: 02 Reservert kurs med venteliste, kursavgift avklart (medlem)</ReservedCoursePaymentConfirmedWithWaitinglistMember>
+        <ReservedCourseNotVerifiedMember>HK: 03 Reservert kurs, ikke verifisert medlem</ReservedCourseNotVerifiedMember>
+        <ReservedCourseNotVerifiedMemberWithWaitinglist>HK: 04 Reservert kurs med venteliste, ikke verifisert medlem</ReservedCourseNotVerifiedMemberWithWaitinglist>
+        <ReservedCourseWantSiblingDiscount>HK: 05 Reservert kurs, har meldt inn et søsken og er medlem</ReservedCourseWantSiblingDiscount>
+        <ReservedCourseWantSiblingDiscountWithWaitinglist>HK: 06 Reservert kurs med venteliste, har meldt inn et søsken og er medlem</ReservedCourseWantSiblingDiscountWithWaitinglist>
+        <ReservedCourseWantMembership>HK: 07 Reservert kurs, ønsker medlemskap</ReservedCourseWantMembership>
+        <ReservedCourseWantMembershipWithWaitinglist>HK: 08 Reservert kurs med venteliste, ønsker medlemskap</ReservedCourseWantMembershipWithWaitinglist>
+        <PaymentReceivedCourse>HK: 09 Betaling mottatt bekreftelse (ikke i bruk ennå)</PaymentReceivedCourse>
+        <PaymentReceivedCourseWithWaitinglist>HK: 10 Betaling mottatt med venteliste bekreftelse (ikke i bruk ennå)</PaymentReceivedCourseWithWaitinglist>
+        <ConfirmationCeremonyGuestSeatDistribution>HK: 11 Tildelte gjesteplasser på seremoni</ConfirmationCeremonyGuestSeatDistribution>
+        <ConfirmationCompleteReservationReminderMinutesAfterLastChange>HK: 12 Fullfør reservasjon - purring x minutter etter siste endring. (standard 60 minutter)</ConfirmationCompleteReservationReminderMinutesAfterLastChange>
+        <ConfirmationCompleteReservationFirstReminderHoursBeforeExpiration>HK: 13 Fullfør reservasjon - 1. purring y timer før frist går ut. (standard 24 timer)</ConfirmationCompleteReservationFirstReminderHoursBeforeExpiration>
+        <ConfirmationCompleteReservationSecondReminderHoursBeforeExpiration>HK: 14 Fullfør reservasjon - 2. purring z timer før frist går ut. (standard 3 timer)</ConfirmationCompleteReservationSecondReminderHoursBeforeExpiration>
+        <ChangeCourseWithNewInvoice>HK: 15 Endring kurs med kreditering (Faktura var sendt og ny pris eller annet lokallag)</ChangeCourseWithNewInvoice>
+        <ChangeCourseWithSameInvoice>HK: 16 Endring kurs uten kreditering (Ikke fakturert eller samme pris og lokallag)</ChangeCourseWithSameInvoice>
+        <OfferWaitingListCourse>HK: 17 Tilbud om ventelistkurs</OfferWaitingListCourse>
+        <OfferWaitingListCourseReminder>HK: 18 Påminnelse om å svare på ventelistekurs tilbud</OfferWaitingListCourseReminder>
+        <ConfirmationOtherParentRegisteredLater>HK: 19 (ikke i bruk)  Informasjon til annen foresatt, lagt til i ettertid</ConfirmationOtherParentRegisteredLater>
+
+        <!-- NameParty / Navnefest -->
+        <NamePartyUserInformationRegistered>HN: 00 Personvern ved lagring av personer som ikke mottar informasjon</NamePartyUserInformationRegistered>
+        <HNReservedCeremonyPaymentConfirmed>HN: 01 Reservert navnefest seremoni, kursavgift avklart (både medlem og ikke medlem)</HNReservedCeremonyPaymentConfirmed>
+        <HNReservedCeremonyNotVerifiedMember>HN: 02 Reservert navnefest seremoni, Ikke verifisert medlem</HNReservedCeremonyNotVerifiedMember>
+        <HNReservedCeremonyWantSiblingDiscount>HN: 03 Reservert navnefest seremoni, har meldt inn et søsken og er/påstår medlem</HNReservedCeremonyWantSiblingDiscount>
+        <HNReservedCeremonyWantMembership>HN: 04 Reservert navnefest seremoni, ønsker medlemskap</HNReservedCeremonyWantMembership>
+        <HNCeremonyGuestSeatDistribution>HN: 05 Tildelte gjesteplasser på seremoni</HNCeremonyGuestSeatDistribution>
+
+        <!-- Funeral / Gravferd -->
+        <FuneralConfirmSpeaker>HG: 01 Epost til byrå ved bekreftet taler</FuneralConfirmSpeaker>
+
+        <!-- Marriage / Vigsel -->
+        <marriageConfirmSpeaker>HV: 01 E-post til brudepar ved bekreftet taler</marriageConfirmSpeaker>
+      </MessageTemplateType>
+      <Gender>
+        <Unknown>Ikke satt</Unknown>
+        <Female>Jente</Female>
+        <Male>Gutt</Male>
+        <Other>Annen kjønnsidentitet</Other>
+      </Gender>
+      <AdultGender>
+        <Unknown>Ikke satt</Unknown>
+        <Female>Dame</Female>
+        <Male>Mann</Male>
+        <Other>Annen kjønnsidentitet</Other>
+      </AdultGender>
+      <PaymentStatus>
+        <NotPaid>Ikke betalt</NotPaid>
+        <PaidFullAmount>Betalt hele beløpet</PaidFullAmount>
+        <PaidTooMuch>Betalt for mye</PaidTooMuch>
+        <PaidInPart>Betalt delvis</PaidInPart>
+        <SoftReminder>Betalingspåminnelse</SoftReminder>
+        <Reminder>Purring</Reminder>
+      </PaymentStatus>
+      <RoleLevel>
+        <Unknown>Ikke bruk</Unknown>
+        <SB_User>Bruker</SB_User>
+        <SB_ElectedRepresentatives>Tillitsvalgt</SB_ElectedRepresentatives>
+        <SB_ExtendedUser>Bruker med ekstra tilganger</SB_ExtendedUser>
+        <SB_ExtendedUserConfirmation>Bruker med ekstra tilganger Konfirmasjon</SB_ExtendedUserConfirmation>
+        <SB_ExtendedUserNameParty>Bruker med ekstra tilganger Navnefest</SB_ExtendedUserNameParty>
+        <SB_Operator>OS</SB_Operator>
+        <SB_Admin>Admin</SB_Admin>
+      </RoleLevel>
+      <UnresolvedPaymentStatus>
+        <SiblingDiscount>Søskenrabatt</SiblingDiscount>
+        <WantMembership>Ønsker medlemskap</WantMembership>
+        <UnverifiedMembership>Ikke verifisert medlemskap</UnverifiedMembership>
+      </UnresolvedPaymentStatus>
+      <WorkArea>
+        <ConfirmationCeremonyLeader>Konfirmasjonsansvarlig</ConfirmationCeremonyLeader>
+        <ConfirmationCourseLeader>Kursleder</ConfirmationCourseLeader>
+        <MarriageCeremonyLeader>Vigsler</MarriageCeremonyLeader>
+        <FuneralSpeaker>Gravferdstaler</FuneralSpeaker>
+        <NamepartyCeremonyLeader>Seremonileder navnefest</NamepartyCeremonyLeader>
+        <OtherRole>Annen rolle</OtherRole>
+        <None>Ukjent</None>
+      </WorkArea>
+      <CommunicationStatus>
+        <Sent>Sendt</Sent>
+        <Pending>I kø</Pending>
+        <Error>Feilet</Error>
+      </CommunicationStatus>
+      <MessageChannel>
+        <Email>E-post</Email>
+        <SMS>SMS</SMS>
+      </MessageChannel>
+      <SiblingStatus>
+        <Unconfirmed>Ubekreftet</Unconfirmed>
+        <Approved>Godkjent</Approved>
+        <Denied>Ikke godkjent</Denied>
+      </SiblingStatus>
+      <CourseStatus>
+        <All>Alle</All>
+        <Incomplete>Ikke gjennomført</Incomplete>
+        <NotApprovedByCourseLeader>Ikke godkjent av kursleder</NotApprovedByCourseLeader>
+        <NotApprovedByHEF>Ikke godkjent av HEF</NotApprovedByHEF>
+        <Done>Ferdig</Done>
+      </CourseStatus>
+      <CeremonyOrderReservationStatus>
+        <NotSet>Manuel registrering</NotSet>
+        <Contact>Hovedforesatt/kontaktperson</Contact>
+        <Membership>Medlemskap og annen foresatt</Membership>
+        <Confirmand>Om konfirmanten</Confirmand>
+        <School>Skole</School>
+        <Sibling>Søsken</Sibling>
+        <GuestSeats>Gjesteplass</GuestSeats>
+        <Consents>Samtykker</Consents>
+        <Completed>Kvittering</Completed>
+      </CeremonyOrderReservationStatus>
+      <OrderRole>
+        <NotSet>Ikke satt</NotSet>
+        <ContactPerson>Hovedkontakt</ContactPerson>
+        <SecondaryContactPerson>Foresatt 2</SecondaryContactPerson>
+        <Confirmand>Konfirmant</Confirmand>
+        <Child>Navnebarn</Child>
+        <Deceased>Avdød</Deceased>
+      </OrderRole>
+      <InvoiceReceiverType>
+        <NotSet>Ikke satt</NotSet>
+        <ContactPerson>Kontaktperson</ContactPerson>
+        <Partner>Byrå</Partner>
+      </InvoiceReceiverType>
+      <InvoiceStatus>
+        <ToBeInvoiced>Til fakturering</ToBeInvoiced>
+        <Invoiced>Fakturert</Invoiced>
+        <WillNotBeInvoiced>Vil ikke bli fakturert</WillNotBeInvoiced>
+      </InvoiceStatus>
+      <PreviouslyHeldStatus>
+        <NotHeld>Aktive oppdrag</NotHeld>
+        <Held>Gjennomførte oppdrag</Held>
+        <All>Alle oppdrag</All>
+      </PreviouslyHeldStatus>
+      <CeremonyOrderSearchFilter>
+        <MismatchInPrice>Tripletex pris avviker</MismatchInPrice>
+        <NotDefaultPriceCalculation>Ikke standard utregnet pris</NotDefaultPriceCalculation>
+        <Duplicates>Duplikate etternavn og fødselsdato</Duplicates>
+        <WithoutSchool>Uten skole</WithoutSchool>
+        <CompletedReservations>Fullført påmelding</CompletedReservations>
+        <WithoutCourse>Uten kurs</WithoutCourse>
+        <ApprovedSiblingsDiscount>Godkjent søskenrabatt</ApprovedSiblingsDiscount>
+        <ApprovedMembership>Godkjent medlemskap</ApprovedMembership>
+        <PreviouslyHeld>Vis avholdte</PreviouslyHeld>
+        <PreviouslyHeldStatus>Avholdt-status</PreviouslyHeldStatus>
+        <ParentsWantToContribute>Foresatt ønsker å bidra</ParentsWantToContribute>
+        <NameInNewspaper>Ønsker ikke navn i avis</NameInNewspaper>
+        <HasPaymentNote>Har Betalingsnotat</HasPaymentNote>
+        <IsFollowedUp>Er fulgt opp</IsFollowedUp>
+        <IsNotFollowedUp>Er ikke fulgt opp</IsNotFollowedUp>
+        <FollowUpLocal>Må følges opp lokalt</FollowUpLocal>
+        <FollowUpOperator>Må følges opp av OR</FollowUpOperator>
+        <FollowUpEconomics>Betalingsoppfølging</FollowUpEconomics>
+        <FollowUpAccounting>Må følges opp av regnskap</FollowUpAccounting>
+        <MysoftExportError>Mysoft eksport feilet</MysoftExportError>
+        <HasComment>Har kommentar</HasComment>
+        <Completed>Skjul fullførte</Completed>
+        <PaymentStatus>Betalingsstatus</PaymentStatus>
+        <OrderStatus>Ordrestatus</OrderStatus>
+        <OrderCompletionStatus>Bestillingsstatus</OrderCompletionStatus>
+        <OrderInvoiceStatus>Kvitteringsstatus</OrderInvoiceStatus>
+        <UnresolvedPaymentStatus>UnresolvedPaymentStatus</UnresolvedPaymentStatus>
+        <CancelledFromWeb>Avbestilling fra human.no</CancelledFromWeb>
+        <NotConsented>Mangler svar på bildesamtykke</NotConsented>
+        <Inactive>Vis kun inaktive</Inactive>
+        <WaitingList>Står på venteliste</WaitingList>
+        <WaitingListNotSet>Venteliste: Ikke forespørt</WaitingListNotSet>
+        <WaitingListOffered>Venteliste: Forespørt</WaitingListOffered>
+        <WaitingListDeclined>Venteliste: Svar nei</WaitingListDeclined>
+        <WaitingListAssigned>Venteliste: Svar ja</WaitingListAssigned>
+        <WaitingListExpired>Venteliste: Forespørsel utgått</WaitingListExpired>
+        <SelectedCeremonyOrderStatus>SelectedCeremonyOrderStatus</SelectedCeremonyOrderStatus>
+        <SelectedCeremonyOrderCompletionStatus>SelectedCeremonyOrderStatus</SelectedCeremonyOrderCompletionStatus>
+        <SelectedCeremonyOrderPreviouslyHeldStatus>SelectedCeremonyOrderPreviouslyHeldStatus</SelectedCeremonyOrderPreviouslyHeldStatus>
+        <SelectedCeremonyOrderInvoiceStatus>SelectedCeremonyOrderInvoiceStatus</SelectedCeremonyOrderInvoiceStatus>
+        <SelectedCeremonyOrderPaymentStatus>SelectedCeremonyOrderPaymentStatus</SelectedCeremonyOrderPaymentStatus>
+        <SelectedCeremonyOrderUnresolvedPaymentStatus>SelectedCeremonyOrderUnresolvedPaymentStatus</SelectedCeremonyOrderUnresolvedPaymentStatus>
+        <SelectedLocalArea>Valgt lokallag</SelectedLocalArea>
+        <SelectedCounty>Valgt fylke</SelectedCounty>
+        <LocalAreas>Alle lokallag</LocalAreas>
+        <SeasonId>Sesong ID</SeasonId>
+        <ApprovedSiblingDiscount>Godkjent søskenrabatt</ApprovedSiblingDiscount>
+        <AnonymizedArchived>Vis kun arkiverte</AnonymizedArchived>
+        <IncludeExported>Vis eksporterte</IncludeExported>
+        <IncludeSystemChanges>Vis endringer fra SYSTEM</IncludeSystemChanges>
+        <IncludeServiceBusChanges>Vis endringer fra SERVICE BUS</IncludeServiceBusChanges>
+        <ExclusivelyCeremonyDatePassed>Vis kun passerte seremonidatoer</ExclusivelyCeremonyDatePassed>
+      </CeremonyOrderSearchFilter>
+    </enums>
+  </language>
+</languages>

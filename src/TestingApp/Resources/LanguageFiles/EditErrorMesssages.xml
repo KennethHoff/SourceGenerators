@@ -1,0 +1,470 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<languages>
+	<language name="Norsk" id="no">
+		<editErrorMesssages>
+			<defaultErrors>
+				<FetchAsync>
+					<friendly>Feil: kunne ikke laste innhold.</friendly>
+					<log>Unable to load</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: kunne ikke lagre innhold.</friendly>
+					<log>Unable to save</log>
+				</SaveAsync>
+				<Save>
+					<friendly>Feil: kunne ikke lagre innhold.</friendly>
+					<log>Unable to save</log>
+				</Save>
+				<CreateListObjectAsync>
+					<friendly>Feil: kunne ikke legge til innhold.</friendly>
+					<log>Unable to create</log>
+				</CreateListObjectAsync>
+			</defaultErrors>
+			<general>
+				<noIdValue>
+					<friendly>Feil: Id mangler verdi.</friendly>
+					<log>Id had no value</log>
+				</noIdValue>
+				<GetExcelDocument>
+					<friendly>Feil: Klarte ikke å generere excel ark.</friendly>
+					<log>Unable to Generate Excel document</log>
+				</GetExcelDocument>
+			</general>
+			<CalendarDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente avtaler.</friendly>
+					<log>Unable to load events</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre avtale.</friendly>
+					<log>Unable to save event</log>
+				</SaveAsync>
+				<CreateListObjectAsync>
+					<friendly>Feil: Kunne ikke opprette ny avtale.</friendly>
+					<log>Unable to create event</log>
+				</CreateListObjectAsync>
+			</CalendarDataProvider>
+			<ConfirmationConfirmandDataProvider>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre konfirmant.</friendly>
+					<log>Unable to save order</log>
+				</SaveAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente konfirmant.</friendly>
+					<log>Unable to load order</log>
+				</FetchAsync>
+			</ConfirmationConfirmandDataProvider>
+			<ConfirmationConfirmandCeremonyDataProvider>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre seremoni på konfirmant.</friendly>
+					<log>Unable to save ceremony on order</log>
+				</SaveAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente seremoni på konfirmant.</friendly>
+					<log>Unable to load ceremony on order</log>
+				</FetchAsync>
+			</ConfirmationConfirmandCeremonyDataProvider>
+			<ConfirmationConfirmandCourseDataProvider>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre kurs på konfirmant.</friendly>
+					<log>Unable to save course on order</log>
+				</SaveAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente kurs på konfirmant.</friendly>
+					<log>Unable to load course on order</log>
+				</FetchAsync>
+			</ConfirmationConfirmandCourseDataProvider>
+			<ConfirmationGuardiansDataProvider>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre foresatte.</friendly>
+					<log>Unable to save Guardians</log>
+				</SaveAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente foresatte.</friendly>
+					<log>Unable to load Guardians</log>
+				</FetchAsync>
+			</ConfirmationGuardiansDataProvider>
+			<ConfirmationStatisticsDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente statistikk.</friendly>
+					<log>Unable to load statistics</log>
+				</FetchAsync>
+			</ConfirmationStatisticsDataProvider>
+			<NoteListDataProvider>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre notat.</friendly>
+					<log>Unable to save note</log>
+				</SaveAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente notat.</friendly>
+					<log>Unable to load note</log>
+				</FetchAsync>
+			</NoteListDataProvider>
+			<ConfirmationCeremonyListDataProvider>
+				<CreateListObjectAsync>
+					<friendly>Feil: Kunne ikke opprette en seremoni.</friendly>
+					<log>Unable to create ceremony</log>
+				</CreateListObjectAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente listen over seremonier.</friendly>
+					<log>Unable to get list of ceremonies</log>
+				</FetchAsync>
+			</ConfirmationCeremonyListDataProvider>
+			<ConfirmationCeremonyOverviewDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente seremoni.</friendly>
+					<log>Unable to get list of ceremonies</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre seremoni.</friendly>
+					<log>Unable to save ceremony</log>
+				</SaveAsync>
+			</ConfirmationCeremonyOverviewDataProvider>
+			<ConfirmationCeremonyListEditDataProvider>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre seremoni.</friendly>
+					<log>Unable to save ceremony</log>
+				</SaveAsync>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente seremoni.</friendly>
+					<log>Unable to load ceremony</log>
+				</FetchAsync>
+			</ConfirmationCeremonyListEditDataProvider>
+			<ConfirmationCeremonySeatDistributionDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente seremoni.</friendly>
+					<log>Unable to load ceremony</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre seremoni.</friendly>
+					<log>Unable to save ceremony</log>
+				</SaveAsync>
+			</ConfirmationCeremonySeatDistributionDataProvider>
+			<ConfirmationConfirmandListController>
+				<moveConfirmands>
+					<success>Konfirmantene er flyttet.</success>
+					<friendly>Feil: Kunne ikke flytte en eller flere konfirmanter.</friendly>
+					<log>Unable to move confirmands</log>
+				</moveConfirmands>
+			</ConfirmationConfirmandListController>
+			<ConfirmationConfirmandListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente ned listen over konfirmanter.</friendly>
+					<log>Unable to load ceremony order persons</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Ikke implementer</friendly>
+					<log>Not implemented</log>
+				</SaveAsync>
+			</ConfirmationConfirmandListDataProvider>
+			<confirmationCourseListDataController>
+				<deleteCourses>
+					<friendly>Feil: Kunne ikke slette et eller flere av kursene</friendly>
+					<log>Unable to delete courses</log>
+					<success>Kursene er nå slettet</success>
+				</deleteCourses>
+				<copyCourses>
+					<friendly>Feil: Kunne ikke kopiere et eller flere av kursene</friendly>
+					<log>Unable to copy course</log>
+					<success>Kursene er kopiert</success>
+				</copyCourses>
+				<hideCourses>
+					<friendly>Feil: Kunne ikke skjule eller vise et eller flere av kursene</friendly>
+					<log>Unable to toggle visibility on course</log>
+					<success>Endringen er lagret</success>
+				</hideCourses>
+			</confirmationCourseListDataController>
+      <NamePartyCeremonyListDataController>
+        <delete>
+          <friendly>Feil: Kunne ikke slette en eller flere av seremoniene</friendly>
+          <log>Unable to delete ceremony</log>
+          <success>Seremoniene er nå slettet</success>
+        </delete>
+        <copy>
+          <friendly>Feil: Kunne ikke kopiere en eller flere av seremoniene</friendly>
+          <log>Unable to copy ceremony</log>
+          <success>Seremoniene er kopiert</success>
+        </copy>
+        <hide>
+          <friendly>Feil: Kunne ikke skjule eller vise en eller flere av seremoniene</friendly>
+          <log>Unable to toggle visibility on ceremony</log>
+          <success>Endringen er lagret</success>
+        </hide>
+      </NamePartyCeremonyListDataController>
+			<confirmationCourseListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente ned listen over kurs.</friendly>
+					<log>Unable to load courses</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Ikke implementer</friendly>
+					<log>Not implemented</log>
+				</SaveAsync>
+			</confirmationCourseListDataProvider>
+			<confirmationCourseListEditDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente kurset.</friendly>
+					<log>Unable to load course</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre kurset.</friendly>
+					<log>Unable to save course</log>
+				</SaveAsync>
+			</confirmationCourseListEditDataProvider>
+			<confirmationCourseDaysDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente kursdager.</friendly>
+					<log>Unable to load course days</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre kursdager.</friendly>
+					<log>Unable to save course days</log>
+				</SaveAsync>
+			</confirmationCourseDaysDataProvider>
+			<ConfirmationCourseCommunicationDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente kommunikasjonshistorikk.</friendly>
+					<log>Unable to load communication</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre kommunikasjonshistorikk.</friendly>
+					<log>Unable to save communication</log>
+				</SaveAsync>
+			</ConfirmationCourseCommunicationDataProvider>
+			<ConfirmationCourseDocumentsDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente dokumentene.</friendly>
+					<log>Unable to load document</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre dokumentene.</friendly>
+					<log>Unable to save document</log>
+				</SaveAsync>
+			</ConfirmationCourseDocumentsDataProvider>
+			<ConfirmationCourseDocumentsDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente dokumentene.</friendly>
+					<log>Unable to load document</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre dokumentene.</friendly>
+					<log>Unable to save document</log>
+				</SaveAsync>
+			</ConfirmationCourseDocumentsDataProvider>
+			<ConfirmationCourseNotesDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente notatene.</friendly>
+					<log>Unable to load notes</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre notatene.</friendly>
+					<log>Unable to save notes</log>
+				</SaveAsync>
+			</ConfirmationCourseNotesDataProvider>
+			<ConfirmationCourseOverviewDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente oversikt.</friendly>
+					<log>Unable to load overview</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre oversikt.</friendly>
+					<log>Unable to save overview</log>
+				</SaveAsync>
+			</ConfirmationCourseOverviewDataProvider>
+			<CountyDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn fylke.</friendly>
+					<log>Unable to load county.</log>
+				</FetchAsync>
+				<SaveAync>
+					<friendly>Feil: Kunne ikke lagre fylke.</friendly>
+					<log>Unable to save county</log>
+				</SaveAync>
+			</CountyDataProvider>
+			<CountySettingsDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn fylkeinnstillinger.</friendly>
+					<log>Unable to load county settings.</log>
+				</FetchAsync>
+				<SaveAync>
+					<friendly>Feil: Kunne ikke lagre fylkeinnstillinger.</friendly>
+					<log>Unable to save county settings</log>
+				</SaveAync>
+			</CountySettingsDataProvider>
+			<EmailTemplateOverviewDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn e-post mal.</friendly>
+					<log>Unable to load email template</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre e-post mal.</friendly>
+					<log>Unable to save email template</log>
+				</SaveAsync>
+			</EmailTemplateOverviewDataProvider>
+			<EmployeeListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente liste med ansatte</friendly>
+					<log>Unable to get list of employee</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Ikke implementert</friendly>
+					<log>Not implemented</log>
+				</SaveAsync>
+			</EmployeeListDataProvider>
+			<EmployeeOverviewDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente ansatt</friendly>
+					<log>Unable to get employee</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre ansatt</friendly>
+					<log>Unable to save employee</log>
+				</SaveAsync>
+			</EmployeeOverviewDataProvider>
+			<EmployeeWorkAreaListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente arbeidsområdene.</friendly>
+					<log>Unable to load person work areas</log>
+				</FetchAsync>
+				<CreateListObjectAsync>
+					<friendly>Feil: Kunne ikke opprette arbeidsområde</friendly>
+					<log>Unable to create person work area</log>
+				</CreateListObjectAsync>
+			</EmployeeWorkAreaListDataProvider>
+			<EmployeeWorkAreaListEditDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente arbeidsområde.</friendly>
+					<log>Unable to load person work area</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre arbeidsområde.</friendly>
+					<log>Unable to save person work area</log>
+				</SaveAsync>
+			</EmployeeWorkAreaListEditDataProvider>
+			<FacilityPlaceOverviewProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente lokalet.</friendly>
+					<log>Unable to load FacilityPlace</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre lokalet.</friendly>
+					<log>Unable to save FacilityPlace</log>
+				</SaveAsync>
+			</FacilityPlaceOverviewProvider>
+			<FacilityPlaceListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente ned listen over lokaler.</friendly>
+					<log>Unable to load FacilityPlaces</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Ikke implementert</friendly>
+					<log>Not implemented</log>
+				</SaveAsync>
+			</FacilityPlaceListDataProvider>
+			<FacilityRoomListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente ned listen over rom.</friendly>
+					<log>Unable to load list of FacilityRooms</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Ikke implementert</friendly>
+					<log>Not implementert</log>
+				</SaveAsync>
+			</FacilityRoomListDataProvider>
+			<FacilityRoomListEditDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente ned listen over rom.</friendly>
+					<log>Unable to load FacilityRoom</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke lagre rom</friendly>
+					<log>Unable to save FacilityRoom</log>
+				</SaveAsync>
+			</FacilityRoomListEditDataProvider>
+			<LocalAreaDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn lokallag.</friendly>
+					<log>Unable to load local area.</log>
+				</FetchAsync>
+				<SaveAync>
+					<friendly>Feil: Kunne ikke lagre lokallag.</friendly>
+					<log>Unable to save local area</log>
+				</SaveAync>
+			</LocalAreaDataProvider>
+			<LocalAreaListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn lokallagene.</friendly>
+					<log>Unable to load list of local areas</log>
+				</FetchAsync>
+				<CreateListObjectAsync>
+					<friendly>Feil: Kunne ikke opprette lokallag.</friendly>
+					<log>Unable to create a local area</log>
+				</CreateListObjectAsync>
+			</LocalAreaListDataProvider>
+			<LocalAreaSettingsListDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn lokallaginnstillinger.</friendly>
+					<log>Unable to load local area settings.</log>
+				</FetchAsync>
+				<SaveAync>
+					<friendly>Feil: Kunne ikke lagre lokallaginnstillinger.</friendly>
+					<log>Unable to save local area settings</log>
+				</SaveAync>
+			</LocalAreaSettingsListDataProvider>
+			<noteErrorMesssages>
+				<note>
+					<save>
+						<friendly>Feil: Kunne ikke lagre notatet.</friendly>
+					</save>
+					<trash>
+						<friendly>Feil: Kunne ikke slette notatet.</friendly>
+					</trash>
+				</note>
+			</noteErrorMesssages>
+			<SchoolDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn skole.</friendly>
+					<log>Unable to load school.</log>
+				</FetchAsync>
+				<SaveAync>
+					<friendly>Feil: Kunne ikke lagre skole.</friendly>
+					<log>Unable to save school</log>
+				</SaveAync>
+			</SchoolDataProvider>
+			<SchoolsDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke laste inn skolene.</friendly>
+					<log>Unable to load list of schools</log>
+				</FetchAsync>
+				<CreateListObjectAsync>
+					<friendly>Feil: Kunne ikke opprette skole.</friendly>
+					<log>Unable to create school</log>
+				</CreateListObjectAsync>
+			</SchoolsDataProvider>
+			<SendMessageDataProvider>
+				<FetchAsync>
+					<friendly>Feil: Kunne ikke hente visning</friendly>
+					<log>Unable to FetchAsync view</log>
+				</FetchAsync>
+				<SaveAsync>
+					<friendly>Feil: Kunne ikke sende melding.</friendly>
+					<log>Unable to send message</log>
+				</SaveAsync>
+			</SendMessageDataProvider>
+
+		</editErrorMesssages>
+
+		<fileErrorMesssages>
+			<file>
+				<upload>
+					<friendly>Feil: Kunne ikke laste opp filen.</friendly>
+				</upload>
+				<trash>
+					<friendly>Feil: Kunne ikke slette filen.</friendly>
+					<notfound>Feil: Kunne ikke finne filen.</notfound>
+				</trash>
+			</file>
+		</fileErrorMesssages>
+
+	</language>
+</languages>
