@@ -4,9 +4,4 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Remove="Microsoft.CodeAnalysis.Analyzers" />
-    <PackageReference Remove="Microsoft.CodeAnalysis.CSharp" />
-  </ItemGroup>
-
 </Project>
