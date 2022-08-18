@@ -25,18 +25,6 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 		// Authors: { Authors}
 		""";
 
-	private static readonly IReadOnlyCollection<string> AllRelevantAttributes = new[]
-	{
-		"name",
-	};
-
-	private static readonly IReadOnlyCollection<string> RelevantAttributesForTopLevel =
-		AllRelevantAttributes.Except(new[]
-			{
-				"name",
-			})
-			.ToImmutableList();
-
 	#region Interface implementations
 
 	public void Execute(GeneratorExecutionContext context)
@@ -56,8 +44,10 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 				return;
 			}
 
+			var elements = new List<ParsedElement>();
+
 			var fileName = new Uri(file.Path).Segments.Last().Replace(FileExtension, string.Empty);
-			var parsed = ParseXmlContent(content, fileName);
+			var parsed = ParseXmlContent(content, fileName, elements);
 			var sanitizedPath = SanitizePath(file.Path);
 			context.AddSource($"{sanitizedPath}.g.cs", parsed);
 		});
@@ -80,14 +70,19 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 	private static string Indent(int depth)
 		=> new('\t', depth);
 
-	private static string ParseSection(XElement element, string fileName, int depth)
+	private static string ParseSection(XElement element, string fileName, int depth, List<ParsedElement> parsedElements)
 	{
 		var name = depth == TopLevelDepth ? fileName : element.Name.LocalName;
 
-		if (element.HasAttributes)
+		if (parsedElements.Any(x => x.Name == name && x.Depth == depth))
 		{
-			UpdateName(ref name, element, depth);
+			return string.Empty;
 		}
+
+		// if (element.HasAttributes)
+		// {
+		// 	UpdateName(ref name, element, depth);
+		// }
 
 		if (!element.HasElements)
 		{
@@ -96,34 +91,19 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 
 		var nextDepth = depth + 1;
 
-		var section = element.Elements().Select(element1 => ParseSection(element1, fileName, nextDepth)).ToList();
+		var section = element.Elements().Select(element1 => ParseSection(element1, fileName, nextDepth, parsedElements)).ToList();
+
+		parsedElements.Add(new ParsedElement(name, depth));
 
 		return $$"""
 				{{ Indent(depth)}}public class {{ name}}
 				{{ Indent(depth)}}{
-				{{ string.Join("\n", section)}}
+				{{ string.Join("\n", section.Where(x => x != string.Empty))}}
 				{{ Indent(depth)}}}
 				""" ;
 	}
 
-	private static void UpdateName(ref string name, XElement element, int depth)
-	{
-		var relevantAttributes = depth == TopLevelDepth
-			? RelevantAttributesForTopLevel
-			: AllRelevantAttributes;
-
-		if (!relevantAttributes.Any())
-		{
-			return;
-		}
-
-		name += "___" + element.Attributes()
-			.Where(x => relevantAttributes.Contains(x.Name.LocalName))
-			.Select(x => $"{x.Name.LocalName}_{x.Value}")
-			.Aggregate((a, b) => $"{a}__{b}");
-	}
-
-	private static string ParseXmlContent(SourceText content, string fileName)
+	private static string ParseXmlContent(SourceText content, string fileName, List<ParsedElement> parsedElements)
 	{
 		var parsed = XDocument.Parse(content.ToString());
 		var languagesRoot = parsed.Root;
@@ -133,7 +113,7 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 			return string.Empty;
 		}
 
-		var recursivelyParsed = ParseSection(firstLanguage, fileName, TopLevelDepth);
+		var recursivelyParsed = ParseSection(firstLanguage, fileName, TopLevelDepth, parsedElements);
 		return CreateFile(recursivelyParsed, "LanguageFiles");
 	}
 
@@ -143,3 +123,5 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 		return filePath.Substring(indexOfLastBackslash + 1);
 	}
 }
+
+internal readonly record struct ParsedElement(string Name, int Depth);
