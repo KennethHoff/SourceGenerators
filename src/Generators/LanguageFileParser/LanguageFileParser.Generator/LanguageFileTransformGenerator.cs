@@ -14,9 +14,11 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 	private const string Authors = "Kenneth Hoff";
 	private const string PackageName = "Oxx.Backend.Utils.LanguageFileParser";
 
-	private const string OutputPartialClassName = "Localizations"; 
+	private const string OutputPartialClassName = "Localizations";
 	private const string FileExtension = ".xml";
-	private const int TopLevelDepth = 1;
+	private const int TopLevelDepth = 0;
+
+	private const string Delimiter = "/";
 
 
 	private static readonly Regex LanguageFileRegex = new(@"^.*Resources(\\|/)LanguageFiles(\\|/).*.xml$");
@@ -77,7 +79,7 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 	private static string Indent(int depth)
 		=> new('\t', depth);
 
-	private static string ParseSection(XElement element, string fileName, int depth, List<ParsedElement> parsedElements)
+	private static string ParseSection(XElement element, string fileName, int depth, List<ParsedElement> parsedElements, ParsedElement? parentElement)
 	{
 		var name = depth == TopLevelDepth ? fileName : element.Name.LocalName;
 
@@ -85,24 +87,31 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 		{
 			return string.Empty;
 		}
-
 		if (!element.HasElements)
 		{
-			return $"{Indent(depth)}public const string {name} = nameof({name});";
+			var value = (parentElement?.FullPath + Delimiter + name).Replace($"{fileName}/", string.Empty);
+			return $"{Indent(depth)}public const string {name} = \"{value}\";";
 		}
 
 		var nextDepth = depth + 1;
 
-		var section = element.Elements().Select(element1 => ParseSection(element1, fileName, nextDepth, parsedElements)).ToList();
+		var newParsedElement = new ParsedElement(name, depth, parentElement);
+		parsedElements.Add(newParsedElement);
 
-		parsedElements.Add(new ParsedElement(name, depth));
+		var section = element.Elements().Select(element1 => ParseSection(element1, fileName, nextDepth, parsedElements, newParsedElement)).ToList();
 
-		return $$"""
+		var innerContent = string.Join("\n", section.Where(x => x != string.Empty));
+		if (parentElement is not null)
+		{
+			return 
+				$$"""
 				{{ Indent(depth)}}public class {{ name}}
 				{{ Indent(depth)}}{
-				{{ string.Join("\n", section.Where(x => x != string.Empty))}}
+				{{ innerContent}}
 				{{ Indent(depth)}}}
-				""" ;
+				""";
+		}
+		return innerContent;
 	}
 
 	private static string ParseXmlContent(SourceText content, string fileName, List<ParsedElement> parsedElements)
@@ -115,7 +124,7 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 			return string.Empty;
 		}
 
-		var recursivelyParsed = ParseSection(firstLanguage, fileName, TopLevelDepth, parsedElements);
+		var recursivelyParsed = ParseSection(firstLanguage, fileName, TopLevelDepth, parsedElements, null);
 		return CreateFile(recursivelyParsed, "LanguageFiles");
 	}
 
@@ -124,6 +133,9 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 		var indexOfLastBackslash = filePath.LastIndexOf('\\');
 		return filePath.Substring(indexOfLastBackslash + 1);
 	}
-}
 
-internal readonly record struct ParsedElement(string Name, int Depth);
+	private record class ParsedElement(string Name, int Depth, ParsedElement? ParentElement)
+	{
+		public string FullPath => ParentElement is null ? Name : ParentElement.FullPath + Delimiter + Name;
+	}
+}
