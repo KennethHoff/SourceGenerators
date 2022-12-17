@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <OutputType>Exe</OutputType>
-    <SchemaGeneratorMethodFullNamespace>TestingApp.SchemaGeneratorConfiguration</SchemaGeneratorMethodFullNamespace>
+    <SchemaGeneratorConfigurationMethodFullNamespace>TestingApp.SchemaGeneratorConfiguration</SchemaGeneratorConfigurationMethodFullNamespace>
+    <SchemaGeneratorConfigurationMethodAssemblyName>$(AssemblyName)</SchemaGeneratorConfigurationMethodAssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,9 +13,5 @@
 
   <ItemGroup>
     <PackageReference Include="Oxx.Backend.Generators.PocoSchema.Zod" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
 </Project>

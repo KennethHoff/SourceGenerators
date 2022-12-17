@@ -3,9 +3,9 @@
   <!--defining properties interesting for my task-->
   <PropertyGroup>
     <!--The folder where the custom task will be present. It points to inside the nuget package. -->
-    <_TaskFolder>$(MSBuildThisFileDirectory)..\tasks\netstandard2.0</_TaskFolder>
+    <_TaskFolder>$(MSBuildThisFileDirectory)..\lib\netstandard2.0</_TaskFolder>
     <!--Reference to the assembly which contains the MSBuild Task-->
-    <CustomTasksAssembly>$(_TaskFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
+    <CustomTasksAssembly>$(_TaskFolder)\Oxx.Backend.Generators.PocoSchema.Zod.dll</CustomTasksAssembly>
   </PropertyGroup>
   
   <UsingTask TaskName="ZodSchemaGeneratorTask" AssemblyFile="$(CustomTasksAssembly)" />

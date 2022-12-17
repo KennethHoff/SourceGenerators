@@ -6,7 +6,10 @@ public abstract class SchemaGeneratorTask<TSchemaType> : Microsoft.Build.Utiliti
 	where TSchemaType: class, ISchemaType
 {
 	[Required]
-	public string SchemaGeneratorConfigurationMethodFullName { get; internal set; } = null!;
+	public string SchemaGeneratorConfigurationMethodFullNamespace { get; internal set; } = null!;
+
+	[Required]
+	public string SchemaGeneratorConfigurationMethodAssemblyName { get; internal set; } = null!;
 
 	protected abstract SchemaGeneratorConfigurationBuilder<TSchemaType> ConfigurationBuilder { get; }
 
@@ -14,13 +17,17 @@ public abstract class SchemaGeneratorTask<TSchemaType> : Microsoft.Build.Utiliti
 
 	public override bool Execute()
 	{
+		Log.LogMessage("Starting schema generation..");
 		if (!ConfigurationBuilder.IsValid)
 		{
 			return false;
 		}
 		
 		var generator = new SchemaGenerator(Schema, ConfigurationBuilder);
-		return generator.CreateFiles();
+		var execute = generator.CreateFiles();
+		
+		Log.LogMessage("Schema generation completed.");
+		return execute;
 	}
 }
 

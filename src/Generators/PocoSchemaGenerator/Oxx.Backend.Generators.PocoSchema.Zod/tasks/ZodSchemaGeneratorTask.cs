@@ -26,7 +26,7 @@ public sealed class ZodSchemaGeneratorTask : SchemaGeneratorTask<IZodSchemaType>
 		configurationBuilder.Substitute<string, StringZodSchemaType>();
 	}
 
-	private static ZodSchemaGeneratorConfigurationBuilder LoadConfigurationBuilder()
+	private ZodSchemaGeneratorConfigurationBuilder LoadConfigurationBuilder()
 	{
 		var method = GetMethodInfoFromCsprojFile();
 		if (method.GetParameters().Any())
@@ -48,24 +48,29 @@ public sealed class ZodSchemaGeneratorTask : SchemaGeneratorTask<IZodSchemaType>
 		return builder;
 	}
 	
-	private static MethodInfo GetMethodInfoFromCsprojFile()
+	private MethodInfo GetMethodInfoFromCsprojFile()
 	{
-		var methodName = GetMethodNameFromCsprojFile();
-		var type = Type.GetType(methodName);
+		String fullNamespace = SchemaGeneratorConfigurationMethodFullNamespace;
+		var assemblyName = SchemaGeneratorConfigurationMethodAssemblyName;
+		Log.LogMessage("Assembly name: {0}", assemblyName);
+		Log.LogMessage("Full namespace: {0}", fullNamespace);
+		
+		var taskAssembly = typeof(ZodSchemaGeneratorTask).Assembly.GetName();
+		Log.LogMessage($"AppDomain base Dir {AppDomain.CurrentDomain.BaseDirectory}");
+		Log.LogMessage($"CurrentWorkingDir {Directory.GetCurrentDirectory()}");
+		Log.LogMessage($"** CodeBase for MyTask's assembly name: {taskAssembly.CodeBase}");
+		
+		
+		var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+		Log.LogMessage("All assemblies: {0}", string.Join(Environment.NewLine, allAssemblies.Select(a => a.FullName)));
+		
+		var assembly = Assembly.Load(assemblyName);
+		var type = assembly.GetType(fullNamespace);
 		if (type is null)
 		{
-			throw new Exception($"Could not find type {methodName} as specified in the csproj file");
+			throw new Exception($"Could not find type {fullNamespace} as specified in the csproj file");
 		}
 
-		return type.GetMethod("ConfigureSchemaGenerator") ?? throw new Exception($"Could not find method ConfigureSchemaGenerator on type {methodName} as specified in the csproj file");
-	}
-	
-	private static string GetMethodNameFromCsprojFile()
-	{
-		// var csprojFileContent = File.ReadAllText(csprojFile);
-		// var schemaGeneratorMethodFullName = Regex.Match(csprojFileContent, @"<SchemaGeneratorMethodFullName>(.*)</SchemaGeneratorMethodFullName>").Groups[1].Value;
-		// return schemaGeneratorMethodFullName;
-
-		return "TestingApp.SchemaGeneratorConfiguration.Configure";
+		return type.GetMethod("ConfigureSchemaGenerator") ?? throw new Exception($"Could not find method ConfigureSchemaGenerator on type {fullNamespace} as specified in the csproj file");
 	}
 }
