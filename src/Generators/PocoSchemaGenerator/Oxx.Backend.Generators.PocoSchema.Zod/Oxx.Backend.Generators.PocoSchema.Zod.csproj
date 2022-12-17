@@ -1,5 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" PrivateAssets="all" ExcludeAssets="Runtime" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Version>0.1.0.19</Version>
+    <IsPackable>true</IsPackable>
+    <Title>Oxx.Backend.Generators.PocoSchema.Zod</Title>
+    <Authors>Kenneth Hoff</Authors>
+    <Description>Generated Zod schemas out of your C# Models</Description>
+    <PackageTags>Zod TypeScript Generator TypeSafety CompileTime SourceGenerator</PackageTags>
+
+    <!-- NU5100: NuGet does validation that libraries in a package are exposed as dependencies, but we _explicitly_ do not want that behavior for MSBuild tasks. They are isolated by design. Therefore we ignore this specific warning. -->
+    <!-- NU5128: We do not want to include the .NET Framework version of the MSBuild task assembly in the package // I don't know what this is -->
+    <NoWarn>NU5100; NU5128</NoWarn>
+    
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Include="build\Oxx.Backend.Generators.PocoSchema.Zod.props">
+      <PackagePath>build\</PackagePath>
+    </Content>
+    <Content Include="build\Oxx.Backend.Generators.PocoSchema.Zod.targets">
+      <PackagePath>build\</PackagePath>
+    </Content>
+  </ItemGroup>
+  
+<!--  <ItemGroup>-->
+<!--    <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema\Oxx.Backend.Generators.PocoSchema.csproj" />-->
+<!--  </ItemGroup>-->
+
+  <!-- This target adds the generated deps.json file to our package output -->
+  <Target Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput" BeforeTargets="BuiltProjectOutputGroup" Condition=" '$(GenerateDependencyFile)' == 'true'">
+
+    <ItemGroup>
+      <BuiltProjectOutputGroupOutput Include="$(ProjectDepsFilePath)" TargetPath="$(ProjectDepsFileName)" FinalOutputPath="$(ProjectDepsFilePath)" />
+    </ItemGroup>
+  </Target>
+
 </Project>

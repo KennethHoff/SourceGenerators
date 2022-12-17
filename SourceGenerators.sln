@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageFileParser", "LanguageFileParser", "{DE422F69-8904-4383-A638-D136CD35022D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageFileParser", "src\Generators\LanguageFileParser\LanguageFiles\LanguageFileParser.csproj", "{8AC71A56-23C3-4A82-8E22-6991C1AD3267}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.LanguageFileParser", "src\Generators\LanguageFileParser\LanguageFiles\Oxx.Backend.Generators.LanguageFileParser.csproj", "{8AC71A56-23C3-4A82-8E22-6991C1AD3267}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageFileParser.Generator", "src\Generators\LanguageFileParser\LanguageFileParser.Generator\LanguageFileParser.Generator.csproj", "{085B289B-E469-484D-A96C-7CAEA2374C5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.LanguageFileParser.Generator", "src\Generators\LanguageFileParser\Oxx.Backend.Generators.LanguageFileParser.Generator\Oxx.Backend.Generators.LanguageFileParser.Generator.csproj", "{085B289B-E469-484D-A96C-7CAEA2374C5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PocoSchemaGenerator", "PocoSchemaGenerator", "{3EA39158-9948-4558-BA59-EEAF16C3E6D2}"
 EndProject

@@ -12,7 +12,7 @@ namespace LanguageFileParser.Generator;
 public class LanguageFileTransformGenerator : ISourceGenerator
 {
 	private const string Authors = "Kenneth Hoff";
-	private const string PackageName = "Oxx.Backend.Utils.LanguageFileParser";
+	private const string PackageName = "Oxx.Backend.Utils.Oxx.Backend.Generators.LanguageFileParser";
 
 	private const string OutputPartialClassName = "Localizations";
 	private const string FileExtension = ".xml";

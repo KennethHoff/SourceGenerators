@@ -3,16 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <OutputType>Exe</OutputType>
+    <SchemaGeneratorMethodFullNamespace>TestingApp.SchemaGeneratorConfiguration</SchemaGeneratorMethodFullNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Analyzer</OutputItemType>
-    </ProjectReference>
+    <AdditionalFiles Include="Resources\LanguageFiles\*.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Resources\LanguageFiles\*.xml" />
+    <PackageReference Include="Oxx.Backend.Generators.PocoSchema.Zod" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
 </Project>
