@@ -38,25 +38,26 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 
 	public void Execute(GeneratorExecutionContext context)
 	{
-		var languageFiles = context.AdditionalFiles
-			.Where(at => LanguageFileRegex.IsMatch(at.Path))
-			.ToImmutableList();
-
-		languageFiles.ForEach(file =>
-		{
-			var content = file.GetText(context.CancellationToken);
-			if (content is null)
-			{
-				return;
-			}
-
-			var elements = new List<ParsedElement>();
-
-			var fileName = new Uri(file.Path).Segments.Last().Replace(FileExtension, string.Empty);
-			var parsed = ParseXmlContent(content, fileName, elements);
-			var sanitizedPath = SanitizePath(file.Path);
-			context.AddSource($"{sanitizedPath}.g.cs", parsed);
-		});
+		context.AddSource("lol.g.cs", "public class Lol { }");
+		// var languageFiles = context.AdditionalFiles
+		// 	.Where(at => LanguageFileRegex.IsMatch(at.Path))
+		// 	.ToImmutableList();
+		//
+		// languageFiles.ForEach(file =>
+		// {
+		// 	var content = file.GetText(context.CancellationToken);
+		// 	if (content is null)
+		// 	{
+		// 		return;
+		// 	}
+		//
+		// 	var elements = new List<ParsedElement>();
+		//
+		// 	var fileName = new Uri(file.Path).Segments.Last().Replace(FileExtension, string.Empty);
+		// 	var parsed = ParseXmlContent(content, fileName, elements);
+		// 	var sanitizedPath = SanitizePath(file.Path);
+		// 	context.AddSource($"{sanitizedPath}.g.cs", parsed);
+		// });
 	}
 
 	public void Initialize(GeneratorInitializationContext context)
