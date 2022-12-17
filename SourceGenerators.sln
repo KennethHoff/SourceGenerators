@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageFileParser", "src\G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageFileParser.Generator", "src\Generators\LanguageFileParser\LanguageFileParser.Generator\LanguageFileParser.Generator.csproj", "{085B289B-E469-484D-A96C-7CAEA2374C5D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PocoSchemaGenerator", "PocoSchemaGenerator", "{3EA39158-9948-4558-BA59-EEAF16C3E6D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.PocoSchema.Zod", "src\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj", "{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +34,8 @@ Global
 		{DE422F69-8904-4383-A638-D136CD35022D} = {BECB8F33-F39E-4CE1-B1FB-4AB68D621318}
 		{8AC71A56-23C3-4A82-8E22-6991C1AD3267} = {DE422F69-8904-4383-A638-D136CD35022D}
 		{085B289B-E469-484D-A96C-7CAEA2374C5D} = {DE422F69-8904-4383-A638-D136CD35022D}
+		{3EA39158-9948-4558-BA59-EEAF16C3E6D2} = {BECB8F33-F39E-4CE1-B1FB-4AB68D621318}
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{68AA5A7B-E7C7-491B-AD70-6E7A5191B8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +50,9 @@ Global
 		{085B289B-E469-484D-A96C-7CAEA2374C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{085B289B-E469-484D-A96C-7CAEA2374C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{085B289B-E469-484D-A96C-7CAEA2374C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
