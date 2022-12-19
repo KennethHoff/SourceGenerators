@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Oxx.Backend.Generators.PocoSchema.Zod.Generator" />
+    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod.Generator\Oxx.Backend.Generators.PocoSchema.Zod.Generator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+    />
+    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
 </Project>

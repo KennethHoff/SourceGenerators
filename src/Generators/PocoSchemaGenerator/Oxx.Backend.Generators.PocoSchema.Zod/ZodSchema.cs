@@ -1,7 +1,4 @@
 using System.Reflection;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Oxx.Backend.Generators.PocoSchema.Zod.Core;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
@@ -10,11 +7,9 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod;
 public sealed class ZodSchema : ISchema
 {
 	private readonly IDictionary<Type, IZodSchemaType> _schemaTypes;
-	private readonly SemanticModel _semanticModel;
 
-	public ZodSchema(SchemaGeneratorConfigurationBuilder<IZodSchemaType> configurationBuilder, SemanticModel semanticModel)
+	public ZodSchema(SchemaGeneratorConfigurationBuilder<IZodSchemaType> configurationBuilder)
 	{
-		_semanticModel = semanticModel;
 		_schemaTypes = configurationBuilder.SchemaTypeDictionary;
 	}
 
@@ -56,25 +51,11 @@ public sealed class ZodSchema : ISchema
 	private string GenerateSchemaProperties(PocoObject pocoObject)
 		=> pocoObject.Properties.Select(GenerateSchemaProperty).JoinWithNewLine();
 
-	private string GenerateSchemaProperty(IPropertySymbol property)
-	{
-		return $"{property.Name}: {GenerateSchemaPropertyType(property.Type)},";
-	}
+	private string GenerateSchemaProperty(PropertyInfo property)
+		=> $"{property.Name}: {GenerateSchemaPropertyType(property.PropertyType)},";
 
-	private string GenerateSchemaPropertyType(ITypeSymbol type)
-	{
-		if (type.Name == "string")
-		{
-			return _schemaTypes[typeof(string)].ValidationSchemaLogic;
-		}
-		
-		if (type.Name == "int")
-		{
-			return _schemaTypes[typeof(int)].ValidationSchemaLogic;
-		}
-
-		throw new NotImplementedException();
-	}
+	private string GenerateSchemaPropertyType(Type type)
+		=> _schemaTypes[type].ValidationSchemaName;
 
 	private IEnumerable<FileInformation> GenerateSchemas(IEnumerable<PocoObject> pocoObjects)
 		=> pocoObjects.Select(GenerateFileContent);

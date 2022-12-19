@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Microsoft.CodeAnalysis;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
 
@@ -16,8 +15,9 @@ public sealed class SchemaGenerator
 		_outputDirectory = configurationBuilder.OutputDirectory;
 	}
 
-	public IEnumerable<FileInformation> CreateFiles(SemanticModel semanticModel, IEnumerable<PocoObject> pocoObjects)
+	public IReadOnlyCollection<FileInformation> CreateFiles()
 	{
+		var pocoObjects = GetPocoObjects();
 		var contents = _schema.GenerateFileContent(pocoObjects).ToArray();
 		
 		foreach (var (fileName, fileContent) in contents)
@@ -28,4 +28,27 @@ public sealed class SchemaGenerator
 
 		return contents;
 	}
+	
+	private IEnumerable<PocoObject> GetPocoObjects()
+	{
+		var types = new List<Type>();
+		foreach (var assembly in _assemblies)
+		{
+			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<PocoObjectAttribute>() is not null).ToList());
+		}
+		
+		return types.Select(t =>
+		{
+			var relevantProperties = GetRelevantProperties(t);
+			return new PocoObject(t.FullName!, relevantProperties);
+		});
+	}
+	
+	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
+		=> type.GetProperties()
+			.Where(IsPropertyOrField());
+
+	// More efficient than HasFlag.. I think - Rider gave me allocation warnings with HasFlag
+	private static Func<PropertyInfo, bool> IsPropertyOrField()
+		=> pi => (pi.MemberType & MemberTypes.Property) != 0 || (pi.MemberType & MemberTypes.Field) != 0;
 }
