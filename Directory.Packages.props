@@ -8,6 +8,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.4.0" />
-    <PackageVersion Include="Oxx.Backend.Generators.PocoSchema.Zod" Version="0.1.0.41" />
+    <PackageVersion Include="Oxx.Backend.Generators.PocoSchema.Zod" Version="0.1.0.42" />
   </ItemGroup>
 </Project>

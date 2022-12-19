@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Zod.Core;
-using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.tasks;
 

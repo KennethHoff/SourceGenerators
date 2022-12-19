@@ -1,6 +1,6 @@
 using Oxx.Backend.Generators.PocoSchema.Zod.Core;
 
-namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes;
+namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 public interface IZodSchemaType : ISchemaType
 {

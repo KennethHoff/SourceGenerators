@@ -5,21 +5,26 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
 public sealed class SchemaGenerator
 {
 	private readonly ISchema _schema;
-	private readonly string _outputDirectory;
 	private readonly IList<Assembly> _assemblies;
 
 
 	public SchemaGenerator(ISchema schema, SchemaGeneratorConfigurationBuilder configurationBuilder)
 	{
 		_schema = schema;
-		_outputDirectory = configurationBuilder.OutputDirectory;
 		_assemblies = configurationBuilder.Assemblies;
 	}
 
 	public bool CreateFiles()
 	{
 		var pocoObjects = GetPocoObjects();
-		return _schema.Generate(pocoObjects);
+		var contents = _schema.GenerateFileContent(pocoObjects);
+		
+		foreach (var (fileName, fileContent) in contents)
+		{
+			File.WriteAllText(fileName, fileContent);
+		}
+
+		return true;
 	}
 	
 	private IEnumerable<PocoObject> GetPocoObjects()

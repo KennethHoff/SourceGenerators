@@ -6,7 +6,7 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
 // as it's only one implementation so far
 public interface ISchema
 {
-	bool Generate(IEnumerable<PocoObject> pocoObjects);
+	IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects);
 }
 
-public record struct SchemaOutput(string FileName, string FileContent);
+public record struct FileInformation(string Name, string Content);

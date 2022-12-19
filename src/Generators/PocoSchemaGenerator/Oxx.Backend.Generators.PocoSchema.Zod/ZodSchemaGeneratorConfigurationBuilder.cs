@@ -1,5 +1,5 @@
 using Oxx.Backend.Generators.PocoSchema.Zod.Core;
-using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
@@ -7,6 +7,10 @@ public sealed class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConf
 {
 	public override void Substitute<TPoco, TSubstitute>()
 	{
-		SchemaTypeDictionary.Add(typeof(TPoco), new TSubstitute());
+		var pocoType = typeof(TPoco);
+		if (!SchemaTypeDictionary.ContainsKey(pocoType))
+		{
+			SchemaTypeDictionary.Add(pocoType, new TSubstitute());
+		}
 	}
 }
