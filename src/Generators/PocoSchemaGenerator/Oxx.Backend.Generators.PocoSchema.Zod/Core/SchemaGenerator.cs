@@ -6,27 +6,25 @@ public sealed class SchemaGenerator
 {
 	private readonly ISchema _schema;
 	private readonly IList<Assembly> _assemblies;
-	private readonly string _outputDirectory;
+
 
 	public SchemaGenerator(ISchema schema, SchemaGeneratorConfigurationBuilder configurationBuilder)
 	{
 		_schema = schema;
 		_assemblies = configurationBuilder.Assemblies;
-		_outputDirectory = configurationBuilder.OutputDirectory;
 	}
 
-	public IReadOnlyCollection<FileInformation> CreateFiles()
+	public bool CreateFiles()
 	{
 		var pocoObjects = GetPocoObjects();
-		var contents = _schema.GenerateFileContent(pocoObjects).ToArray();
+		var contents = _schema.GenerateFileContent(pocoObjects);
 		
 		foreach (var (fileName, fileContent) in contents)
 		{
-			var filePath = Path.Combine(_outputDirectory, fileName);
-			File.WriteAllText(filePath, fileContent);
+			File.WriteAllText(fileName, fileContent);
 		}
 
-		return contents;
+		return true;
 	}
 	
 	private IEnumerable<PocoObject> GetPocoObjects()

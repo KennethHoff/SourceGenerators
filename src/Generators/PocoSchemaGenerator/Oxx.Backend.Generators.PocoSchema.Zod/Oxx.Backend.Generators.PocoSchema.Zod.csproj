@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" PrivateAssets="all" ExcludeAssets="Runtime" />
   </ItemGroup>
 
   <PropertyGroup>
-    <Version>0.1.0.45</Version>
+    <Version>0.1.0.42</Version>
     <IsPackable>true</IsPackable>
     <Title>Oxx.Backend.Generators.PocoSchema.Zod</Title>
     <Authors>Kenneth Hoff</Authors>
@@ -16,5 +14,14 @@
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Include="build\Oxx.Backend.Generators.PocoSchema.Zod.props">
+      <PackagePath>build\</PackagePath>
+    </Content>
+    <Content Include="build\Oxx.Backend.Generators.PocoSchema.Zod.targets">
+      <PackagePath>build\</PackagePath>
+    </Content>
+  </ItemGroup>
 
 </Project>

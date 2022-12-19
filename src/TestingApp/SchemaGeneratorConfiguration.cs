@@ -5,7 +5,7 @@ namespace TestingApp;
 
 internal static class SchemaGeneratorConfiguration
 {
-	public static ZodSchemaGeneratorConfigurationBuilder ConfigureZodSchema()
+	public static ZodSchemaGeneratorConfigurationBuilder ConfigureSchemaGenerator()
 	{
 		var configurationBuilder = new ZodSchemaGeneratorConfigurationBuilder();
 		configurationBuilder.ResolveTypesFromAssemblyContaining<TestPoco>();
@@ -13,3 +13,4 @@ internal static class SchemaGeneratorConfiguration
 		return configurationBuilder;
 	}
 }
+

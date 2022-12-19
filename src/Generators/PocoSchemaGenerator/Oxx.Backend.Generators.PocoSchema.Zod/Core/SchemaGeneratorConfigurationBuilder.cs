@@ -37,7 +37,7 @@ public abstract class SchemaGeneratorConfigurationBuilder
 public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType> : SchemaGeneratorConfigurationBuilder
 	where TSchemaType: class, ISchemaType
 {
-	public readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
+	internal readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
 
 	public abstract void Substitute<TPoco, TSubstitute>() where TSubstitute : TSchemaType, new();
 }
