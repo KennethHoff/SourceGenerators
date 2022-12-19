@@ -7,7 +7,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.4.0" />
-    <PackageVersion Include="Oxx.Backend.Generators.PocoSchema.Zod" Version="0.1.0.44" />
-    <PackageVersion Include="Oxx.Backend.Generators.PocoSchema.Zod.Generator" Version="0.1.0.45" />
+    <PackageVersion Include="Oxx.Backend.Generators.PocoSchema.Zod.Generator" Version="0.1.0.67" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
+    <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj"
+                      OutputItemType="Analyzer"
+                      GeneratePathProperty="true" />
   </ItemGroup>
 
   <PropertyGroup>
-    <Version>0.1.0.45</Version>
+    <Version>0.1.0.67</Version>
     <IsPackable>true</IsPackable>
     <Title>Oxx.Backend.Generators.PocoSchema.Zod.Generator</Title>
     <Authors>Kenneth Hoff</Authors>
@@ -13,4 +15,10 @@
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
 </Project>
+
