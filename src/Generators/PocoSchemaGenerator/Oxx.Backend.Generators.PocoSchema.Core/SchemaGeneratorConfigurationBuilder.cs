@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
+namespace Oxx.Backend.Generators.PocoSchema.Core;
 
 public abstract class SchemaGeneratorConfigurationBuilder
 {

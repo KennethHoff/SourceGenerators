@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PocoSchemaGenerator", "Poco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.PocoSchema.Zod", "src\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj", "{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.PocoSchema.Core", "src\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Core\Oxx.Backend.Generators.PocoSchema.Core.csproj", "{B73A1CDA-01C9-47DE-8766-565FA6ECD68A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.PocoSchema.Zod.Generator", "src\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod.Generator\Oxx.Backend.Generators.PocoSchema.Zod.Generator.csproj", "{9D36C0EE-5505-40CB-AB6F-6775C3F10EFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,8 @@ Global
 		{085B289B-E469-484D-A96C-7CAEA2374C5D} = {DE422F69-8904-4383-A638-D136CD35022D}
 		{3EA39158-9948-4558-BA59-EEAF16C3E6D2} = {BECB8F33-F39E-4CE1-B1FB-4AB68D621318}
 		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
+		{B73A1CDA-01C9-47DE-8766-565FA6ECD68A} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
+		{9D36C0EE-5505-40CB-AB6F-6775C3F10EFE} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{68AA5A7B-E7C7-491B-AD70-6E7A5191B8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -54,5 +60,13 @@ Global
 		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B73A1CDA-01C9-47DE-8766-565FA6ECD68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B73A1CDA-01C9-47DE-8766-565FA6ECD68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B73A1CDA-01C9-47DE-8766-565FA6ECD68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B73A1CDA-01C9-47DE-8766-565FA6ECD68A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D36C0EE-5505-40CB-AB6F-6775C3F10EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D36C0EE-5505-40CB-AB6F-6775C3F10EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D36C0EE-5505-40CB-AB6F-6775C3F10EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D36C0EE-5505-40CB-AB6F-6775C3F10EFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

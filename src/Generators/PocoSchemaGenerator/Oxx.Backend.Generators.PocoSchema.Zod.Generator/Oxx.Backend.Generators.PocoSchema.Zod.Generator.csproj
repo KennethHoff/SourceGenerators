@@ -1,20 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
+    <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <Version>0.1.0.45</Version>
     <IsPackable>true</IsPackable>
-    <Title>Oxx.Backend.Generators.PocoSchema.Zod</Title>
+    <Title>Oxx.Backend.Generators.PocoSchema.Zod.Generator</Title>
     <Authors>Kenneth Hoff</Authors>
     <Description>Generated Zod schemas out of your C# Models</Description>
     <PackageTags>Zod TypeScript Generator TypeSafety CompileTime SourceGenerator</PackageTags>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-
 </Project>

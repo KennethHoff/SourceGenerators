@@ -6,13 +6,11 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
 public sealed class ZodSchema : ISchema
 {
-	private readonly string _outputDirectory;
 	private readonly IDictionary<Type, IZodSchemaType> _schemaTypes;
 
 	public ZodSchema(SchemaGeneratorConfigurationBuilder<IZodSchemaType> configurationBuilder)
 	{
 		_schemaTypes = configurationBuilder.SchemaTypeDictionary;
-		_outputDirectory = configurationBuilder.OutputDirectory;
 	}
 
 	#region Interface implementations
@@ -40,8 +38,8 @@ public sealed class ZodSchema : ISchema
 		return new FileInformation(GenerateFileName(schemaName), content);
 	}
 
-	private string GenerateFileName(string schemaName)
-		=> Path.Combine(_outputDirectory, $"{schemaName}.ts");
+	private static string GenerateFileName(string schemaName)
+		=> $"{schemaName}.ts";
 
 	private string GenerateSchema(PocoObject pocoObject)
 		=> $$"""

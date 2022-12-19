@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
 namespace LanguageFileParser.Generator;
@@ -134,8 +135,18 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 		return filePath.Substring(indexOfLastBackslash + 1);
 	}
 
-	private record class ParsedElement(string Name, int Depth, ParsedElement? ParentElement)
+	private sealed class ParsedElement
 	{
+		public ParsedElement(string name, int depth, ParsedElement? parentElement)
+		{
+			Name = name;
+			Depth = depth;
+			ParentElement = parentElement;
+		}
+
+		public string Name { get; }
+		public int Depth { get; }
+		public ParsedElement? ParentElement { get; }
 		public string FullPath => ParentElement is null ? Name : ParentElement.FullPath + Delimiter + Name;
 	}
 }
