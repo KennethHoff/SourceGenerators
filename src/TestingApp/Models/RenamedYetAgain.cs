@@ -1,4 +1,4 @@
-using Oxx.Backend.Generators.PocoSchema.Zod.Core;
+using Oxx.Backend.Generators.PocoSchema.Core;
 
 namespace TestingApp.Models;
 

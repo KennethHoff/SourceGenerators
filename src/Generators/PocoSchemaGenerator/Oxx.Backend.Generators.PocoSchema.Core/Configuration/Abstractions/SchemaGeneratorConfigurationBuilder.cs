@@ -1,12 +1,12 @@
 using System.Reflection;
 
-namespace Oxx.Backend.Generators.PocoSchema.Zod.Core.Configuration.Abstractions;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
 public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> : ISchemaGeneratorConfigurationBuilder<TConfigurationType>
 	where TSchemaType : class, ISchemaType
 	where TConfigurationType : ISchemaGeneratorConfiguration
 {
-	internal readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
+	public readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
 	protected string OutputDirectory = string.Empty;
 
 	protected string SchemaNamingConvention = "{0}Schema";

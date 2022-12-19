@@ -1,10 +1,9 @@
-using Oxx.Backend.Generators.PocoSchema.Zod.Core.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Zod.Core.Configuration.Abstractions;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
-namespace Oxx.Backend.Generators.PocoSchema.Zod;
+namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurationBuilder<IZodSchemaType, ZodSchemaGeneratorConfiguration>
 {

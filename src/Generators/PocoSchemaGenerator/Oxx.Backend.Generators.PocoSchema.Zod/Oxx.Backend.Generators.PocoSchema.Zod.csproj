@@ -23,5 +23,9 @@
       <PackagePath>build\</PackagePath>
     </Content>
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema.Core\Oxx.Backend.Generators.PocoSchema.Core.csproj" />
+  </ItemGroup>
 
 </Project>

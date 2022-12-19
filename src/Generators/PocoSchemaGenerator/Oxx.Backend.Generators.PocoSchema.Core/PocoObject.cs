@@ -1,7 +1,7 @@
 using System.Reflection;
-using Oxx.Backend.Generators.PocoSchema.Zod.Core.Configuration;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
+namespace Oxx.Backend.Generators.PocoSchema.Core;
 
 public record struct PocoObject(BaseName Name, IEnumerable<PropertyInfo> Properties);
 

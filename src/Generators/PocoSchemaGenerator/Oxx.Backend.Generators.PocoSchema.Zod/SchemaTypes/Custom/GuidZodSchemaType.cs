@@ -1,4 +1,4 @@
-using Oxx.Backend.Generators.PocoSchema.Zod.Core;
+using Oxx.Backend.Generators.PocoSchema.Core;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;

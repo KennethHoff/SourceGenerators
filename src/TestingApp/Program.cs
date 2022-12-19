@@ -1,5 +1,6 @@
-﻿using Oxx.Backend.Generators.PocoSchema.Zod;
-using Oxx.Backend.Generators.PocoSchema.Zod.Core;
+﻿using Oxx.Backend.Generators.PocoSchema.Core;
+using Oxx.Backend.Generators.PocoSchema.Zod;
+using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using TestingApp.Models;
 
 var configuration = new ZodSchemaGeneratorConfigurationBuilder()

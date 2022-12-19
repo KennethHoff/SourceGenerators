@@ -1,6 +1,6 @@
-namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
+namespace Oxx.Backend.Generators.PocoSchema.Core;
 
-internal static class StringExtensions
+public static class StringExtensions
 {
 	public static string ToCamelCaseInvariant(this string value)
 	{
@@ -16,5 +16,8 @@ internal static class StringExtensions
 
 		return char.ToLowerInvariant(value[0]) + value.Substring(1);
 	}
+
+	public static string JoinWithNewLine(this IEnumerable<string> strings)
+		=> string.Join(Environment.NewLine, strings);
 }
 

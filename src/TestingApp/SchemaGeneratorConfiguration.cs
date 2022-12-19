@@ -1,4 +1,5 @@
 using Oxx.Backend.Generators.PocoSchema.Zod;
+using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using TestingApp.Models;
 
 namespace TestingApp;
