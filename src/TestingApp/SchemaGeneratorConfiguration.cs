@@ -8,9 +8,8 @@ internal static class SchemaGeneratorConfiguration
 	public static ZodSchemaGeneratorConfigurationBuilder ConfigureSchemaGenerator()
 	{
 		var configurationBuilder = new ZodSchemaGeneratorConfigurationBuilder();
-		configurationBuilder.ResolveTypesFromAssemblyContaining<TestPoco>();
+		configurationBuilder.ResolveTypesFromAssemblyContaining<RenamedYetAgain>();
 
 		return configurationBuilder;
 	}
 }
-

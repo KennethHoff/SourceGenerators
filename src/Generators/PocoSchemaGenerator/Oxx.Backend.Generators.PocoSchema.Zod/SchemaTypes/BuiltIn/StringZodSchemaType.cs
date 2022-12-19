@@ -1,9 +1,10 @@
+using Oxx.Backend.Generators.PocoSchema.Zod.Core;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
 public class StringZodSchemaType : IBuiltInZodSchemaType
 {
-	public string ValidationSchemaLogic => "z.string()";
-	public string ValidationSchemaName => "string";
+	public SchemaLogic ValidationSchemaLogic => new("z.string()");
+	public BaseName ValidationSchemaName => new("string");
 }

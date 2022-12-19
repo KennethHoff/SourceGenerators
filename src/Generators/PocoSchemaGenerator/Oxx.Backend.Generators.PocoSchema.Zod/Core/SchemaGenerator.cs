@@ -1,21 +1,22 @@
 ﻿using System.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Zod.Core.Configuration;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Core;
 
-public sealed class SchemaGenerator
+public class SchemaGenerator
 {
 	private readonly ISchema _schema;
-	private readonly IList<Assembly> _assemblies;
+	private readonly ISchemaGeneratorConfiguration _configuration;
 
-
-	public SchemaGenerator(ISchema schema, SchemaGeneratorConfigurationBuilder configurationBuilder)
+	public SchemaGenerator(ISchema schema, ISchemaGeneratorConfiguration configuration)
 	{
 		_schema = schema;
-		_assemblies = configurationBuilder.Assemblies;
+		_configuration = configuration;
 	}
 
 	public bool CreateFiles()
 	{
+		EnsureDirectoryExists();
 		var pocoObjects = GetPocoObjects();
 		var contents = _schema.GenerateFileContent(pocoObjects);
 		
@@ -26,11 +27,20 @@ public sealed class SchemaGenerator
 
 		return true;
 	}
-	
+
+	private void EnsureDirectoryExists()
+	{
+		if (_configuration.DeleteFilesOnStart && Directory.Exists(_configuration.OutputDirectory))
+		{
+			Directory.Delete(_configuration.OutputDirectory, true);
+		}
+		Directory.CreateDirectory(_configuration.OutputDirectory);
+	}
+
 	private IEnumerable<PocoObject> GetPocoObjects()
 	{
 		var types = new List<Type>();
-		foreach (var assembly in _assemblies)
+		foreach (var assembly in _configuration.Assemblies)
 		{
 			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<PocoObjectAttribute>() is not null).ToList());
 		}
@@ -38,7 +48,7 @@ public sealed class SchemaGenerator
 		return types.Select(t =>
 		{
 			var relevantProperties = GetRelevantProperties(t);
-			return new PocoObject(t.FullName!, relevantProperties);
+			return new PocoObject(new BaseName(t.Name), relevantProperties);
 		});
 	}
 	
