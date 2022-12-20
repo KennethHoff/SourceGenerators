@@ -17,23 +17,25 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 		SubstituteIncludingNullable<Guid, GuidZodSchemaType>();
 		SubstituteIncludingNullable<bool, BooleanZodSchemaType>();
 		SubstituteIncludingNullable<DateTime, DateZodSchemaType>();
-		SubstituteIncludingNullable<DateTimeOffset, DateZodSchemaType>();
 		SubstituteIncludingNullable<DateOnly, DateOnlyZodSchemaType>();
 	}
-	public override void Substitute<TType, TSubstitute>() where TType: class
+	public override ZodSchemaGeneratorConfigurationBuilder Substitute<TType, TSubstitute>() where TType: class
 	{
-		AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>();
+		UpsertSchemaTypeDictionary<TType, TSubstitute>();
+		return this;
 	}
 
-	public override void SubstituteIncludingNullable<TType, TSubstitute>() where TType: struct
+	public override ZodSchemaGeneratorConfigurationBuilder SubstituteIncludingNullable<TType, TSubstitute>() where TType: struct
 	{
-		AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>();
-		AddTypeToDictionaryIfNotAlreadyThere<TType?, TSubstitute>();
+		UpsertSchemaTypeDictionary<TType, TSubstitute>();
+		UpsertSchemaTypeDictionary<TType?, TSubstitute>();
+		return this;
 	}
 
-	public override void SubstituteExcludingNullable<TType, TSubstitute>()
+	public override ZodSchemaGeneratorConfigurationBuilder SubstituteExcludingNullable<TType, TSubstitute>()
 	{
-		AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>();
+		UpsertSchemaTypeDictionary<TType, TSubstitute>();
+		return this;
 	}
 
 	protected override ZodSchemaGeneratorConfiguration CreateConfiguration()
@@ -47,10 +49,14 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 			DeleteFilesOnStart = DeleteFilesOnStart,
 		};
 
-	private void AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>() where TSubstitute : IZodSchemaType, new()
+	private void UpsertSchemaTypeDictionary<TType, TSubstitute>() where TSubstitute : IZodSchemaType, new()
 	{
 		var type = typeof(TType);
-		if (!SchemaTypeDictionary.ContainsKey(type))
+		if (SchemaTypeDictionary.ContainsKey(type))
+		{
+			SchemaTypeDictionary[type] = new TSubstitute();
+		}
+		else
 		{
 			SchemaTypeDictionary.Add(type, new TSubstitute());
 		}

@@ -20,15 +20,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Content Include="build\Oxx.Backend.Generators.PocoSchema.Zod.props">
-      <PackagePath>build\</PackagePath>
-    </Content>
-    <Content Include="build\Oxx.Backend.Generators.PocoSchema.Zod.targets">
-      <PackagePath>build\</PackagePath>
-    </Content>
-  </ItemGroup>
-  
-  <ItemGroup>
     <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema.Core\Oxx.Backend.Generators.PocoSchema.Core.csproj" />
   </ItemGroup>
 

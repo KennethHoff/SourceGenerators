@@ -3,7 +3,7 @@ using Oxx.Backend.Generators.PocoSchema.Core;
 namespace TestingApp.Models;
 
 [PocoObject]
-internal sealed class RenamedYetAgain
+internal sealed class NoobaTron
 {
 	public string Name { get; init; } = string.Empty;
 	public Guid Id { get; init; }
@@ -21,4 +21,10 @@ internal sealed class RenamedYetAgain
 	
 	public DateOnly? NullableDateOnly { get; init; }
 	public DateOnly DateOnly { get; init; }
+}
+
+[PocoObject]
+internal sealed class NewPoco
+{
+	public double NoobaTron { get; init; } = new();
 }

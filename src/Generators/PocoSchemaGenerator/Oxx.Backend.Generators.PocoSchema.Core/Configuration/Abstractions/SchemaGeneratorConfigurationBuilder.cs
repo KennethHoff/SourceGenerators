@@ -79,9 +79,9 @@ public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigur
 		return this;
 	}
 
-	public abstract void Substitute<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : class;
-	public abstract void SubstituteIncludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
-	public abstract void SubstituteExcludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
+	public abstract SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> Substitute<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : class;
+	public abstract SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> SubstituteIncludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
+	public abstract SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> SubstituteExcludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
 
 	protected abstract TConfigurationType CreateConfiguration();
 }

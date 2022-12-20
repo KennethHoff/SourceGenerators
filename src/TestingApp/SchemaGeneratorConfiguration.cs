@@ -1,4 +1,3 @@
-using Oxx.Backend.Generators.PocoSchema.Zod;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using TestingApp.Models;
 
@@ -9,7 +8,7 @@ internal static class SchemaGeneratorConfiguration
 	public static ZodSchemaGeneratorConfigurationBuilder ConfigureSchemaGenerator()
 	{
 		var configurationBuilder = new ZodSchemaGeneratorConfigurationBuilder();
-		configurationBuilder.ResolveTypesFromAssemblyContaining<RenamedYetAgain>();
+		configurationBuilder.ResolveTypesFromAssemblyContaining<NoobaTron>();
 
 		return configurationBuilder;
 	}

@@ -1,11 +1,11 @@
 ﻿using Oxx.Backend.Generators.PocoSchema.Core;
 using Oxx.Backend.Generators.PocoSchema.Zod;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
-using TestingApp.Models;
+using TestingApp;
 
 var configuration = new ZodSchemaGeneratorConfigurationBuilder()
-	.SetRootDirectory("/home/kennethhoff/Documents/Development/OXX/Suppehue/Frontend/Suppehue.Frontend.NextJS/src/zod/")
-	.ResolveTypesFromAssemblyContaining<RenamedYetAgain>()
+	.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
+	.ResolveTypesFromAssemblyContaining<ITestingAppMarker>()
 	.Build();
 
 var schema = new ZodSchema(configuration);
