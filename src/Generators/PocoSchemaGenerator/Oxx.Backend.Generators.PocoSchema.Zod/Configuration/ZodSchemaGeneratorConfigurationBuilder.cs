@@ -9,20 +9,31 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 {
 	public ZodSchemaGeneratorConfigurationBuilder()
 	{
-		Substitute<int, NumberZodSchemaType>();
-		Substitute<float, NumberZodSchemaType>();
-		Substitute<double, NumberZodSchemaType>();
-		Substitute<decimal, NumberZodSchemaType>();
 		Substitute<string, StringZodSchemaType>();
-		Substitute<Guid, GuidZodSchemaType>();
+		SubstituteIncludingNullable<int, NumberZodSchemaType>();
+		SubstituteIncludingNullable<float, NumberZodSchemaType>();
+		SubstituteIncludingNullable<double, NumberZodSchemaType>();
+		SubstituteIncludingNullable<decimal, NumberZodSchemaType>();
+		SubstituteIncludingNullable<Guid, GuidZodSchemaType>();
+		SubstituteIncludingNullable<bool, BooleanZodSchemaType>();
+		SubstituteIncludingNullable<DateTime, DateZodSchemaType>();
+		SubstituteIncludingNullable<DateTimeOffset, DateZodSchemaType>();
+		SubstituteIncludingNullable<DateOnly, DateOnlyZodSchemaType>();
 	}
-	public override void Substitute<TPoco, TSubstitute>()
+	public override void Substitute<TType, TSubstitute>() where TType: class
 	{
-		var pocoType = typeof(TPoco);
-		if (!SchemaTypeDictionary.ContainsKey(pocoType))
-		{
-			SchemaTypeDictionary.Add(pocoType, new TSubstitute());
-		}
+		AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>();
+	}
+
+	public override void SubstituteIncludingNullable<TType, TSubstitute>() where TType: struct
+	{
+		AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>();
+		AddTypeToDictionaryIfNotAlreadyThere<TType?, TSubstitute>();
+	}
+
+	public override void SubstituteExcludingNullable<TType, TSubstitute>()
+	{
+		AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>();
 	}
 
 	protected override ZodSchemaGeneratorConfiguration CreateConfiguration()
@@ -35,4 +46,13 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 			SchemaTypeNamingConvention = SchemaTypeNamingConvention,
 			DeleteFilesOnStart = DeleteFilesOnStart,
 		};
+
+	private void AddTypeToDictionaryIfNotAlreadyThere<TType, TSubstitute>() where TSubstitute : IZodSchemaType, new()
+	{
+		var type = typeof(TType);
+		if (!SchemaTypeDictionary.ContainsKey(type))
+		{
+			SchemaTypeDictionary.Add(type, new TSubstitute());
+		}
+	}
 }

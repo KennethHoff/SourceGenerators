@@ -50,6 +50,7 @@ public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigur
 		return this;
 	}
 
+
 	public SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> ResolveTypesFromAssemblies(params Assembly[] assemblies)
 	{
 		foreach (var assembly in assemblies)
@@ -78,7 +79,9 @@ public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigur
 		return this;
 	}
 
-	public abstract void Substitute<TPoco, TSubstitute>() where TSubstitute : TSchemaType, new();
+	public abstract void Substitute<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : class;
+	public abstract void SubstituteIncludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
+	public abstract void SubstituteExcludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
 
 	protected abstract TConfigurationType CreateConfiguration();
 }

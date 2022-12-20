@@ -1,4 +1,4 @@
-namespace Oxx.Backend.Generators.PocoSchema.Core;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 
 public static class StringExtensions
 {
