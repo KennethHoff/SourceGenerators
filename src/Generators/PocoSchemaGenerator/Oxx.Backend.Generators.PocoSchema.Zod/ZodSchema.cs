@@ -22,12 +22,7 @@ public class ZodSchema : ISchema
 		var types = GenerateTypes();
 		var schemas = GenerateSchemas(pocoObjects);
 
-		return types
-			.Concat(schemas)
-			.Select(x => x with
-			{
-				Name = Path.Combine(_configuration.OutputDirectory, x.Name),
-			});
+		return types.Concat(schemas);
 	}
 
 	#endregion

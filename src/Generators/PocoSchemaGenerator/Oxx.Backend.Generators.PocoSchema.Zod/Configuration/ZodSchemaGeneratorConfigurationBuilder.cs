@@ -17,25 +17,6 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 		SubstituteIncludingNullable<Guid, GuidZodSchemaType>();
 		SubstituteIncludingNullable<bool, BooleanZodSchemaType>();
 		SubstituteIncludingNullable<DateTime, DateZodSchemaType>();
-		SubstituteIncludingNullable<DateOnly, DateOnlyZodSchemaType>();
-	}
-	public override ZodSchemaGeneratorConfigurationBuilder Substitute<TType, TSubstitute>() where TType: class
-	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>();
-		return this;
-	}
-
-	public override ZodSchemaGeneratorConfigurationBuilder SubstituteIncludingNullable<TType, TSubstitute>() where TType: struct
-	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>();
-		UpsertSchemaTypeDictionary<TType?, TSubstitute>();
-		return this;
-	}
-
-	public override ZodSchemaGeneratorConfigurationBuilder SubstituteExcludingNullable<TType, TSubstitute>()
-	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>();
-		return this;
 	}
 
 	protected override ZodSchemaGeneratorConfiguration CreateConfiguration()
@@ -49,16 +30,4 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 			DeleteFilesOnStart = DeleteFilesOnStart,
 		};
 
-	private void UpsertSchemaTypeDictionary<TType, TSubstitute>() where TSubstitute : IZodSchemaType, new()
-	{
-		var type = typeof(TType);
-		if (SchemaTypeDictionary.ContainsKey(type))
-		{
-			SchemaTypeDictionary[type] = new TSubstitute();
-		}
-		else
-		{
-			SchemaTypeDictionary.Add(type, new TSubstitute());
-		}
-	}
 }

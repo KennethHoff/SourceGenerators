@@ -24,32 +24,26 @@ public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigur
 
 	#endregion
 
+	/// <summary>
+	/// Be careful with this method, it will delete all files in the output directory
+	/// </summary>
 	public SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> DeleteExistingFiles(bool shouldDelete = true)
 	{
 		DeleteFilesOnStart = shouldDelete;
 		return this;
 	}
 
-	/// <summary>
-	/// {0} = Type Name <br/>
-	/// Default is `{}Schema`
-	/// </summary>
 	public SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> OverrideSchemaNamingConvention(string namingFormat)
 	{
 		SchemaNamingConvention = namingFormat;
 		return this;
 	}
 
-	/// <summary>
-	/// {0} = Type Name <br/>
-	/// Default is `{0}SchemaType
-	/// </summary>
 	public SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> OverrideSchemaTypeNamingConvention(string namingFormat)
 	{
 		SchemaTypeNamingConvention = namingFormat;
 		return this;
 	}
-
 
 	public SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> ResolveTypesFromAssemblies(params Assembly[] assemblies)
 	{
@@ -79,10 +73,40 @@ public abstract class SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigur
 		return this;
 	}
 
-	public abstract SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> Substitute<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : class;
-	public abstract SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> SubstituteIncludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
-	public abstract SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> SubstituteExcludingNullable<TType, TSubstitute>() where TSubstitute : TSchemaType, new() where TType : struct;
+	protected SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> Substitute<TType, TSubstitute>() where TType : class
+		where TSubstitute : TSchemaType, new()
+	{
+		UpsertSchemaTypeDictionary<TType, TSubstitute>();
+		return this;
+	}
 
+	protected SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> SubstituteIncludingNullable<TType, TSubstitute>() where TType : struct
+		where TSubstitute : TSchemaType, new()
+	{
+		UpsertSchemaTypeDictionary<TType, TSubstitute>();
+		UpsertSchemaTypeDictionary<TType?, TSubstitute>();
+		return this;
+	}
+
+	public SchemaGeneratorConfigurationBuilder<TSchemaType, TConfigurationType> SubstituteExcludingNullable<TType, TSubstitute>()
+		where TSubstitute: TSchemaType, new()
+	{
+		UpsertSchemaTypeDictionary<TType, TSubstitute>();
+		return this;
+	}
 	protected abstract TConfigurationType CreateConfiguration();
+
+	private void UpsertSchemaTypeDictionary<TType, TSubstitute>() where TSubstitute : TSchemaType, new()
+	{
+		var type = typeof(TType);
+		if (SchemaTypeDictionary.ContainsKey(type))
+		{
+			SchemaTypeDictionary[type] = new TSubstitute();
+		}
+		else
+		{
+			SchemaTypeDictionary.Add(type, new TSubstitute());
+		}
+	}
 }
 
