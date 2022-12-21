@@ -15,16 +15,16 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 	public required string SchemaFileNameFormat { get; init; } = "{0}Schema.ts";
 	public required ZodSchemaEventConfiguration Events { get; init; }
 
-	public string FormatSchemaTypeName(IZodSchema schema)
+	public string FormatSchemaTypeName(IPartialZodSchema schema)
 		=> schema is IBuiltInAtomicZodSchema
 			? schema.SchemaBaseName
 			: string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName);
 
-	public string FormatSchemaName(IZodSchema schema)
+	public string FormatSchemaName(IPartialZodSchema schema)
 		=> schema is IBuiltInAtomicZodSchema
 			? schema.SchemaBaseName
 			: string.Format(SchemaNamingFormat, schema.SchemaBaseName);
 
-	public string FormatFilePath(IZodSchema zodSchema)
+	public string FormatFilePath(IPartialZodSchema zodSchema)
 		=> $"./{string.Format(SchemaFileNameFormat, zodSchema.SchemaBaseName)}".TrimEnd('.', 't', 's');
 }

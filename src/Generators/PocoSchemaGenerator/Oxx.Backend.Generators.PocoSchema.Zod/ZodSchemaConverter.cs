@@ -115,8 +115,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		var validSchemas = pocoObject.Properties
 			.Where(x => _generatedSchemas.ContainsKey(x.PropertyType))
-			.Where(x => _generatedSchemas[x.PropertyType] is IZodSchema)
-			.Select(x => KeyValuePair.Create(x, (IZodSchema)_generatedSchemas[x.PropertyType]))
+			.Select(x => KeyValuePair.Create(x, _generatedSchemas[x.PropertyType]))
 			.ToDictionary(x => x.Key, x => x.Value);
 
 		return partialSchema.Populate(validSchemas, _configuration);
@@ -125,6 +124,7 @@ public class ZodSchemaConverter : ISchemaConverter
 	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
 		=> pocoObjects
 			.Select(GenerateMoleculeDefinition)
+			.ToArray()
 			.Select(GenerateMolecule);
 
 	/// <summary>

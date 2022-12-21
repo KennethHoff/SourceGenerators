@@ -11,7 +11,7 @@ public class PartialMolecularZodSchema : IPartialZodSchema
 {
 	public SchemaBaseName SchemaBaseName { get; init; }
 
-	public MolecularZodSchema Populate(IDictionary<PropertyInfo, IZodSchema> schemaDictionary, ZodSchemaConfiguration schemaConfiguration)
+	public MolecularZodSchema Populate(IDictionary<PropertyInfo, IPartialZodSchema> schemaDictionary, ZodSchemaConfiguration schemaConfiguration)
 		=> MolecularZodSchema.CreateFromPartial(this, schemaDictionary, schemaConfiguration);
 }
 
@@ -25,7 +25,7 @@ public class MolecularZodSchema : IMolecularZodSchema
 
 	public static MolecularZodSchema CreateFromPartial(
 		PartialMolecularZodSchema partial,
-		IDictionary<PropertyInfo, IZodSchema> schemaDictionary,
+		IDictionary<PropertyInfo, IPartialZodSchema> schemaDictionary,
 		ZodSchemaConfiguration zodSchemaConfiguration)
 		=> new()
 		{
@@ -57,5 +57,5 @@ public class MolecularZodSchema : IMolecularZodSchema
 		.Aggregate(string.Empty, (a, b)
 			=> $$"""{{a}}import { {{b.SchemaName}} } from '{{b.FilePath}}';""");
 
-	public IDictionary<PropertyInfo, IZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IZodSchema>();
+	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }
