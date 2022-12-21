@@ -21,7 +21,8 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZ
 
 	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
 	protected override string SchemaTypeNamingFormat { get; set; } = "{0}SchemaType";
-	protected override string SchemaFileNameFormat { get; set; } = "{0}Schema.ts";
+	protected override string FileNameFormat { get; set; } = "{0}Schema";
+	protected override string FileExtension { get; set; } = ".ts";
 
 	protected override ZodSchemaConfiguration CreateConfiguration()
 		=> new()
@@ -33,6 +34,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZ
 			Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
 			SchemaNamingFormat = SchemaNamingFormat,
 			SchemaTypeNamingFormat = SchemaTypeNamingFormat,
-			SchemaFileNameFormat = SchemaFileNameFormat,
+			SchemaFileNameFormat = FileNameFormat,
+			FileExtension = FileExtension,
 		};
 }

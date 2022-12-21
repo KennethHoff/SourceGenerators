@@ -33,7 +33,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 
 			if (!fileCreatingEventArgs.Skip)
 			{
-				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name);
+				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
 				File.WriteAllText(filePath, fileInformation.Content);
 			}
 

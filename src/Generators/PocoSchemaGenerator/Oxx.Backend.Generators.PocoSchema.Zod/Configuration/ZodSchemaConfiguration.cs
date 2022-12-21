@@ -8,12 +8,13 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 {
 	public required IEnumerable<Assembly> Assemblies { get; init; }
 	public required string OutputDirectory { get; init; }
-	public required bool DeleteFilesOnStart { get; init; } = true;
+	public required bool DeleteFilesOnStart { get; init; }
 	public required IDictionary<Type, IAtomicZodSchema> AtomicSchemaDictionary { get; init; }
-	public required string SchemaNamingFormat { get; init; } = "{0}Schema";
-	public required string SchemaTypeNamingFormat { get; init; } = "{0}SchemaType";
-	public required string SchemaFileNameFormat { get; init; } = "{0}Schema.ts";
+	public required string SchemaNamingFormat { get; init; }
+	public required string SchemaTypeNamingFormat { get; init; }
+	public required string SchemaFileNameFormat { get; init; }
 	public required ZodSchemaEventConfiguration Events { get; init; }
+	public required string FileExtension { get; init; }
 
 	public string FormatSchemaTypeName(IPartialZodSchema schema)
 		=> schema is IBuiltInAtomicZodSchema
@@ -25,6 +26,8 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 			? schema.SchemaBaseName
 			: string.Format(SchemaNamingFormat, schema.SchemaBaseName);
 
+	// If we ever add a way to configure the output file directory, this will need to be updated.
+	// Currently it assumes everything is in the same directory.
 	public string FormatFilePath(IPartialZodSchema zodSchema)
-		=> $"./{string.Format(SchemaFileNameFormat, zodSchema.SchemaBaseName)}".TrimEnd('.', 't', 's');
+		=> $"./{string.Format(SchemaFileNameFormat, zodSchema.SchemaBaseName)}";
 }

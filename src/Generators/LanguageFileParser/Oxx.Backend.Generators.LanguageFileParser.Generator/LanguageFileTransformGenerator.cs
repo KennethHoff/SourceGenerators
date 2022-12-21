@@ -100,7 +100,7 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 
 		var section = element.Elements().Select(element1 => ParseSection(element1, fileName, nextDepth, parsedElements, newParsedElement)).ToList();
 
-		var innerContent = string.Join("\n", section.Where(x => x != string.Empty));
+		var innerContent = string.Join(Environment.NewLine, section.Where(x => x != string.Empty));
 		if (parentElement is not null)
 		{
 			return 

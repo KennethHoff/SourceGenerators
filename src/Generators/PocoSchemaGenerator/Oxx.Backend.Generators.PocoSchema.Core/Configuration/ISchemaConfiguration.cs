@@ -9,6 +9,7 @@ public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : 
 	where TSchemaEventConfiguration : ISchemaEventConfiguration
 {
 	TSchemaEventConfiguration Events { get; }
+	string FileExtension { get; }
 }
 
 public interface ISchemaConfiguration

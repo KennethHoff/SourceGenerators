@@ -14,13 +14,13 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
-	protected abstract string SchemaFileNameFormat { get; set; }
+	protected abstract string FileNameFormat { get; set; }
 	protected TSchemaEventConfiguration? EventConfiguration;
 
-	public IList<Assembly> Assemblies { get; } = new List<Assembly>();
-	internal bool IsValid => !string.IsNullOrWhiteSpace(OutputDirectory) && Assemblies.Any();
+	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
 
-	protected bool DeleteFilesOnStart { get; set; } = true;
+	protected bool DeleteFilesOnStart { get; set; }
+	protected abstract string FileExtension { get; set; }
 
 	#region Interface implementations
 
@@ -47,6 +47,18 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideSchemaTypeNamingFormat(string namingFormat)
 	{
 		SchemaTypeNamingFormat = namingFormat;
+		return this;
+	}
+	
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideFileNameFormat(string namingFormat)
+	{
+		FileNameFormat = namingFormat;
+		return this;
+	}
+	
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideFileExtension(string fileExtension)
+	{
+		FileExtension = fileExtension;
 		return this;
 	}
 
@@ -118,8 +130,6 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	{
 		EventConfiguration = new TSchemaEventConfiguration();
 		action(EventConfiguration);
-		
-		
 		return this;
 	}
 }

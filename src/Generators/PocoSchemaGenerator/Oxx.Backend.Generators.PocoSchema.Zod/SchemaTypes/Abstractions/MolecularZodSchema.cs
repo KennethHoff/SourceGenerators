@@ -42,8 +42,8 @@ public class MolecularZodSchema : IMolecularZodSchema
 
 	private string SchemaContent => SchemaDictionary
 		.Aggregate(string.Empty, (a, b) 
-			=> $"{a}\t{b.Key.Name.ToCamelCaseInvariant()}: {SchemaConfiguration.FormatSchemaName(b.Value)},\n")
-		.TrimEnd(',', '\n');
+			=> $"{a}\t{b.Key.Name.ToCamelCaseInvariant()}: {SchemaConfiguration.FormatSchemaName(b.Value)},{Environment.NewLine}")
+		.TrimEnd($"{Environment.NewLine}");
 
 	public string AdditionalImports => SchemaDictionary
 		.Select(x => x.Value)
@@ -55,7 +55,7 @@ public class MolecularZodSchema : IMolecularZodSchema
 		})
 		.Distinct()
 		.Aggregate(string.Empty, (a, b)
-			=> $$"""{{a}}import { {{b.SchemaName}} } from '{{b.FilePath}}';""");
+			=> $$"""{{a}}{{Environment.NewLine}}import { {{b.SchemaName}} } from '{{b.FilePath}}';""");
 
 	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }

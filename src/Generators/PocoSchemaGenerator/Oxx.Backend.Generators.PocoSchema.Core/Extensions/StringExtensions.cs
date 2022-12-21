@@ -14,10 +14,12 @@ public static class StringExtensions
 			return value.ToLowerInvariant();
 		}
 
-		return char.ToLowerInvariant(value[0]) + value.Substring(1);
+		return char.ToLowerInvariant(value[0]) + value[1..];
 	}
-
-	public static string JoinWithNewLine(this IEnumerable<string> strings)
-		=> string.Join(Environment.NewLine, strings);
+	
+	public static string TrimEnd(this string str, string value)
+		=> str.EndsWith(value)
+			? str[..^value.Length]
+			: str;
 }
 

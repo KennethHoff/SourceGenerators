@@ -8,7 +8,7 @@ internal static class SchemaGeneratorConfiguration
 	public static ZodSchemaConfigurationBuilder ConfigureSchemaGenerator()
 	{
 		var configurationBuilder = new ZodSchemaConfigurationBuilder();
-		configurationBuilder.ResolveTypesFromAssemblyContaining<NoobaTron>();
+		configurationBuilder.ResolveTypesFromAssemblyContaining<Person>();
 
 		return configurationBuilder;
 	}
