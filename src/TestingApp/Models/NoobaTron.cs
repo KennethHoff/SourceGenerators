@@ -22,9 +22,3 @@ internal sealed class NoobaTron
 	public DateOnly? NullableDateOnly { get; init; }
 	public DateOnly DateOnly { get; init; }
 }
-
-[PocoObject]
-internal sealed class NewPoco
-{
-	public double NoobaTron { get; init; } = new();
-}

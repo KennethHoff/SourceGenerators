@@ -5,29 +5,35 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IZodSchemaType, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
 {
 	public ZodSchemaConfigurationBuilder()
 	{
-		Substitute<string, StringZodSchemaType>();
-		SubstituteIncludingNullable<int, NumberZodSchemaType>();
-		SubstituteIncludingNullable<float, NumberZodSchemaType>();
-		SubstituteIncludingNullable<double, NumberZodSchemaType>();
-		SubstituteIncludingNullable<decimal, NumberZodSchemaType>();
-		SubstituteIncludingNullable<Guid, GuidZodSchemaType>();
-		SubstituteIncludingNullable<bool, BooleanZodSchemaType>();
-		SubstituteIncludingNullable<DateTime, DateZodSchemaType>();
+		Substitute<string, StringAtomicZodSchema>();
+		SubstituteIncludingNullable<int, NumberAtomicZodSchema>();
+		SubstituteIncludingNullable<float, NumberAtomicZodSchema>();
+		SubstituteIncludingNullable<double, NumberAtomicZodSchema>();
+		SubstituteIncludingNullable<decimal, NumberAtomicZodSchema>();
+		SubstituteIncludingNullable<Guid, GuidAtomicZodSchema>();
+		SubstituteIncludingNullable<bool, BooleanAtomicZodSchema>();
+		SubstituteIncludingNullable<DateTime, DateAtomicZodSchema>();
 	}
+
+	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
+	protected override string SchemaTypeNamingFormat { get; set; } = "{0}SchemaType";
+	protected override string SchemaFileNameFormat { get; set; } = "{0}Schema.ts";
 
 	protected override ZodSchemaConfiguration CreateConfiguration()
 		=> new()
 		{
-			SchemaTypeDictionary = SchemaTypeDictionary,
+			AtomicSchemaDictionary = SchemaTypeDictionary,
 			Assemblies = Assemblies,
 			OutputDirectory = OutputDirectory,
-			PropertyNamingConvention = SchemaNamingConvention,
-			PropertyTypeNamingConvention = SchemaTypeNamingConvention,
+			PropertyNamingFormat = SchemaNamingFormat,
 			DeleteFilesOnStart = DeleteFilesOnStart,
 			Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
+			SchemaNamingFormat = SchemaNamingFormat,
+			SchemaTypeNamingFormat = SchemaTypeNamingFormat,
+			SchemaFileNameFormat = SchemaFileNameFormat,
 		};
 }

@@ -7,6 +7,6 @@ var configuration = new ZodSchemaConfigurationBuilder()
 	.ResolveTypesFromAssemblyContaining<ITestingAppMarker>()
 	.Build();
 
-var schema = new ZodSchema(configuration);
+var schema = new ZodSchemaConverter(configuration);
 var generator = new ZodSchemaGenerator(schema, configuration);
 generator.CreateFiles();

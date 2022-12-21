@@ -2,19 +2,20 @@
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Models;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
 public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
-	where TSchemaType : ISchemaType
+	where TSchemaType : IAtomicSchema
 	where TSchemaEventConfiguration : ISchemaEventConfiguration
 {
 	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
-	private readonly ISchema _schema;
+	private readonly ISchemaConverter _schemaConverter;
 
-	protected SchemaGenerator(ISchema schema, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
+	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
 	{
-		_schema = schema;
+		_schemaConverter = schemaConverter;
 		_configuration = configuration;
 	}
 
@@ -22,7 +23,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 	{
 		EnsureDirectoryExists();
 		var pocoObjects = GetPocoObjects();
-		var contents = _schema.GenerateFileContent(pocoObjects).ToList();
+		var contents = _schemaConverter.GenerateFileContent(pocoObjects).ToList();
 		
 		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
 		foreach (var fileInformation in contents)
@@ -66,7 +67,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		return types.Select(t =>
 		{
 			var relevantProperties = GetRelevantProperties(t);
-			return new PocoObject(new BaseName(t.Name), relevantProperties);
+			return new PocoObject(t, relevantProperties);
 		});
 	}
 

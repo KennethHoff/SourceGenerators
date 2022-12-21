@@ -1,18 +1,20 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
 public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : ISchemaConfigurationBuilder<TConfigurationType>
-	where TSchemaType : class, ISchemaType
+	where TSchemaType : class, IAtomicSchema
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
 	protected readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
 	protected string OutputDirectory = string.Empty;
 
-	protected string SchemaNamingConvention = "{0}Schema";
-	protected string SchemaTypeNamingConvention = "{0}SchemaType";
+	protected abstract string SchemaNamingFormat { get; set; }
+	protected abstract string SchemaTypeNamingFormat { get; set; }
+	protected abstract string SchemaFileNameFormat { get; set; }
 	protected TSchemaEventConfiguration? EventConfiguration;
 
 	public IList<Assembly> Assemblies { get; } = new List<Assembly>();
@@ -36,15 +38,15 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideSchemaNamingConvention(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideSchemaNamingFormat(string namingFormat)
 	{
-		SchemaNamingConvention = namingFormat;
+		SchemaNamingFormat = namingFormat;
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideSchemaTypeNamingConvention(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideSchemaTypeNamingFormat(string namingFormat)
 	{
-		SchemaTypeNamingConvention = namingFormat;
+		SchemaTypeNamingFormat = namingFormat;
 		return this;
 	}
 

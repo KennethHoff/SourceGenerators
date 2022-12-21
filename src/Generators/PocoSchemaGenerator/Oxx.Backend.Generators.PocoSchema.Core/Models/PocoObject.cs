@@ -3,16 +3,16 @@ using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
 
-public record struct PocoObject(BaseName Name, IEnumerable<PropertyInfo> Properties);
-
-public record struct BaseName(string Value)
+public readonly record struct PocoObject(Type Type, IEnumerable<PropertyInfo> Properties)
 {
-	public string GetPropertyName(ISchemaConfiguration configuration)
-		=> string.Format(configuration.PropertyNamingConvention, Value);
+	public string GetSchemaName(ISchemaConfiguration configuration)
+		=> string.Format(configuration.SchemaNamingFormat, Type.Name);
 	
-	public string GetPropertyTypeName(ISchemaConfiguration configuration)
-		=> string.Format(configuration.PropertyTypeNamingConvention, Value);
+	public string Name => Type.Name;
 
-	public override string ToString()
-		=> Value;
+	public string GetSchemaTypeName(ISchemaConfiguration configuration)
+		=> string.Format(configuration.SchemaTypeNamingFormat, Type.Name);
+
+	public string GetFileName(ISchemaConfiguration zodSchemaConfiguration)
+		=> string.Format(zodSchemaConfiguration.SchemaFileNameFormat, Type.Name);
 }
