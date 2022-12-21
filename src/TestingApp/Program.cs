@@ -9,4 +9,4 @@ var configuration = new ZodSchemaConfigurationBuilder()
 
 var schema = new ZodSchemaConverter(configuration);
 var generator = new ZodSchemaGenerator(schema, configuration);
-generator.CreateFiles();
+await generator.CreateFilesAsync();

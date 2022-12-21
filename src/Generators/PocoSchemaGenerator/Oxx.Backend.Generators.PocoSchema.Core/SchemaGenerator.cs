@@ -19,14 +19,14 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		_configuration = configuration;
 	}
 
-	public bool CreateFiles()
+	public async Task CreateFilesAsync()
 	{
 		EnsureDirectoryExists();
 		var pocoObjects = GetPocoObjects();
 		var contents = _schemaConverter.GenerateFileContent(pocoObjects).ToList();
 		
 		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
-		foreach (var fileInformation in contents)
+		await Task.WhenAll(contents.Select(fileInformation => Task.Run(() =>
 		{
 			var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
 			_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
@@ -41,10 +41,8 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			{
 				Skipped = fileCreatingEventArgs.Skip,
 			});
-		}
+		})));
 		_configuration.Events.FilesCreated?.Invoke(this, new FilesCreatedEventArgs(contents));
-
-		return true;
 	}
 
 	private void EnsureDirectoryExists()
