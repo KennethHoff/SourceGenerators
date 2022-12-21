@@ -16,9 +16,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 	public required string SchemaFileNameFormat { get; init; } = "{0}Schema.ts";
 	public required ZodSchemaEventConfiguration Events { get; init; }
 
-	public string FormatSchemaTypeName(SchemaName schemaName)
-		=> string.Format(SchemaTypeNamingFormat, schemaName);
+	public string FormatSchemaTypeName(IZodSchema schema)
+		=> string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName);
 
-	public string FormatSchemaName(SchemaName schemaName)
-		=> string.Format(SchemaNamingFormat, schemaName);
+	public string FormatSchemaName(IZodSchema schema)
+		=> string.Format(SchemaNamingFormat, schema.SchemaBaseName);
 }
