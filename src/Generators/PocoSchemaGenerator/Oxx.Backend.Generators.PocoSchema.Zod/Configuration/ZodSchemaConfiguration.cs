@@ -1,6 +1,5 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Zod.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;

@@ -48,7 +48,6 @@ public class ZodSchema : ISchema
 
 		var fileInformation = new FileInformation(GenerateFileName(pocoObject.Name), content);
 		
-		_configuration.Events.SchemaCreating?.Invoke(this, new SchemaCreatingEventArgs(fileInformation));
 		return fileInformation;
 	}
 

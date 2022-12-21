@@ -29,11 +29,13 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		{
 			var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
 			_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
+
 			if (!fileCreatingEventArgs.Skip)
 			{
 				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name);
 				File.WriteAllText(filePath, fileInformation.Content);
 			}
+
 			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
 			{
 				Skipped = fileCreatingEventArgs.Skip,
