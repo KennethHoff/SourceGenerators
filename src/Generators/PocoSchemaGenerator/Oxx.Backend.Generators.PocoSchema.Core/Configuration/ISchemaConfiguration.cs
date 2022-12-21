@@ -1,16 +1,20 @@
 using System.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaConfiguration<TSchemaType> : ISchemaConfiguration
-	where TSchemaType: ISchemaType
-{ }
+public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : ISchemaConfiguration
+	where TSchemaType : ISchemaType
+	where TSchemaEventConfiguration : ISchemaEventConfiguration
+{
+	TSchemaEventConfiguration Events { get; }
+}
 
 public interface ISchemaConfiguration
 {
 	IEnumerable<Assembly> Assemblies { get; }
 	string OutputDirectory { get; }
 	bool DeleteFilesOnStart { get; }
-	string SchemaNamingConvention { get; }
-	string SchemaTypeNamingConvention { get; }
+	string PropertyNamingConvention { get; }
+	string PropertyTypeNamingConvention { get; }
 }

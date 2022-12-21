@@ -1,6 +1,8 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
+using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
@@ -44,11 +46,14 @@ public class ZodSchema : ISchema
 		{{typeExport}}
 		""";
 
-		return new FileInformation(GenerateFileName(pocoObject.Name), content);
+		var fileInformation = new FileInformation(GenerateFileName(pocoObject.Name), content);
+		
+		_configuration.Events.SchemaCreating?.Invoke(this, new SchemaCreatingEventArgs(fileInformation));
+		return fileInformation;
 	}
 
 	private string GenerateFileName(BaseName baseName)
-		=> $"{baseName.GetSchemaName(_configuration)}.ts";
+		=> $"{baseName.GetPropertyName(_configuration)}.ts";
 
 	private (string Schema, IReadOnlyCollection<string> AdditionalImports) GenerateSchema(PocoObject pocoObject)
 	{
@@ -61,7 +66,7 @@ public class ZodSchema : ISchema
 			.ToArray();
 
 		var schema = $$"""
-		export const {{pocoObject.Name.GetSchemaName(_configuration)}} = z.object({
+		export const {{pocoObject.Name.GetPropertyName(_configuration)}} = z.object({
 			{{string.Join("," + Environment.NewLine + "\t", properties.Select(x => x.Property))}},
 		});
 		""";
@@ -103,7 +108,7 @@ public class ZodSchema : ISchema
 			return new PropertyInformation(schemaType.ValidationSchemaLogic.Logic, ImportInformation.None);
 		}
 
-		var schemaName = schemaType.ValidationSchemaName.GetSchemaName(_configuration);
+		var schemaName = schemaType.ValidationSchemaName.GetPropertyName(_configuration);
 		return new PropertyInformation(schemaName, new ImportInformation
 		{
 			Name = schemaName,
@@ -123,7 +128,7 @@ public class ZodSchema : ISchema
 
 		import { z } from "zod";
 
-		export const {{schemaType.ValidationSchemaName.GetSchemaName(_configuration)}} = {{schemaType.ValidationSchemaLogic}};
+		export const {{schemaType.ValidationSchemaName.GetPropertyName(_configuration)}} = {{schemaType.ValidationSchemaLogic}};
 
 		{{GenerateTypeExport(schemaType.ValidationSchemaName)}}
 		""";
@@ -137,7 +142,7 @@ public class ZodSchema : ISchema
 			.Select(kvp => GenerateType(kvp.Value));
 
 	private string GenerateTypeExport(BaseName baseName)
-		=> $"export type {baseName.GetSchemaTypeName(_configuration)} = z.infer<typeof {baseName.GetSchemaName(_configuration)}>;";
+		=> $"export type {baseName.GetPropertyTypeName(_configuration)} = z.infer<typeof {baseName.GetPropertyName(_configuration)}>;";
 
 
 	private record struct ImportInformation(string Name, string Path, bool Required)

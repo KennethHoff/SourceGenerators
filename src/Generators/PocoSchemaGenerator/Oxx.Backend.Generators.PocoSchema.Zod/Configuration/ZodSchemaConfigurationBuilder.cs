@@ -1,11 +1,12 @@
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
+using Oxx.Backend.Generators.PocoSchema.Zod.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IZodSchemaType, ZodSchemaConfiguration>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IZodSchemaType, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
 {
 	public ZodSchemaConfigurationBuilder()
 	{
@@ -25,9 +26,9 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IZodSche
 			SchemaTypeDictionary = SchemaTypeDictionary,
 			Assemblies = Assemblies,
 			OutputDirectory = OutputDirectory,
-			SchemaNamingConvention = SchemaNamingConvention,
-			SchemaTypeNamingConvention = SchemaTypeNamingConvention,
+			PropertyNamingConvention = SchemaNamingConvention,
+			PropertyTypeNamingConvention = SchemaTypeNamingConvention,
 			DeleteFilesOnStart = DeleteFilesOnStart,
+			Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
 		};
-
 }
