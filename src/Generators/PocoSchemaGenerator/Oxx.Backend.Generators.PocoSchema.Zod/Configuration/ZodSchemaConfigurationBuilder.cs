@@ -29,7 +29,6 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZ
 			AtomicSchemaDictionary = SchemaTypeDictionary,
 			Assemblies = Assemblies,
 			OutputDirectory = OutputDirectory,
-			PropertyNamingFormat = SchemaNamingFormat,
 			DeleteFilesOnStart = DeleteFilesOnStart,
 			Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
 			SchemaNamingFormat = SchemaNamingFormat,

@@ -16,7 +16,6 @@ public interface ISchemaConfiguration
 	IEnumerable<Assembly> Assemblies { get; }
 	string OutputDirectory { get; }
 	bool DeleteFilesOnStart { get; }
-	string PropertyNamingFormat { get; }
 	string SchemaNamingFormat { get; }
 	string SchemaTypeNamingFormat { get; }
 	string SchemaFileNameFormat { get; }

@@ -10,15 +10,21 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 	public required string OutputDirectory { get; init; }
 	public required bool DeleteFilesOnStart { get; init; } = true;
 	public required IDictionary<Type, IAtomicZodSchema> AtomicSchemaDictionary { get; init; }
-	public required string PropertyNamingFormat { get; init; } = "{0}";
 	public required string SchemaNamingFormat { get; init; } = "{0}Schema";
 	public required string SchemaTypeNamingFormat { get; init; } = "{0}SchemaType";
 	public required string SchemaFileNameFormat { get; init; } = "{0}Schema.ts";
 	public required ZodSchemaEventConfiguration Events { get; init; }
 
 	public string FormatSchemaTypeName(IZodSchema schema)
-		=> string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName);
+		=> schema is IBuiltInAtomicZodSchema
+			? schema.SchemaBaseName
+			: string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName);
 
 	public string FormatSchemaName(IZodSchema schema)
-		=> string.Format(SchemaNamingFormat, schema.SchemaBaseName);
+		=> schema is IBuiltInAtomicZodSchema
+			? schema.SchemaBaseName
+			: string.Format(SchemaNamingFormat, schema.SchemaBaseName);
+
+	public string FormatFilePath(IZodSchema zodSchema)
+		=> $"./{string.Format(SchemaFileNameFormat, zodSchema.SchemaBaseName)}".TrimEnd('.', 't', 's');
 }

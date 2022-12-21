@@ -119,7 +119,7 @@ public class ZodSchemaConverter : ISchemaConverter
 			.Select(x => KeyValuePair.Create(x, (IZodSchema)_generatedSchemas[x.PropertyType]))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return partialSchema.Populate(validSchemas);
+		return partialSchema.Populate(validSchemas, _configuration);
 	}
 
 	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
