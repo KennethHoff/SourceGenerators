@@ -4,6 +4,11 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 public class GuidAtomicZodSchema : IAtomicZodSchema
 {
-	public SchemaDefinition SchemaDefinition => new("""z.string().uuid().brand<"GUID">()""");
-	public SchemaOutputPath SchemaOutputPath { get; } public SchemaBaseName SchemaBaseName => new("guid");
+	public virtual string Brand => "guid";
+	public SchemaDefinition SchemaDefinition => new($"""z.string().uuid().brand<"{Brand.ToUpperInvariant()}">()""");
+	public SchemaBaseName SchemaBaseName => new(Brand);
+}
+public class TypedIdAtomicZodSchema<TTypedId> : GuidAtomicZodSchema
+{
+	public override string Brand => typeof(TTypedId).Name;
 }

@@ -55,7 +55,10 @@ public class MolecularZodSchema : IMolecularZodSchema
 		})
 		.Distinct()
 		.Aggregate(string.Empty, (a, b)
-			=> $$"""{{a}}{{Environment.NewLine}}import { {{b.SchemaName}} } from '{{b.FilePath}}';""");
+			=> $$"""
+			{{a}}import { {{b.SchemaName}} } from "{{b.FilePath}}";{{Environment.NewLine}}
+			""")
+		.TrimEnd(Environment.NewLine);
 
 	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }

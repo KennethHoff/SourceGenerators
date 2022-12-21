@@ -90,14 +90,14 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	protected SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> Substitute<TType, TSubstitute>() where TType : class
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> Substitute<TType, TSubstitute>() where TType : class
 		where TSubstitute : TSchemaType, new()
 	{
 		UpsertSchemaTypeDictionary<TType, TSubstitute>();
 		return this;
 	}
 
-	protected SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteIncludingNullable<TType, TSubstitute>() where TType : struct
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteIncludingNullable<TType, TSubstitute>() where TType : struct
 		where TSubstitute : TSchemaType, new()
 	{
 		UpsertSchemaTypeDictionary<TType, TSubstitute>();

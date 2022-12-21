@@ -1,4 +1,5 @@
 using Oxx.Backend.Generators.PocoSchema.Core;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace TestingApp.Models;
 
@@ -8,7 +9,7 @@ internal sealed class Person : IPersonAge, IPersonName, IPersonId
 	public int Age { get; init; }
 
 	public string Name { get; init; } = string.Empty;
-	public Guid Id { get; init; }
+	public PersonId Id { get; init; }
 }
 
 public interface IPersonAge
@@ -23,5 +24,17 @@ public interface IPersonName
 
 public interface IPersonId
 {
-	Guid Id { get; init; }
+	PersonId Id { get; init; }
+}
+
+public readonly record struct PersonId(Guid Id)
+{
+	public override string ToString()
+		=> Id.ToString();
+}
+
+public readonly record struct CeremonyId(Guid Id)
+{
+	public override string ToString()
+		=> Id.ToString();
 }
