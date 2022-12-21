@@ -6,9 +6,9 @@ namespace Oxx.Backend.Generators.PocoSchema.Core;
 public class SchemaGenerator
 {
 	private readonly ISchema _schema;
-	private readonly ISchemaGeneratorConfiguration _configuration;
+	private readonly ISchemaConfiguration _configuration;
 
-	public SchemaGenerator(ISchema schema, ISchemaGeneratorConfiguration configuration)
+	public SchemaGenerator(ISchema schema, ISchemaConfiguration configuration)
 	{
 		_schema = schema;
 		_configuration = configuration;

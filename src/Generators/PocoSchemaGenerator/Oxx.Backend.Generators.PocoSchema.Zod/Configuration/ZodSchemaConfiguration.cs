@@ -4,7 +4,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaGeneratorConfiguration : ISchemaGeneratorConfiguration<IZodSchemaType>
+public class ZodSchemaConfiguration : ISchemaConfiguration<IZodSchemaType>
 {
 	public IEnumerable<Assembly> Assemblies { get; set; } = new List<Assembly>();
 	public string OutputDirectory { get; set; } = string.Empty;

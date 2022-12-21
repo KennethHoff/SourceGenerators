@@ -8,9 +8,9 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
 public class ZodSchema : ISchema
 {
-	private readonly ZodSchemaGeneratorConfiguration _configuration;
+	private readonly ZodSchemaConfiguration _configuration;
 
-	public ZodSchema(ZodSchemaGeneratorConfiguration configuration)
+	public ZodSchema(ZodSchemaConfiguration configuration)
 	{
 		_configuration = configuration;
 	}

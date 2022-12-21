@@ -5,9 +5,9 @@ namespace TestingApp;
 
 internal static class SchemaGeneratorConfiguration
 {
-	public static ZodSchemaGeneratorConfigurationBuilder ConfigureSchemaGenerator()
+	public static ZodSchemaConfigurationBuilder ConfigureSchemaGenerator()
 	{
-		var configurationBuilder = new ZodSchemaGeneratorConfigurationBuilder();
+		var configurationBuilder = new ZodSchemaConfigurationBuilder();
 		configurationBuilder.ResolveTypesFromAssemblyContaining<NoobaTron>();
 
 		return configurationBuilder;

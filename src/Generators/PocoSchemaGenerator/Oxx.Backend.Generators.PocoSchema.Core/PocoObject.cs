@@ -7,10 +7,10 @@ public record struct PocoObject(BaseName Name, IEnumerable<PropertyInfo> Propert
 
 public record struct BaseName(string Value)
 {
-	public string GetSchemaName(ISchemaGeneratorConfiguration configuration)
+	public string GetSchemaName(ISchemaConfiguration configuration)
 		=> string.Format(configuration.SchemaNamingConvention, Value);
 	
-	public string GetSchemaTypeName(ISchemaGeneratorConfiguration configuration)
+	public string GetSchemaTypeName(ISchemaConfiguration configuration)
 		=> string.Format(configuration.SchemaTypeNamingConvention, Value);
 
 	public override string ToString()

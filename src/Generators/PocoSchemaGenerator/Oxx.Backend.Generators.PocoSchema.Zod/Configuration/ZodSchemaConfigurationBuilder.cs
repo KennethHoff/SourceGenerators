@@ -5,9 +5,9 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurationBuilder<IZodSchemaType, ZodSchemaGeneratorConfiguration>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IZodSchemaType, ZodSchemaConfiguration>
 {
-	public ZodSchemaGeneratorConfigurationBuilder()
+	public ZodSchemaConfigurationBuilder()
 	{
 		Substitute<string, StringZodSchemaType>();
 		SubstituteIncludingNullable<int, NumberZodSchemaType>();
@@ -19,7 +19,7 @@ public class ZodSchemaGeneratorConfigurationBuilder : SchemaGeneratorConfigurati
 		SubstituteIncludingNullable<DateTime, DateZodSchemaType>();
 	}
 
-	protected override ZodSchemaGeneratorConfiguration CreateConfiguration()
+	protected override ZodSchemaConfiguration CreateConfiguration()
 		=> new()
 		{
 			SchemaTypeDictionary = SchemaTypeDictionary,

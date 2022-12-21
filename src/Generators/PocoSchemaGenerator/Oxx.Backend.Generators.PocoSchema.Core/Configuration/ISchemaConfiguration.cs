@@ -2,11 +2,11 @@ using System.Reflection;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaGeneratorConfiguration<TSchemaType> : ISchemaGeneratorConfiguration
+public interface ISchemaConfiguration<TSchemaType> : ISchemaConfiguration
 	where TSchemaType: ISchemaType
 { }
 
-public interface ISchemaGeneratorConfiguration
+public interface ISchemaConfiguration
 {
 	IEnumerable<Assembly> Assemblies { get; }
 	string OutputDirectory { get; }
