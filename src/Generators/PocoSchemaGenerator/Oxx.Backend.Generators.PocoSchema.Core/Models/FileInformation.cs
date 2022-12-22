@@ -1,6 +1,6 @@
 namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
 
-public readonly record struct FileInformation
+public readonly struct FileInformation
 {
 	public static readonly FileInformation None = new()
 	{
