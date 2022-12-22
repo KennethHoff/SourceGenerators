@@ -6,7 +6,7 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 public class GuidAtomicZodSchema : IAtomicZodSchema
 {
 	public virtual string Brand => "guid";
-	public SchemaDefinition SchemaDefinition => new($"""z.string().uuid().brand<"{Brand.ToUpperInvariant()}">()""");
+	public SchemaDefinition SchemaDefinition => new($"""z.string().uuid().brand<"{Brand}">()""");
 	public SchemaBaseName SchemaBaseName => new(Brand);
 }
 public class TypedIdAtomicZodSchema<TTypedId> : GuidAtomicZodSchema

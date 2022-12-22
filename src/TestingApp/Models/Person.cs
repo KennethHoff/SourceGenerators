@@ -1,3 +1,4 @@
+using AnotherProject;
 using Oxx.Backend.Generators.PocoSchema.Core;
 using TestingApp.SchemaTypes;
 
@@ -10,6 +11,8 @@ internal sealed class Person : IPersonAge, IPersonName, IPersonId
 
 	public string Name { get; init; } = string.Empty;
 	public PersonId Id { get; init; }
+
+	public required PocoFromAnotherProject Type { get; init; }
 }
 
 public interface IPersonAge

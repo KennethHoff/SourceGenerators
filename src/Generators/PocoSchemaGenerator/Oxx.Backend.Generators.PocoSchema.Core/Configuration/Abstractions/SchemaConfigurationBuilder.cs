@@ -50,7 +50,7 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 	
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideFileNameFormat(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> OverrideFileNameNamingFormat(string namingFormat)
 	{
 		FileNameFormat = namingFormat;
 		return this;

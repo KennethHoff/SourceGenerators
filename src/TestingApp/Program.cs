@@ -1,4 +1,5 @@
-﻿using Oxx.Backend.Generators.PocoSchema.Zod;
+﻿using AnotherProject;
+using Oxx.Backend.Generators.PocoSchema.Zod;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 using TestingApp;
@@ -8,7 +9,10 @@ using TestingApp.SchemaTypes;
 var configuration = new ZodSchemaConfigurationBuilder()
 	.SetRootDirectory("/home/kennethhoff/Documents/Development/OXX/Suppehue/Frontend/Suppehue.Frontend.NextJS/src/zod/")
 	.DeleteExistingFiles()
+	.OverrideFileNameFormat("{0}")
+	.OverrideSchemaTypeNamingFormat("{0}")
 	.ResolveTypesFromAssemblyContaining<ITestingAppMarker>()
+	.ResolveTypesFromAssemblyContaining<IAnotherProjectMarker>()
 	.SubstituteIncludingNullable<PersonId, TypedIdAtomicZodSchema<PersonId>>()
 	.SubstituteIncludingNullable<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
 	.SubstituteExcludingNullable<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))

@@ -15,4 +15,8 @@
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Oxx.Backend.Generators.PocoSchema.Zod" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AnotherProject\AnotherProject.csproj" />
+  </ItemGroup>
 </Project>
