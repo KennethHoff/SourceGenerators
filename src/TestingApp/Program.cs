@@ -11,7 +11,7 @@ var configuration = new ZodSchemaConfigurationBuilder()
 	.ResolveTypesFromAssemblyContaining<ITestingAppMarker>()
 	.SubstituteIncludingNullable<PersonId, TypedIdAtomicZodSchema<PersonId>>()
 	.SubstituteIncludingNullable<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
-	.SubstituteExcludingNullable<ClampedNumber, ClampedNumberAtomicZodSchema>()
+	.SubstituteExcludingNullable<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 	.Build();
 
 var schema = new ZodSchemaConverter(configuration);
