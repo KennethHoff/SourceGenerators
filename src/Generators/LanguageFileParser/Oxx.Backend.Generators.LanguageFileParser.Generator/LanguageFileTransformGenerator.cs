@@ -1,10 +1,9 @@
-﻿using System.Collections.Immutable;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis.Text;
 
-namespace LanguageFileParser.Generator;
+namespace Oxx.Backend.Generators.LanguageFileParser.Generator;
 
 // TODO: Convert to IIncrementalGenerator
 // TODO: Add option to select output partial class name
@@ -12,7 +11,7 @@ namespace LanguageFileParser.Generator;
 public class LanguageFileTransformGenerator : ISourceGenerator
 {
 	private const string Authors = "Kenneth Hoff";
-	private const string PackageName = "Oxx.Backend.Utils.LanguageFileParser";
+	private const string PackageName = "Oxx.Backend.Generators.LanguageFileParser";
 
 	private const string OutputPartialClassName = "Localizations";
 	private const string FileExtension = ".xml";
@@ -38,25 +37,26 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 
 	public void Execute(GeneratorExecutionContext context)
 	{
-		var languageFiles = context.AdditionalFiles
-			.Where(at => LanguageFileRegex.IsMatch(at.Path))
-			.ToImmutableList();
-
-		languageFiles.ForEach(file =>
-		{
-			var content = file.GetText(context.CancellationToken);
-			if (content is null)
-			{
-				return;
-			}
-
-			var elements = new List<ParsedElement>();
-
-			var fileName = new Uri(file.Path).Segments.Last().Replace(FileExtension, string.Empty);
-			var parsed = ParseXmlContent(content, fileName, elements);
-			var sanitizedPath = SanitizePath(file.Path);
-			context.AddSource($"{sanitizedPath}.g.cs", parsed);
-		});
+		context.AddSource("lol.g.cs", "public class Lol { }");
+		// var languageFiles = context.AdditionalFiles
+		// 	.Where(at => LanguageFileRegex.IsMatch(at.Path))
+		// 	.ToImmutableList();
+		//
+		// languageFiles.ForEach(file =>
+		// {
+		// 	var content = file.GetText(context.CancellationToken);
+		// 	if (content is null)
+		// 	{
+		// 		return;
+		// 	}
+		//
+		// 	var elements = new List<ParsedElement>();
+		//
+		// 	var fileName = new Uri(file.Path).Segments.Last().Replace(FileExtension, string.Empty);
+		// 	var parsed = ParseXmlContent(content, fileName, elements);
+		// 	var sanitizedPath = SanitizePath(file.Path);
+		// 	context.AddSource($"{sanitizedPath}.g.cs", parsed);
+		// });
 	}
 
 	public void Initialize(GeneratorInitializationContext context)
@@ -100,7 +100,7 @@ public class LanguageFileTransformGenerator : ISourceGenerator
 
 		var section = element.Elements().Select(element1 => ParseSection(element1, fileName, nextDepth, parsedElements, newParsedElement)).ToList();
 
-		var innerContent = string.Join("\n", section.Where(x => x != string.Empty));
+		var innerContent = string.Join(Environment.NewLine, section.Where(x => x != string.Empty));
 		if (parentElement is not null)
 		{
 			return 

@@ -5,6 +5,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{79904E39-F5B4-4F9A-BBCB-0538CB62F140}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingApp", "src\TestingApp\TestingApp.csproj", "{68AA5A7B-E7C7-491B-AD70-6E7A5191B8E8}"
@@ -13,9 +16,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageFileParser", "LanguageFileParser", "{DE422F69-8904-4383-A638-D136CD35022D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageFileParser", "src\Generators\LanguageFileParser\LanguageFiles\LanguageFileParser.csproj", "{8AC71A56-23C3-4A82-8E22-6991C1AD3267}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.LanguageFileParser", "src\Generators\LanguageFileParser\LanguageFiles\Oxx.Backend.Generators.LanguageFileParser.csproj", "{8AC71A56-23C3-4A82-8E22-6991C1AD3267}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageFileParser.Generator", "src\Generators\LanguageFileParser\LanguageFileParser.Generator\LanguageFileParser.Generator.csproj", "{085B289B-E469-484D-A96C-7CAEA2374C5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.LanguageFileParser.Generator", "src\Generators\LanguageFileParser\Oxx.Backend.Generators.LanguageFileParser.Generator\Oxx.Backend.Generators.LanguageFileParser.Generator.csproj", "{085B289B-E469-484D-A96C-7CAEA2374C5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PocoSchemaGenerator", "PocoSchemaGenerator", "{3EA39158-9948-4558-BA59-EEAF16C3E6D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.PocoSchema.Zod", "src\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj", "{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.PocoSchema.Core", "src\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Core\Oxx.Backend.Generators.PocoSchema.Core.csproj", "{E2F93D7A-76C7-4AA2-8C59-E13B8D078669}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnotherProject", "src\AnotherProject\AnotherProject.csproj", "{DCDB0850-743C-4168-A779-3498DE511DBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +39,10 @@ Global
 		{DE422F69-8904-4383-A638-D136CD35022D} = {BECB8F33-F39E-4CE1-B1FB-4AB68D621318}
 		{8AC71A56-23C3-4A82-8E22-6991C1AD3267} = {DE422F69-8904-4383-A638-D136CD35022D}
 		{085B289B-E469-484D-A96C-7CAEA2374C5D} = {DE422F69-8904-4383-A638-D136CD35022D}
+		{3EA39158-9948-4558-BA59-EEAF16C3E6D2} = {BECB8F33-F39E-4CE1-B1FB-4AB68D621318}
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
+		{E2F93D7A-76C7-4AA2-8C59-E13B8D078669} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
+		{DCDB0850-743C-4168-A779-3498DE511DBE} = {AF36F164-DA64-4E7A-ACD4-84959132BEFB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{68AA5A7B-E7C7-491B-AD70-6E7A5191B8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -42,5 +57,17 @@ Global
 		{085B289B-E469-484D-A96C-7CAEA2374C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{085B289B-E469-484D-A96C-7CAEA2374C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{085B289B-E469-484D-A96C-7CAEA2374C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1771AF6C-DF5F-46E5-BA25-66CF3103F23F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2F93D7A-76C7-4AA2-8C59-E13B8D078669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2F93D7A-76C7-4AA2-8C59-E13B8D078669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2F93D7A-76C7-4AA2-8C59-E13B8D078669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2F93D7A-76C7-4AA2-8C59-E13B8D078669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCDB0850-743C-4168-A779-3498DE511DBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCDB0850-743C-4168-A779-3498DE511DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCDB0850-743C-4168-A779-3498DE511DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCDB0850-743C-4168-A779-3498DE511DBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

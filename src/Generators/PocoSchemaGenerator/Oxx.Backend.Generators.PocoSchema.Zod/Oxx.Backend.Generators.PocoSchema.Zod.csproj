@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>0.1.1.10</Version>
+    <IsPackable>true</IsPackable>
+    <Title>Oxx.Backend.Generators.PocoSchema.Zod</Title>
+    <Authors>Kenneth Hoff</Authors>
+    <Description>Generate Zod schemas from your C# Models</Description>
+    <PackageTags>Zod TypeScript Generator TypeSafety CompileTime SourceGenerator</PackageTags>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Oxx.Backend.Generators.PocoSchema.Core\Oxx.Backend.Generators.PocoSchema.Core.csproj" />
+  </ItemGroup>
+
+</Project>
