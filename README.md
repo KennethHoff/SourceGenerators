@@ -72,7 +72,9 @@ The following options are available:
   * This has an optional parameter `Func<TSubstitute> substituteFactory` that is used to override the default factory for the substitute type.
   * Example: `ApplySchemaToClass<MyClass, MyClassSchema>()` will apply the schema `MyClassSchema` to the class `MyClass`.
   * Example: `ApplySchemaToClass<MyClass, MyClassSchema>(() => new MyClass())` will apply the schema `MyClassSchema` to the class `MyClass` and use the factory `() => new MyClass()` to create the substitute type.
-  * Note: This should very rarely be used, as you generally want to use the `[PocoObject`] attribute instead. This is only here for edge cases - Specifically string.
+  * Note: This should very rarely be used, as you generally want to use the `[PocoObject`] attribute instead. This is only here for edge cases.
+    * Example: If you don't have access to the source code of the class, but you want to apply a schema to it.
+    * Internally this is only used to apply a schema to the `string` type.
 * `ConfigureEvents(Action<TSchemaEventConfiguration> action)` - Configures the events that are fired during the generation process.
     * Example: `ConfigureEvents(x => x.FileCreated += (sender, args) => { /* Do something */ })`
 * `ResolveTypesFromAssemblyContaining<TType>()` - Resolves types from the assembly containing the specified type.
