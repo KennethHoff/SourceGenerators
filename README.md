@@ -127,6 +127,7 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
           type `MyOtherClass`).
 * The schema generator doesn't support generic types.
     * Example: `class MyClass<T> { public T MyProperty { get; set; } }`
+    * This is similar to the generic-property issue, but not quite the same. 
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
     * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
 
