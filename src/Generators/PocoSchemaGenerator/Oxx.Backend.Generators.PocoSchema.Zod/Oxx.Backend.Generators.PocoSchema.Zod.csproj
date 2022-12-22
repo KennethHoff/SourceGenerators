@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>0.1.1.8</Version>
+    <Version>0.1.1.9</Version>
     <IsPackable>true</IsPackable>
     <Title>Oxx.Backend.Generators.PocoSchema.Zod</Title>
     <Authors>Kenneth Hoff</Authors>

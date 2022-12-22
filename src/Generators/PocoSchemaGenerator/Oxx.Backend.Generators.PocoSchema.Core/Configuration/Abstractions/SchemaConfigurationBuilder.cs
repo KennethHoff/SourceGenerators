@@ -91,47 +91,47 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> Substitute<TType, TSubstitute>(
-		Func<TSubstitute>? configure = null) where TType : class
+		Func<TSubstitute>? substituteFactory = null) where TType : class
 		where TSubstitute : TSchemaType, new()
 	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>(configure);
+		UpsertSchemaTypeDictionary<TType, TSubstitute>(substituteFactory);
 		return this;
 	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteIncludingNullable<TType, TSubstitute>(
-		Func<TSubstitute>? configure = null) 
+		Func<TSubstitute>? substituteFactory = null) 
 		where TType : struct
 		where TSubstitute : TSchemaType, new()
 	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>(configure);
-		UpsertSchemaTypeDictionary<TType?, TSubstitute>(configure);
+		UpsertSchemaTypeDictionary<TType, TSubstitute>(substituteFactory);
+		UpsertSchemaTypeDictionary<TType?, TSubstitute>(substituteFactory);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteExcludingNullable<TType, TSubstitute>(Func<TSubstitute>? configure = null) 
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteExcludingNullable<TType, TSubstitute>(Func<TSubstitute>? substituteFactory = null) 
 		where TType : struct
 		where TSubstitute : TSchemaType, new()
 	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>(configure);
+		UpsertSchemaTypeDictionary<TType, TSubstitute>(substituteFactory);
 		return this;
 	}
 	protected abstract TConfigurationType CreateConfiguration();
 
-	private void UpsertSchemaTypeDictionary<TType, TSubstitute>(Func<TSubstitute>? configure = null) where TSubstitute : TSchemaType, new()
+	private void UpsertSchemaTypeDictionary<TType, TSubstitute>(Func<TSubstitute>? substituteFactory = null) where TSubstitute : TSchemaType, new()
 	{
 		var type = typeof(TType);
 		
 		if (SchemaTypeDictionary.ContainsKey(type))
 		{
-			SchemaTypeDictionary[type] = configure is null
+			SchemaTypeDictionary[type] = substituteFactory is null
 				? new TSubstitute()
-				: configure();
+				: substituteFactory();
 		}
 		else
 		{
-			SchemaTypeDictionary.Add(type, configure is null
+			SchemaTypeDictionary.Add(type, substituteFactory is null
 				? new TSubstitute()
-				: configure());
+				: substituteFactory());
 		}
 	}
 
