@@ -1,4 +1,5 @@
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace TestingApp.SchemaTypes;
 

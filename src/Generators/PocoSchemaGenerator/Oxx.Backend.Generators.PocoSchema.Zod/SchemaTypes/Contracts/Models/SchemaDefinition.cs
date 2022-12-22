@@ -1,4 +1,4 @@
-namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
+namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 public readonly record struct SchemaDefinition(string Value)
 {

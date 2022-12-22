@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis.Text;
 
-namespace LanguageFileParser.Generator;
+namespace Oxx.Backend.Generators.LanguageFileParser.Generator;
 
 // TODO: Convert to IIncrementalGenerator
 // TODO: Add option to select output partial class name
@@ -11,7 +11,7 @@ namespace LanguageFileParser.Generator;
 public class LanguageFileTransformGenerator : ISourceGenerator
 {
 	private const string Authors = "Kenneth Hoff";
-	private const string PackageName = "Oxx.Backend.Utils.Oxx.Backend.Generators.LanguageFileParser";
+	private const string PackageName = "Oxx.Backend.Generators.LanguageFileParser";
 
 	private const string OutputPartialClassName = "Localizations";
 	private const string FileExtension = ".xml";
