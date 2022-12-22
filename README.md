@@ -94,6 +94,49 @@ The following options are available:
 * Add more schema generators.
   * TypeScript
   * OpenAPI
+
+## Known issues
+
+### Very high priority
+Issues that are currently blocking the release of the package. 
+* The schema generator doesn't support generic properties.
+  * Example: `class MyClass { public List<MyClass> MyProperty { get; set; } }`
+* The schema generator doesn't support nullable "molecular" types.
+  * A "molecular" type is a type that is created from the `[PocoObject]` attribute.
+  * Example: `class MyClass { MyOtherClass? MyProperty { get; set; } }` would be identical to `class MyClass { MyOtherClass MyProperty { get; set; } }`
+
+### Medium priority
+Issues that are less common and/or can be worked around.
+* The schema generator doesn't support enums.
+  * Example: `enum MyEnum { MyValue }`
+* The schema generator only partially supports inheritance.
+  * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
+  * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for them.
+* The schema generator doesn't fully support interfaces
+    * Example: `interface IMyInterface { string MyProperty { get; set; } }`
+    * Currently it will generate a schema that's identical to what it would generate for a class. That is to say, all properties will have to match the schema,
+      and all other properties will be discarded.
+    * Ideally it would generate a schema that matches the interface, but allows for additional properties.
+
+### Low priority
+Issues that are very uncommon and/or can easily be worked around and/or are very difficult to fix.
+* The schema generator doesn't support self-referencing types.
+    * Example: `class MyClass { public MyClass MyProperty { get; set; } }`
+    * There is a way to do this in Zod, but it's quite complicated and I don't think it's worth it.
+        * https://github.com/colinhacks/zod#recursive-types
+    * This can partially be worked around by making an inherited class instead
+      * Example: `class MyClass { public MyOtherClass MyProperty { get; set; } } class MyOtherClass : MyClass { }`
+      * However, the `MyOtherClass` will have TypeScript errors as it will then have a reference to itself (`MyOtherClass.MyProperty` will be of type `MyOtherClass`).
+* The schema generator doesn't support generic types.
+    * Example: `class MyClass<T> { public T MyProperty { get; set; } }`
+    * I'm sure it's possible to do this, but I imagine it would be very complicated.
+    * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
+
+I'm sure there are tons of other issues, but these are the ones I'm aware of.
+
+## Contributing
+
+Contributions are welcome, feel free to open a pull request.
 ## Authors
 
 * **Kenneth Hoff** - *Everything*

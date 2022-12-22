@@ -13,10 +13,10 @@ internal sealed class Person : IPersonAge, IPersonName, IPersonId
 	public PersonId Id { get; init; }
 	public PersonId? Id2 { get; init; }
 
-	[PocoPropertyIgnore]
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
 }
 
+[PocoObject]
 public interface IPersonAge
 {
 	ClampedNumber Age { get; init; }
