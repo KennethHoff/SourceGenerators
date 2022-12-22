@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" />
-    <PackageReference Include="Oxx.Backend.Generators.PocoSchema.Zod" />
+<!--    <PackageReference Include="Oxx.Backend.Generators.PocoSchema.Zod" />-->
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
 
 </Project>

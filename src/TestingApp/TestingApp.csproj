@@ -15,5 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AnotherProject\AnotherProject.csproj" />
+    <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
 </Project>

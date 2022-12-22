@@ -11,6 +11,7 @@ internal sealed class Person : IPersonAge, IPersonName, IPersonId
 
 	public string Name { get; init; } = string.Empty;
 	public PersonId Id { get; init; }
+	public PersonId? Id2 { get; init; }
 
 	[PocoPropertyIgnore]
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }

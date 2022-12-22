@@ -90,27 +90,20 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> Substitute<TType, TSubstitute>(
-		Func<TSubstitute>? substituteFactory = null) where TType : class
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteStruct<TType, TSubstitute>(
+		Func<TSubstitute>? substituteFactory = null)
 		where TSubstitute : TSchemaType, new()
-	{
-		UpsertSchemaTypeDictionary<TType, TSubstitute>(substituteFactory);
-		return this;
-	}
-
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteIncludingNullable<TType, TSubstitute>(
-		Func<TSubstitute>? substituteFactory = null) 
-		where TType : struct
-		where TSubstitute : TSchemaType, new()
+		where TType: struct
 	{
 		UpsertSchemaTypeDictionary<TType, TSubstitute>(substituteFactory);
 		UpsertSchemaTypeDictionary<TType?, TSubstitute>(substituteFactory);
 		return this;
 	}
-
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteExcludingNullable<TType, TSubstitute>(Func<TSubstitute>? substituteFactory = null) 
-		where TType : struct
+	
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> SubstituteClass<TType, TSubstitute>(
+		Func<TSubstitute>? substituteFactory = null)
 		where TSubstitute : TSchemaType, new()
+		where TType: class
 	{
 		UpsertSchemaTypeDictionary<TType, TSubstitute>(substituteFactory);
 		return this;

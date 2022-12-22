@@ -9,14 +9,14 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZ
 {
 	public ZodSchemaConfigurationBuilder()
 	{
-		Substitute<string, StringAtomicZodSchema>();
-		SubstituteIncludingNullable<int, NumberAtomicZodSchema>();
-		SubstituteIncludingNullable<float, NumberAtomicZodSchema>();
-		SubstituteIncludingNullable<double, NumberAtomicZodSchema>();
-		SubstituteIncludingNullable<decimal, NumberAtomicZodSchema>();
-		SubstituteIncludingNullable<Guid, GuidAtomicZodSchema>();
-		SubstituteIncludingNullable<bool, BooleanAtomicZodSchema>();
-		SubstituteIncludingNullable<DateTime, DateAtomicZodSchema>();
+		SubstituteClass<string, StringAtomicZodSchema>();
+		SubstituteStruct<int, NumberAtomicZodSchema>();
+		SubstituteStruct<float, NumberAtomicZodSchema>();
+		SubstituteStruct<double, NumberAtomicZodSchema>();
+		SubstituteStruct<decimal, NumberAtomicZodSchema>();
+		SubstituteStruct<Guid, GuidAtomicZodSchema>();
+		SubstituteStruct<bool, BooleanAtomicZodSchema>();
+		SubstituteStruct<DateTime, DateAtomicZodSchema>();
 	}
 
 	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
