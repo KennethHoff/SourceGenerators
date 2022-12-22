@@ -1,19 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" PrivateAssets="all" ExcludeAssets="Runtime" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <Version>0.1.0.42</Version>
+    <Version>0.1.1.1</Version>
     <IsPackable>true</IsPackable>
     <Title>Oxx.Backend.Generators.PocoSchema.Zod</Title>
     <Authors>Kenneth Hoff</Authors>
-    <Description>Generated Zod schemas out of your C# Models</Description>
+    <Description>Generate Zod schemas from your C# Models</Description>
     <PackageTags>Zod TypeScript Generator TypeSafety CompileTime SourceGenerator</PackageTags>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

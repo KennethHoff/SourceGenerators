@@ -2,4 +2,14 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <Version>1.0.0.0</Version>
+    <IsPackable>true</IsPackable>
+    <Title>Oxx.Backend.Generators.PocoSchema.Core</Title>
+    <Authors>Kenneth Hoff</Authors>
+    <Description>Core library for C# Model generators</Description>
+    <PackageTags>Zod TypeScript Generator TypeSafety CompileTime SourceGenerator</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
 </Project>
