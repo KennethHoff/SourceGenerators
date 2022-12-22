@@ -47,8 +47,8 @@ var configuration = new ZodSchemaConfigurationBuilder()
 The following options are available:
 * `DeleteExistingFiles(bool)`
   * If set to true, the generator will delete all existing files in the output directory before generating new ones.
-    * Default: `false`
-    * Note: This will delete the entire directory, so make sure you don't have any other files in there.
+  * Default: `false`
+  * Note: This will delete the entire directory, so make sure you don't have any other files in there.
 * `OverrideSchemaNamingFormat(string)`
   * This is used to override the default naming format for the generated schema files.
   * Default: `{0}Schema` where `{0}` is the name of the class.
