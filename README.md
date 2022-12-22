@@ -64,12 +64,15 @@ The following options are available:
   * Default: `.ts`
   * Example: `OverrideFileExtension(".ts")` will generate a file called `myClassSchema.ts` for a class called `MyClass`.
     * Note: The file name can be changed by using the `OverrideFileNameNamingFormat(string)` method (see above).
-* `Substitute<TType, TSubstitute>` - Substitutes a reference
-    * This has an optional parameter `Func<TSubstitute> substituteFactory` that is used to override the default factory for the substitute type.
-* `SubstituteIncludingNullable<TType, TSubstitute>` - Substitutes a POCO type with a IZodSchema.
-    * This has an optional parameter `Func<TSubstitute> substituteFactory` that is used to override the default factory for the substitute type.
-* `SubstituteExcludingNullable<TType, TSubstitute>` - Substitutes a POCO type with a IZodSchema.
-    * This has an optional parameter `Func<TSubstitute> substituteFactory` that is used to override the default factory for the substitute type.
+* `ApplySchemaToStruct<TType, TSchema>` - Applies a schema to a struct (Both Nullable and Non-Nullable).
+  * This has an optional parameter `Func<TSubstitute> substituteFactory` that is used to override the default factory for the substitute type.
+  * Example: `ApplySchemaToStruct<MyStruct, MyStructSchema>()` will apply the schema `MyStructSchema` to the struct `MyStruct`.
+  * Example: `ApplySchemaToStruct<MyStruct, MyStructSchema>(() => new MyStruct())` will apply the schema `MyStructSchema` to the struct `MyStruct` and use the factory `() => new MyStruct()` to create the substitute type.
+* `ApplySchemaToClass<TType, TSchema` - Applies a schema to a class.
+  * This has an optional parameter `Func<TSubstitute> substituteFactory` that is used to override the default factory for the substitute type.
+  * Example: `ApplySchemaToClass<MyClass, MyClassSchema>()` will apply the schema `MyClassSchema` to the class `MyClass`.
+  * Example: `ApplySchemaToClass<MyClass, MyClassSchema>(() => new MyClass())` will apply the schema `MyClassSchema` to the class `MyClass` and use the factory `() => new MyClass()` to create the substitute type.
+  * Note: This should very rarely be used, as you generally want to use the `[PocoObject`] attribute instead. This is only here for edge cases - Specifically string.
 * `ConfigureEvents(Action<TSchemaEventConfiguration> action)` - Configures the events that are fired during the generation process.
     * Example: `ConfigureEvents(x => x.FileCreated += (sender, args) => { /* Do something */ })`
 * `ResolveTypesFromAssemblyContaining<TType>()` - Resolves types from the assembly containing the specified type.
