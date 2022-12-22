@@ -8,7 +8,7 @@ This repository contains a set of source generators for C#.
 
 Converts C# classes into various Schemas
 
-_(Currently only [Zod](https://zod.dev/) schemas are supported)_, but more might be added in the future, like a TypeScript schema (Although, I think using Zod directly in TypeScript is a better idea).
+_(Currently only [Zod](https://zod.dev/) schemas are supported)_
 
 #### Usage
 
