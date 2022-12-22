@@ -107,7 +107,7 @@ Issues that are less common and/or can be worked around.
     * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
     * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for
       them.
-* The schema generator doesn't fully support interfaces
+* The schema generator only partially supports interfaces
     * Example: `interface IMyInterface { string MyProperty { get; set; } }`
     * Currently it will generate a schema that's identical to what it would generate for a class. That is to say, all properties will have to match the schema,
       and all other properties will be discarded.
