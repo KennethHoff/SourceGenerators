@@ -136,12 +136,20 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
 ## Future plans
 
 * Add Roslyn analyzers to ensure that the classes are valid for the schema generator.
-* Add more schema types.
-  * TypeScript
-  * OpenAPI
+  * This will be a separate - recommended - package.
+    * There might even be a separate package for each Schema, as there might be some issues that are specific to each schema.
+  * This will include things like:
+    * Ensuring that the `[PocoObject]` attribute is not applied to Static classes.
+    * Ensuring that the `[PocoObject]` attribute is not applied to classes that does not have a public parameterless constructor.
+    * Telling you if you're using a type that is not supported by the schema generator.
+      * If the intention is to not export the type, then you should use the `[PocoPropertyIgnore]` attribute on the property.
+      * This might not be possible to do however.
 * Add more schema generators.
   * TypeScript
+    * For when you don't want to use Zod - which will be the recommended schema generator, as it has runtime validation.
   * OpenAPI
+    * For when all you want is a schema for your API.
+    * (Probably won't do this: There are already plenty of packages that do this, and I don't think it's worth it to create another one.)
 
 ## Contributing
 
