@@ -9,7 +9,7 @@ using TestingApp.SchemaTypes;
 var configuration = new ZodSchemaConfigurationBuilder()
 	.SetRootDirectory("/home/kennethhoff/Documents/Development/OXX/Suppehue/Frontend/Suppehue.Frontend.NextJS/src/zod/")
 	.DeleteExistingFiles()
-	.OverrideFileNameFormat("{0}")
+	.OverrideFileNameNamingFormat("{0}")
 	.OverrideSchemaTypeNamingFormat("{0}")
 	.ResolveTypesFromAssemblyContaining<ITestingAppMarker>()
 	.ResolveTypesFromAssemblyContaining<IAnotherProjectMarker>()

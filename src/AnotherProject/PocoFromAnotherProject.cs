@@ -1,4 +1,4 @@
-﻿using Oxx.Backend.Generators.PocoSchema.Core;
+﻿using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 
 namespace AnotherProject;
 

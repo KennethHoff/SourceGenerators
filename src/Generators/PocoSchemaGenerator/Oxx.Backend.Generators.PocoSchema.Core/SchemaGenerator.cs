@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
+using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 
@@ -71,9 +73,13 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 
 	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
 		=> type.GetProperties()
-			.Where(IsPropertyOrField());
+			.Where(IsPropertyOrField())
+			.Where(DoesNotHaveIgnoreAttribute());
 
 	// More efficient than HasFlag.. I think - Rider gave me allocation warnings with HasFlag
 	private static Func<PropertyInfo, bool> IsPropertyOrField()
 		=> pi => (pi.MemberType & MemberTypes.Property) != 0 || (pi.MemberType & MemberTypes.Field) != 0;
+	
+	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
+		=> pi => pi.GetCustomAttribute<PocoPropertyIgnoreAttribute>() is null;
 }
