@@ -1,12 +1,12 @@
 using Oxx.Backend.Generators.PocoSchema.Core;
-using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
+using TestingApp.SchemaTypes;
 
 namespace TestingApp.Models;
 
 [PocoObject]
 internal sealed class Person : IPersonAge, IPersonName, IPersonId
 {
-	public int Age { get; init; }
+	public ClampedNumber Age { get; init; }
 
 	public string Name { get; init; } = string.Empty;
 	public PersonId Id { get; init; }
@@ -14,7 +14,7 @@ internal sealed class Person : IPersonAge, IPersonName, IPersonId
 
 public interface IPersonAge
 {
-	int Age { get; init; }
+	ClampedNumber Age { get; init; }
 }
 
 public interface IPersonName
