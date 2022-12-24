@@ -50,7 +50,8 @@ public class MolecularZodSchema : IMolecularZodSchema
 			
 			if (b.Key.IsNullable())
 			{
-				propertySchema += ".optional()";
+				// If the property is nullable, we need to make the property allow null (still required, and undefined is not allowed)
+				propertySchema += ".nullable()";
 			}
 
 			return $"{a}\t{propertyName}: {propertySchema},{Environment.NewLine}";
