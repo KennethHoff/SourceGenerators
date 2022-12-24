@@ -43,7 +43,19 @@ public class MolecularZodSchema : IMolecularZodSchema
 
 	private string SchemaContent => SchemaDictionary
 		.Aggregate(string.Empty, (a, b) 
-			=> $"{a}\t{b.Key.Name.ToCamelCaseInvariant()}: {SchemaConfiguration.FormatSchemaName(b.Value)},{Environment.NewLine}")
+			=>
+		{
+			var propertyName = b.Key.Name.ToCamelCaseInvariant();
+			var propertySchema = SchemaConfiguration.FormatSchemaName(b.Value);
+			
+			if (b.Key.IsNullable())
+			{
+				// If the property is nullable, we need to make the property allow null (still required, and undefined is not allowed)
+				propertySchema += ".nullable()";
+			}
+
+			return $"{a}\t{propertyName}: {propertySchema},{Environment.NewLine}";
+		})
 		.TrimEnd($"{Environment.NewLine}");
 
 	public string AdditionalImports => SchemaDictionary

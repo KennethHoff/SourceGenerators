@@ -7,15 +7,13 @@ using TestingApp.Models;
 using TestingApp.SchemaTypes;
 
 var configuration = new ZodSchemaConfigurationBuilder()
-	.SetRootDirectory("/home/kennethhoff/Documents/Development/OXX/Suppehue/Frontend/Suppehue.Frontend.NextJS/src/zod/")
+	.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
 	.DeleteExistingFiles()
-	.OverrideFileNameNamingFormat("{0}")
-	.OverrideSchemaTypeNamingFormat("{0}")
 	.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 	.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
-	.ApplySchemaToStruct<PersonId, TypedIdAtomicZodSchema<PersonId>>()
-	.ApplySchemaToStruct<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
-	.ApplySchemaToStruct<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
+	.ApplySchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
+	.ApplySchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
+	.ApplySchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 	.Build();
 
 var schema = new ZodSchemaConverter(configuration);

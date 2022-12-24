@@ -10,6 +10,7 @@ internal sealed class Person : IPersonAge, IPersonName, IPersonId
 	public ClampedNumber Age { get; init; }
 
 	public string Name { get; init; } = string.Empty;
+	public string? NullableName { get; init; } = string.Empty;
 	public PersonId Id { get; init; }
 	public PersonId? Id2 { get; init; }
 

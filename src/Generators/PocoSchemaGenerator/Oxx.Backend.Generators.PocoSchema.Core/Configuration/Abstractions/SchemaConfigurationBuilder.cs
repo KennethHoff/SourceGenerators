@@ -90,24 +90,27 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ApplySchemaToStruct<TType, TSchema>(
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ApplySchema<TType, TSchema>(
 		Func<TSchema>? schemaFactory = null)
 		where TSchema : TSchemaType, new()
-		where TType: struct
 	{
 		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
-		UpsertSchemaTypeDictionary<TType?, TSchema>(schemaFactory);
+		
+		// Add to Nullable<TType> if TType is a value type.
+		// Unlike Reference Types, when ValueTypes are null, they are an entirely different type.
+		// Specifically, Nullable<T> is a different type than T.
+		// Reference Types are still the same type when they are null.
+		if (typeof(TType).GetTypeInfo().IsValueType is false)
+		{
+			return this;
+		}
+
+		var nullableType = typeof(Nullable<>).MakeGenericType(typeof(TType));
+		UpsertSchemaTypeDictionary(nullableType, schemaFactory);
 		return this;
 	}
-	
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ApplySchemaToClass<TType, TSchema>(
-		Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, new()
-		where TType: class
-	{
-		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
-		return this;
-	}
+
+
 	protected abstract TConfigurationType CreateConfiguration();
 
 	private void UpsertSchemaTypeDictionary<TType, TSchema>(Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
@@ -127,6 +130,23 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 				: substituteFactory());
 		}
 	}
+
+	private void UpsertSchemaTypeDictionary<TSchema>(Type type, Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
+	{
+		if (SchemaTypeDictionary.ContainsKey(type))
+		{
+			SchemaTypeDictionary[type] = substituteFactory is null
+				? new TSchema()
+				: substituteFactory();
+		}
+		else
+		{
+			SchemaTypeDictionary.Add(type, substituteFactory is null
+				? new TSchema()
+				: substituteFactory());
+		}
+	}
+
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ConfigureEvents(Action<TSchemaEventConfiguration> action)
 	{
