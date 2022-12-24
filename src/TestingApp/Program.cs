@@ -13,9 +13,9 @@ var configuration = new ZodSchemaConfigurationBuilder()
 	.OverrideSchemaTypeNamingFormat("{0}Schema")
 	.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 	.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
-	.ApplySchemaToStruct<PersonId, TypedIdAtomicZodSchema<PersonId>>()
-	.ApplySchemaToStruct<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
-	.ApplySchemaToStruct<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
+	.ApplySchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
+	.ApplySchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
+	.ApplySchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 	.Build();
 
 var schema = new ZodSchemaConverter(configuration);
