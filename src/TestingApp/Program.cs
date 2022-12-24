@@ -7,10 +7,10 @@ using TestingApp.Models;
 using TestingApp.SchemaTypes;
 
 var configuration = new ZodSchemaConfigurationBuilder()
-	.SetRootDirectory("/home/kennethhoff/Documents/Development/OXX/Suppehue/Frontend/Suppehue.Frontend.NextJS/src/zod/")
+	.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
 	.DeleteExistingFiles()
 	.OverrideFileNameNamingFormat("{0}")
-	.OverrideSchemaTypeNamingFormat("{0}")
+	.OverrideSchemaTypeNamingFormat("{0}Schema")
 	.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 	.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 	.ApplySchemaToStruct<PersonId, TypedIdAtomicZodSchema<PersonId>>()
