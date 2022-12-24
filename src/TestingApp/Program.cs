@@ -9,8 +9,6 @@ using TestingApp.SchemaTypes;
 var configuration = new ZodSchemaConfigurationBuilder()
 	.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
 	.DeleteExistingFiles()
-	.OverrideFileNameNamingFormat("{0}")
-	.OverrideSchemaTypeNamingFormat("{0}Schema")
 	.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 	.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 	.ApplySchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
