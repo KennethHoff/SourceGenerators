@@ -36,7 +36,10 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			if (!fileCreatingEventArgs.Skip)
 			{
 				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
-				File.WriteAllText(filePath, fileInformation.Content);
+				lock (_configuration)
+				{
+					File.WriteAllText(filePath, fileInformation.Content);
+				}
 			}
 
 			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)

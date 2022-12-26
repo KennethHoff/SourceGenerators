@@ -33,7 +33,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	public IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects)
 	{
-		var atoms = GenerateAtoms(_configuration.AtomicSchemaDictionary);
+		var atoms = GenerateAtoms(_configuration.SchemaDictionary);
 		var molecules = GenerateMolecules(pocoObjects);
 		return atoms.Concat(molecules).Where(x => x != FileInformation.None);
 	}
@@ -113,8 +113,35 @@ public class ZodSchemaConverter : ISchemaConverter
 		};
 
 		var validSchemas = pocoObject.Properties
-			.Where(x => _generatedSchemas.ContainsKey(x.PropertyType))
-			.Select(x => KeyValuePair.Create(x, _generatedSchemas[x.PropertyType]))
+			.Where(x =>
+			{
+				var propertyType = x.PropertyType;
+				
+				// If the propertyType is generic, we need to get the generic type definition
+				if (propertyType.IsGenericType)
+				{
+					return _configuration.GenericSchemaDictionary.ContainsKey(propertyType.GetGenericTypeDefinition());
+				}
+				return _generatedSchemas.ContainsKey(propertyType);
+			})
+			.Select(x =>
+			{
+				var propertyType = x.PropertyType;
+
+				// If the propertyType is generic, we need to get the generic type definition
+				if (propertyType.IsGenericType)
+				{
+					var genericSchema = _configuration.CreateGenericSchema(propertyType.GetGenericTypeDefinition(), propertyType.GetGenericArguments());
+					if (genericSchema is null)
+					{
+						throw new InvalidOperationException($"No generic schema found for {propertyType.GetGenericTypeDefinition().Name}");
+					}
+					return KeyValuePair.Create(x, genericSchema);
+				}
+
+				var partialZodSchema = _generatedSchemas[propertyType];
+				return KeyValuePair.Create(x, partialZodSchema);
+			})
 			.ToDictionary(x => x.Key, x => x.Value);
 
 		return partialSchema.Populate(validSchemas, _configuration);

@@ -9,7 +9,8 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 	public required IEnumerable<Assembly> Assemblies { get; init; }
 	public required string OutputDirectory { get; init; }
 	public required bool DeleteFilesOnStart { get; init; }
-	public required IDictionary<Type, IAtomicZodSchema> AtomicSchemaDictionary { get; init; }
+	public required IDictionary<Type, IAtomicZodSchema> SchemaDictionary { get; init; }
+	public required IDictionary<Type, Type> GenericSchemaDictionary { get; init; }
 	public required string SchemaNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
@@ -30,4 +31,18 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 	// Currently it assumes everything is in the same directory.
 	public string FormatFilePath(IPartialZodSchema zodSchema)
 		=> $"./{string.Format(SchemaFileNameFormat, zodSchema.SchemaBaseName)}";
+
+	public IPartialZodSchema CreateGenericSchema(Type type, IReadOnlyCollection<Type> genericArguments)
+	{
+		var genericSchema = GenericSchemaDictionary[type];
+		
+		var argumentSchemas = genericArguments
+			.Select(x => SchemaDictionary[x])
+			.ToArray();
+		var genericSchemaType = genericSchema.MakeGenericType(argumentSchemas.Select(x => x.GetType()).ToArray());
+		return (IPartialZodSchema)Activator.CreateInstance(genericSchemaType)!;
+	}
+
+	public IPartialZodSchema CreateSchema(Type type)
+		=> SchemaDictionary[type];
 }

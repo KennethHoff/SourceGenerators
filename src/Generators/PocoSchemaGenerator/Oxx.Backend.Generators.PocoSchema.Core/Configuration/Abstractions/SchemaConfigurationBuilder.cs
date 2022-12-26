@@ -10,11 +10,13 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
 	protected readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
+	protected readonly IDictionary<Type, Type> GenericSchemaTypeDictionary = new Dictionary<Type, Type>();
 	protected string OutputDirectory = string.Empty;
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
 	protected abstract string FileNameFormat { get; set; }
+	protected abstract TConfigurationType Configuration { get; }
 	protected TSchemaEventConfiguration? EventConfiguration;
 
 	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
@@ -25,7 +27,10 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	#region Interface implementations
 
 	public TConfigurationType Build()
-		=> CreateConfiguration();
+	{
+		ActionToRunAfterConfigurationIsBuilt();
+		return Configuration;
+	}
 
 	#endregion
 
@@ -110,8 +115,22 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyGenericSchema(
+		Type genericType,
+		Type genericSchema)
+	{
+		var genericTypeDefinition = genericType.GetTypeInfo().GetGenericTypeDefinition();
+		var genericSchemaDefinition = genericSchema.GetTypeInfo().GetGenericTypeDefinition();
+		UpsertGenericSchemaTypeDictionary(genericTypeDefinition, genericSchemaDefinition);
+		return this;
+	}
+	
+	protected void ApplySchemas(Action action)
+	{
+		ActionToRunAfterConfigurationIsBuilt = action;
+	}
 
-	protected abstract TConfigurationType CreateConfiguration();
+	protected Action ActionToRunAfterConfigurationIsBuilt { get; private set; } = null!;
 
 	private void UpsertSchemaTypeDictionary<TType, TSchema>(Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
 	{
@@ -130,20 +149,55 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 				: substituteFactory());
 		}
 	}
-
-	private void UpsertSchemaTypeDictionary<TSchema>(Type type, Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
+	private void UpsertSchemaTypeDictionary<TSchema>(Type genericType, Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
 	{
-		if (SchemaTypeDictionary.ContainsKey(type))
+		if (SchemaTypeDictionary.ContainsKey(genericType))
 		{
-			SchemaTypeDictionary[type] = substituteFactory is null
+			SchemaTypeDictionary[genericType] = substituteFactory is null
 				? new TSchema()
 				: substituteFactory();
 		}
 		else
 		{
-			SchemaTypeDictionary.Add(type, substituteFactory is null
+			SchemaTypeDictionary.Add(genericType, substituteFactory is null
 				? new TSchema()
 				: substituteFactory());
+		}
+	}
+	
+	private void UpsertGenericSchemaTypeDictionary(Type genericType, Type genericSchema)
+	{
+		// Get the generic type definition of the generic type
+		var genericTypeTypeInfo = genericType.GetTypeInfo();
+		
+		// Get the generic type definition of the generic schema
+		var genericSchemaTypeInfo = genericSchema.GetTypeInfo();
+		
+		// Throw an exception if the generic schema does not implement TSchemaType
+		if (genericSchemaTypeInfo.ImplementedInterfaces.Contains(typeof(TSchemaType)) is false)
+		{
+			throw new ArgumentException($"The generic schema {genericSchema} does not implement {typeof(TSchemaType)}");
+		}
+		
+		// If the two generics don't have the same number of generic parameters, throw an exception
+		if (genericTypeTypeInfo.GenericTypeParameters.Length != genericSchemaTypeInfo.GenericTypeParameters.Length)
+		{
+			throw new ArgumentException($"The generic type {genericTypeTypeInfo.Name} and the generic schema {genericSchemaTypeInfo.Name} do not have the same number of generic parameters.");
+		}
+		
+		// if the two generics don't have the same number of generic arguments, throw an exception
+		if (genericTypeTypeInfo.GenericTypeArguments.Length != genericSchemaTypeInfo.GenericTypeArguments.Length)
+		{
+			throw new ArgumentException($"The generic type {genericTypeTypeInfo.Name} and the generic schema {genericSchemaTypeInfo.Name} do not have the same number of generic arguments.");
+		}
+
+		if (GenericSchemaTypeDictionary.ContainsKey(genericType))
+		{
+			GenericSchemaTypeDictionary[genericType] = genericSchema;
+		}
+		else
+		{
+			GenericSchemaTypeDictionary.Add(genericType, genericSchema);
 		}
 	}
 
