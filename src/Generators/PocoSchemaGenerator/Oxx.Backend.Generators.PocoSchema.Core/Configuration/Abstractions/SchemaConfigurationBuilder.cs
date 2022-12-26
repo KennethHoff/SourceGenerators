@@ -28,7 +28,7 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 
 	public TConfigurationType Build()
 	{
-		ActionToRunAfterConfigurationIsBuilt();
+		SchemaApplicationAction();
 		return Configuration;
 	}
 
@@ -127,10 +127,10 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	
 	protected void ApplySchemas(Action action)
 	{
-		ActionToRunAfterConfigurationIsBuilt = action;
+		SchemaApplicationAction = action;
 	}
 
-	protected Action ActionToRunAfterConfigurationIsBuilt { get; private set; } = null!;
+	protected Action SchemaApplicationAction { get; private set; } = null!;
 
 	private void UpsertSchemaTypeDictionary<TType, TSchema>(Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
 	{

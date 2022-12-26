@@ -58,7 +58,7 @@ public class MolecularZodSchema : IMolecularZodSchema
 		})
 		.TrimEnd($"{Environment.NewLine}");
 
-	public string AdditionalImports => SchemaDictionary
+	public IEnumerable<string> AdditionalImports => SchemaDictionary
 		.Select(x => x.Value)
 		.Where(x => x is not IBuiltInAtomicZodSchema)
 		.Select(x => new
@@ -67,11 +67,9 @@ public class MolecularZodSchema : IMolecularZodSchema
 			SchemaName = SchemaConfiguration.FormatSchemaName(x),
 		})
 		.Distinct()
-		.Aggregate(string.Empty, (a, b)
-			=> $$"""
-			{{a}}import { {{b.SchemaName}} } from "{{b.FilePath}}";{{Environment.NewLine}}
-			""")
-		.TrimEnd(Environment.NewLine);
+		.Select(x => $$"""
+		import { {{x.SchemaName}} } from "{{x.FilePath}}";
+		""");
 
 	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }

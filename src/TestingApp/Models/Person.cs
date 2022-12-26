@@ -14,9 +14,9 @@ internal sealed class Person
 	// public PersonId Id { get; init; }
 	// public PersonId? Id2 { get; init; }
 	
-	public IEnumerable<Guid> Ids { get; init; } = Enumerable.Empty<Guid>();
+	public IEnumerable<PersonId> Ids { get; init; } = Enumerable.Empty<PersonId>();
 
-	// public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
+	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
 }
 
 [PocoObject]

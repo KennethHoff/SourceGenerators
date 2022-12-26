@@ -81,7 +81,7 @@ public class ZodSchemaConverter : ISchemaConverter
 	private FileContent GenerateMolecularFileContent(IMolecularZodSchema molecularZodSchema)
 		=> new($$"""
 		{{StandardHeader}}
-		{{molecularZodSchema.AdditionalImports}}
+		{{molecularZodSchema.AdditionalImportsString}}
 		
 		export const {{_configuration.FormatSchemaName(molecularZodSchema)}} = {{molecularZodSchema.SchemaDefinition}};
 

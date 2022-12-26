@@ -40,7 +40,15 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IAtomicZodSchema, Zod
 			.Select(x => SchemaDictionary[x])
 			.ToArray();
 		var genericSchemaType = genericSchema.MakeGenericType(argumentSchemas.Select(x => x.GetType()).ToArray());
-		return (IPartialZodSchema)Activator.CreateInstance(genericSchemaType)!;
+		
+		// if genericSchemaType does not implement IGenericZodSchema, throw an exception
+		if (!typeof(IGenericZodSchema).IsAssignableFrom(genericSchemaType))
+		{
+			throw new InvalidOperationException($"The generic schema type {genericSchemaType} does not implement {nameof(IGenericZodSchema)}.");
+		}
+		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
+		partialZodSchema.SetConfiguration(this);
+		return partialZodSchema;
 	}
 
 	public IPartialZodSchema CreateSchema(Type type)
