@@ -131,7 +131,7 @@ public class ZodSchemaConverter : ISchemaConverter
 				// If the propertyType is generic, we need to get the generic type definition
 				if (propertyType.IsGenericType)
 				{
-					var genericSchema = _configuration.CreateGenericSchema(propertyType.GetGenericTypeDefinition(), propertyType.GetGenericArguments());
+					var genericSchema = _configuration.CreateGenericSchema(x);
 					if (genericSchema is null)
 					{
 						throw new InvalidOperationException($"No generic schema found for {propertyType.GetGenericTypeDefinition().Name}");

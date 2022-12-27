@@ -9,10 +9,16 @@ public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IBuilt
 	where TUnderlyingSchema: IZodSchema, new()
 {
 	public ZodSchemaConfiguration Configuration { get; private set; } = null!;
+	public IReadOnlyCollection<PropertyInfo> UnderlyingProperties { get; private set; } = null!;
 
 	public void SetConfiguration(ZodSchemaConfiguration configuration)
 	{
 		Configuration = configuration;
+	}
+	
+	public void SetUnderlyingProperties(IReadOnlyCollection<PropertyInfo> propertyInfos)
+	{
+		UnderlyingProperties = propertyInfos;
 	}
 
 	public SchemaDefinition SchemaDefinition

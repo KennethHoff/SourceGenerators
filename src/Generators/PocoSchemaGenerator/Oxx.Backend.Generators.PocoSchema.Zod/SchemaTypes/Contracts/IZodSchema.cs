@@ -1,3 +1,4 @@
+using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
@@ -17,8 +18,10 @@ public interface IPartialZodSchema : ISchema
 public interface IGenericZodSchema : IZodSchema
 {
 	ZodSchemaConfiguration Configuration { get; }
+	IReadOnlyCollection<PropertyInfo> UnderlyingProperties { get; }
 	
 	void SetConfiguration(ZodSchemaConfiguration configuration);
+	void SetUnderlyingProperties(IReadOnlyCollection<PropertyInfo> propertyInfos);
 }
 
 public interface IAdditionalImportZodSchema : IZodSchema

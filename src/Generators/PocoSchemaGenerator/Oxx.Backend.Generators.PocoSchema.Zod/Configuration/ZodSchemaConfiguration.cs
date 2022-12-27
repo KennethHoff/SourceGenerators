@@ -30,9 +30,11 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public string FormatFilePath(IPartialZodSchema schema)
 		=> $"./{FormatSchemaName(schema)}";
 
-	public IPartialZodSchema CreateGenericSchema(Type type, IReadOnlyCollection<Type> genericArguments)
+	public IPartialZodSchema CreateGenericSchema(PropertyInfo propertyInfo)
 	{
-		var genericSchema = GenericSchemaDictionary[type];
+		var genericTypeDefinition = propertyInfo.PropertyType.GetGenericTypeDefinition();
+		var genericArguments = propertyInfo.PropertyType.GetGenericArguments();
+		var genericSchema = GenericSchemaDictionary[genericTypeDefinition];
 		
 		var argumentSchemas = genericArguments
 			.Select(x => SchemaDictionary[x])
@@ -46,6 +48,16 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		}
 		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
 		partialZodSchema.SetConfiguration(this);
+		
+		var propertyInfos = genericArguments.SelectMany(x =>
+		{
+			var isNullable = x.IsGenericType && x.GetGenericTypeDefinition() == typeof(Nullable<>);
+			var type = isNullable ? x.GetGenericArguments()[0] : x;
+			return properties;
+		}).ToArray();
+		
+		
+		partialZodSchema.SetUnderlyingProperties(null!);
 		return partialZodSchema;
 	}
 
@@ -54,4 +66,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
 		=> new(FormatSchemaName(schema), FormatFilePath(schema));
+
+	public TValue CreateGenericSchema<TValue>(PropertyInfo type)
+	{
+		throw new NotImplementedException();
+	}
 }
