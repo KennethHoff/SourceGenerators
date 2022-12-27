@@ -5,7 +5,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
 public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : ISchemaConfigurationBuilder<TConfigurationType>
-	where TSchemaType : class, IAtomicSchema
+	where TSchemaType : class, ISchema
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {

@@ -23,6 +23,13 @@ public interface IGenericZodSchema : IZodSchema
 
 public interface IAdditionalImportZodSchema : IZodSchema
 {
-	IEnumerable<string> AdditionalImports { get; }
+	IEnumerable<ZodImport> AdditionalImports { get; }
 	string AdditionalImportsString => string.Join(Environment.NewLine, AdditionalImports);
+}
+
+public readonly record struct ZodImport(string SchemaName, string FilePath)
+{
+	public static readonly ZodImport None = new(string.Empty, string.Empty);
+	public override string ToString()
+		=> $$"""import { {{SchemaName}} } from "{{FilePath}}";""";
 }

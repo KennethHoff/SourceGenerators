@@ -9,7 +9,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
 public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
-	where TSchemaType : IAtomicSchema
+	where TSchemaType : ISchema
 	where TSchemaEventConfiguration : ISchemaEventConfiguration
 {
 	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;

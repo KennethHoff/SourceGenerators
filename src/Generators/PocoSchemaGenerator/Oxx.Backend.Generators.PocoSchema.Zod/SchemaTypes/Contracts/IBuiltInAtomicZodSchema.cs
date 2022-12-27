@@ -13,3 +13,8 @@ public interface IBuiltInAtomicZodSchema : IAtomicZodSchema
 {
 	SchemaBaseName IPartialZodSchema.SchemaBaseName => new(SchemaDefinition);
 }
+
+public interface IBuiltInMolecularZodSchema : IMolecularZodSchema
+{
+	SchemaBaseName IPartialZodSchema.SchemaBaseName => new(SchemaDefinition);
+}

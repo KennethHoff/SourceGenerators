@@ -58,18 +58,16 @@ public class MolecularZodSchema : IMolecularZodSchema
 		})
 		.TrimEnd($"{Environment.NewLine}");
 
-	public IEnumerable<string> AdditionalImports => SchemaDictionary
+	public IEnumerable<ZodImport> AdditionalImports => SchemaDictionary
 		.Select(x => x.Value)
-		.Where(x => x is not IBuiltInAtomicZodSchema)
-		.Select(x => new
-		{
-			FilePath = SchemaConfiguration.FormatFilePath(x),
-			SchemaName = SchemaConfiguration.FormatSchemaName(x),
-		})
+		.OfType<IAdditionalImportZodSchema>()
+		.SelectMany(x => x.AdditionalImports)
 		.Distinct()
-		.Select(x => $$"""
-		import { {{x.SchemaName}} } from "{{x.FilePath}}";
-		""");
+		.Concat(SchemaDictionary
+			.Select(x => x.Value)
+			.Where(x => x is not IBuiltInAtomicZodSchema and not IAdditionalImportZodSchema)
+			.Select(SchemaConfiguration.CreateStandardImport)
+			.Distinct());
 
 	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }

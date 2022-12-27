@@ -1,3 +1,4 @@
+using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
@@ -9,6 +10,7 @@ public class GuidAtomicZodSchema : IAtomicZodSchema
 	public SchemaDefinition SchemaDefinition => new($"""z.string().uuid().brand<"{Brand}">()""");
 	public SchemaBaseName SchemaBaseName => new(Brand);
 }
+
 public class TypedIdAtomicZodSchema<TTypedId> : GuidAtomicZodSchema
 {
 	public override string Brand => typeof(TTypedId).Name;

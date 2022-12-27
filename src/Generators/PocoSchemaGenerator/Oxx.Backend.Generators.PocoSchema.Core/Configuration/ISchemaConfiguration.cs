@@ -5,7 +5,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
 public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : ISchemaConfiguration
-	where TSchemaType : IAtomicSchema
+	where TSchemaType : ISchema
 	where TSchemaEventConfiguration : ISchemaEventConfiguration
 {
 	TSchemaEventConfiguration Events { get; }

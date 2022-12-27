@@ -40,7 +40,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	#endregion
 
-	private FileInformation GenerateAtom(KeyValuePair<Type, IAtomicZodSchema> atomicSchema)
+	private FileInformation GenerateAtom(KeyValuePair<Type, IPartialZodSchema> atomicSchema)
 	{
 		_generatedSchemas.Add(atomicSchema.Key, atomicSchema.Value);
 
@@ -56,11 +56,11 @@ public class ZodSchemaConverter : ISchemaConverter
 		};
 	}
 
-	private IEnumerable<FileInformation> GenerateAtoms(IDictionary<Type, IAtomicZodSchema> configurationAtomicSchemaDictionary)
+	private IEnumerable<FileInformation> GenerateAtoms(IDictionary<Type, IPartialZodSchema> configurationAtomicSchemaDictionary)
 		=> configurationAtomicSchemaDictionary
 			.Select(GenerateAtom);
 
-	private FileContent GenerateFileContent(IZodSchema schemaValue)
+	private FileContent GenerateFileContent(IPartialZodSchema schemaValue)
 		=> schemaValue switch
 		{
 			IAtomicZodSchema atomicZodSchema       => GenerateAtomicFileContent(atomicZodSchema),
@@ -89,7 +89,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
-	private FileName GenerateFileName(IZodSchema schemaValue)
+	private FileName GenerateFileName(IPartialZodSchema schemaValue)
 		=> new(string.Format(_configuration.SchemaFileNameFormat, schemaValue.SchemaBaseName));
 
 	private FileInformation GenerateMolecule(PocoObject pocoObject)

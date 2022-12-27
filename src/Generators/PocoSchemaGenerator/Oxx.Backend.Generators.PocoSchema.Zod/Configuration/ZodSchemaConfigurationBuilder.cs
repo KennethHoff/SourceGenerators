@@ -5,7 +5,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
 {
 	public ZodSchemaConfigurationBuilder()
 	{
