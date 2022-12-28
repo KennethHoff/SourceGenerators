@@ -92,15 +92,4 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema => schema.SchemaBaseName,
 			_                       => string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName),
 		};
-
-	public IPartialZodSchema GetSchemaForType(Type getGenericArgument)
-	{
-		var schema = CreatedSchemaDictionary.GetSchemaForType(getGenericArgument);
-		if (schema is null)
-		{
-			throw new InvalidOperationException($"Could not find schema for type {getGenericArgument.Name}");
-		}
-
-		return schema;
-	}
 }
