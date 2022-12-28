@@ -5,6 +5,17 @@ using TestingApp.SchemaTypes;
 namespace TestingApp.Models;
 
 [PocoObject]
+internal sealed class User
+{
+	public required Name Name { get; init; }
+	public required string Email { get; init; }
+	public required string Password { get; init; }
+}
+
+[PocoObject]
+internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
+
+[PocoObject]
 internal abstract class Person
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
