@@ -87,9 +87,10 @@ The following options are available:
     * Note: If you want to apply a schema to a nullable type, but not to a non-nullable type, you can use the `ApplySchema<TType?, TSchema>` method.
     * Note: If you want to apply a schema to a non-nullable type, but not to a nullable type, you have to first apply the schema to both (using the `ApplySchema<TType, TSchema>` method), and then override the schema for the nullable type (using the `ApplySchema<TType?, TSchema>` method).
 
-* `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a type.
+* `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a generic type.
   * Example: `ApplyGenericSchema(typeof(MyClass<>), typeof(MySchema<>))` will apply the schema `MySchema<T>` to the type `MyClass<>`.
   * This is useful if you want to apply a schema to a generic type.
+  * Note: The number of generic parameters must match.
   * Note: The number of generic arguments must match.
 
 * `ConfigureEvents(Action<TSchemaEventConfiguration> action)` - Configures the events that are fired during the generation process.
