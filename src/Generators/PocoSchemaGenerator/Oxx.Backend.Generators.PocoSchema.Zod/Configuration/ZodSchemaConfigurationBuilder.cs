@@ -11,15 +11,15 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 	{
 		ApplySchemas(() =>
 		{
-			ApplySchema<string, StringAtomicZodSchema>();
-			ApplySchema<int, NumberAtomicZodSchema>();
-			ApplySchema<float, NumberAtomicZodSchema>();
-			ApplySchema<double, NumberAtomicZodSchema>();
-			ApplySchema<decimal, NumberAtomicZodSchema>();
+			ApplySchema<string, StringBuiltInAtomicZodSchema>();
+			ApplySchema<int, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<float, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<double, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<decimal, NumberBuiltInAtomicZodSchema>();
 			ApplySchema<Guid, GuidAtomicZodSchema>();
-			ApplySchema<bool, BooleanAtomicZodSchema>();
-			ApplySchema<DateTime, DateAtomicZodSchema>();
-			ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayAtomicZodSchema<>));
+			ApplySchema<bool, BooleanBuiltInAtomicZodSchema>();
+			ApplySchema<DateTime, DateBuiltInAtomicZodSchema>();
+			ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayBuiltInAtomicZodSchema<>));
 		});
 	}
 	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";

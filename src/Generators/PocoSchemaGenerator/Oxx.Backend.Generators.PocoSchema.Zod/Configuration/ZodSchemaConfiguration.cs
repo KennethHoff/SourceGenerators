@@ -21,14 +21,14 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public string FormatSchemaTypeName(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInZodSchema   => schema.SchemaBaseName,
+			IBuiltInAtomicZodSchema   => schema.SchemaBaseName,
 			_                   => string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName),
 		};
 
 	public string FormatSchemaName(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInZodSchema   => schema.SchemaBaseName,
+			IBuiltInAtomicZodSchema   => schema.SchemaBaseName,
 			_                   => string.Format(SchemaNamingFormat, schema.SchemaBaseName),
 		};
 
@@ -63,7 +63,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInZodSchema or IAdditionalImportZodSchema => ZodImport.None,
+			IBuiltInAtomicZodSchema or IAdditionalImportZodSchema => ZodImport.None,
 			_                                               => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
 		};
 }

@@ -7,7 +7,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
-public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInZodSchema
+public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInAtomicZodSchema
 	where TUnderlyingSchema: IZodSchema, new()
 {
 	public ZodSchemaConfiguration Configuration { get; private set; } = null!;
