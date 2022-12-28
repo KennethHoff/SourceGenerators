@@ -8,13 +8,11 @@ Converts C# classes and structs into various Schemas.
 
 In this section I will refer to these as POCOs (Plain Old CLR/C# Objects).
 
-## Zod Poco Schema Generator
+## [Zod Poco Schema Generator](src/Generators/PocoSchemaGenerator/Oxx.Backend.Generators.PocoSchema.Zod)
 
 [Zod Website](https://zod.dev/)
 
 [Zod Github](https://github.com/colinhacks/zod)
-
-[Generator GitHub](src/Generators/PocoSchemaGenerator/Oxx.Backend.Generators.PocoSchema.Zod)
 
 ## Contributing
 
