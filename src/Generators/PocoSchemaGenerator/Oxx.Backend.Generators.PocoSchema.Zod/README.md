@@ -115,9 +115,6 @@ Issues that are currently blocking the release of the package.
 
 Issues that are common and annoying, but not blocking the release of the package.
 
-* The schema generator stops if you have a collection of a type that doesn't have a schema.
-    * Example: `public List<MyClass> MyClasses { get; set; }` will stop the schema generator if `MyClass` doesn't have a schema.
-
 ### Medium priority
 
 Issues that are less common and/or can be worked around.
