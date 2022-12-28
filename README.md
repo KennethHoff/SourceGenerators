@@ -119,7 +119,7 @@ Issues that are less common and/or can be worked around.
     * Example: `enum MyEnum { MyValue }`
     * The schema generator has a `SimpleEnumBuiltInAtomicZodSchema` schema, but it is very limited.
       * It does not generate a custom schema&type for each enum, but rather spews out `z.enum(<values>)` everywhere it's used.
-      * This means that you can't access the type of the enum
+        * This means that you can't access the type of the enum
 * The schema generator only partially supports inheritance.
     * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
     * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for
