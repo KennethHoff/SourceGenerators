@@ -5,15 +5,21 @@ using TestingApp.SchemaTypes;
 namespace TestingApp.Models;
 
 [PocoObject]
+internal readonly record struct Role(string Name);
+
+[PocoObject]
 internal sealed class User
 {
 	public required Name Name { get; init; }
 	public required string Email { get; init; }
 	public required string Password { get; init; }
+	
+	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
 }
 
 [PocoObject]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
+
 
 [PocoObject]
 internal abstract class Person
@@ -42,10 +48,6 @@ internal abstract class Person
 	public List<string?> ListNamesNullableUnderlying { get; init; } = new List<string?>();
 	public List<string?>? ListNamesNullableUnderlyingNullable { get; init; } = new List<string?>();
 	
-	public string[] ArrayNames { get; init; } = Array.Empty<string>();
-	public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
-	public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
-	
 	public IEnumerable<Guid> Guids { get; init; } = Enumerable.Empty<Guid>();
 	public IEnumerable<Guid?> GuidsNullableUnderlying { get; init; } = Enumerable.Empty<Guid?>();
 	public IEnumerable<Guid?>? GuidsNullableUnderlyingNullable { get; init; } = Enumerable.Empty<Guid?>();
@@ -54,9 +56,10 @@ internal abstract class Person
 	public List<Guid?> ListGuidsNullableUnderlying { get; init; } = new List<Guid?>();
 	public List<Guid?>? ListGuidsNullableUnderlyingNullable { get; init; } = new List<Guid?>();
 	
-	public int[] ArrayInts { get; init; } = Array.Empty<int>();
-	public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
-	public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
+	
+	public IReadOnlyCollection<User> RelatedUsers { get; init; } = Array.Empty<User>();
+	public IReadOnlyCollection<User?> RelatedUsersNullableUnderlying { get; init; } = Array.Empty<User?>();
+	public IReadOnlyCollection<User?>? RelatedUsersNullableUnderlyingNullable { get; init; } = Array.Empty<User?>();
 	
 	public int Int { get; init; }
 	public int? IntNullable { get; init; }
@@ -77,8 +80,23 @@ internal abstract class Person
 	protected string Protected { get; init; } = string.Empty;
 
 	protected abstract string ProtectedAbstract { get; init; }
-	
 
+
+
+	// All of the following does not work.
+	// The generator doesn't know how to handle the array type.
+	// It's not a generic type, but at the same time it has a "generic" type parameter.
+	// All other collection types are handled correctly - it's just the [] (as opposed to <>) that's the problem.
+
+	// public int[] ArrayInts { get; init; } = Array.Empty<int>();
+	// public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
+	// public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
+	
+	// public string[] ArrayNames { get; init; } = Array.Empty<string>();
+	// public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
+	// public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
+	
+	
 	// All of the following should be ignored as they are either:
 	// - not a property (field, method, etc.)
 	// - not an instance property (static)

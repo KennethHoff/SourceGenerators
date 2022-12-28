@@ -1,4 +1,5 @@
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
+using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
@@ -9,8 +10,8 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 {
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
-		SchemaDictionary = SchemaTypeDictionary,
-		GenericSchemaDictionary = GenericSchemaTypeDictionary,
+		AtomicSchemasToCreateDictionary = AtomicSchemasToCreateDictionary,
+		GenericSchemasDictionary = GenericSchemasDictionary,
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,
 		DeleteFilesOnStart = DeleteFilesOnStart,
@@ -19,6 +20,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		SchemaTypeNamingFormat = SchemaTypeNamingFormat,
 		SchemaFileNameFormat = FileNameFormat,
 		FileExtension = FileExtension,
+		CreatedSchemasDictionary = new TypeSchemaDictionary<IPartialZodSchema>(),
 	};
 
 	protected override string FileExtension { get; set; } = ".ts";

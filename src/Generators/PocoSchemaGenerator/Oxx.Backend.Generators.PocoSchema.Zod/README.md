@@ -105,10 +105,15 @@ Currently the generator lacks a lot of context. There are a few issues with the 
 
 1. It doesn't know of the full context of the schema it's generating, each property is mapped individually, so it doesn't know if the "surrounding" class is
    generic, or if it's a class or struct, etc.
+2. Naming needs improvement. "Atoms", "Molecules" is used in the code, but it's not really clear what they are, and they're not really used consistently.
 
 ### Very high priority
 
 Issues that are currently blocking the release of the package.
+
+### High priority
+
+Issues that are common and annoying, but not blocking the release of the package.
 
 ### Medium priority
 
@@ -145,6 +150,10 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
     * Example: `class MyClass<T> { public T MyProperty { get; set; } }`
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
     * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
+* The schema generator doesn't support the Array type.
+  * Example: `class MyClass { public string[] MyStrings { get; set; } }` 
+  * This is because the [] syntax is very unusual. It's not a generic, but at the same time it has a backing type.
+  * I imagine it would be relatively easy to support this, but how often do you really use this syntax?
 
 I'm sure there are tons of other issues, but these are the ones I'm aware of.
 

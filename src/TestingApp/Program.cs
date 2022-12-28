@@ -17,6 +17,20 @@ var configuration = new ZodSchemaConfigurationBuilder()
 	.ApplySchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
 	.ApplySchema<Gender, SimpleEnumBuiltInAtomicZodSchema<Gender>>()
 	.ApplySchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
+	.ConfigureEvents(events =>
+	{
+		events.MoleculeSchemaCreated += (_, args) =>
+		{
+			if (args.InvalidProperties.Count is 0)
+			{
+				return;
+			}
+
+			var errorMessage = $"Invalid properties for {args.Type.Name}:" + Environment.NewLine +
+							   string.Join(Environment.NewLine, args.InvalidProperties.Select(p => $"{p.Name} ({p.PropertyType})"));
+			Console.WriteLine(errorMessage + Environment.NewLine);
+		};
+	})
 	.Build();
 
 var schema = new ZodSchemaConverter(configuration);

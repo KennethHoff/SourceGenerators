@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
@@ -33,7 +35,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	public IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects)
 	{
-		var atoms = GenerateAtoms(_configuration.SchemaDictionary);
+		var atoms = GenerateAtoms(_configuration.AtomicSchemasToCreateDictionary);
 		var molecules = GenerateMolecules(pocoObjects);
 		return atoms.Concat(molecules).Where(x => x != FileInformation.None);
 	}
@@ -68,7 +70,8 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private IEnumerable<FileInformation> GenerateAtoms(TypeSchemaDictionary<IPartialZodSchema> configurationAtomicSchemaDictionary)
 		=> configurationAtomicSchemaDictionary
-			.Select(GenerateAtom);
+			.Select(GenerateAtom)
+			.ToArray();
 
 	private FileContent GenerateFileContent(IPartialZodSchema schemaValue)
 		=> schemaValue switch
@@ -92,7 +95,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
-	private IMolecularZodSchema GenerateMolecularSchema(PocoObject pocoObject)
+	private (IMolecularZodSchema Schema, IReadOnlyCollection<PropertyInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
 	{
 		var partialSchema = _generatedSchemas[pocoObject.Type] switch
 		{
@@ -115,7 +118,9 @@ public class ZodSchemaConverter : ISchemaConverter
 				// If the propertyType is generic, we need to get the generic type definition
 				if (propertyType.IsGenericType)
 				{
-					return _configuration.GenericSchemaDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
+					var hasRelatedType = _configuration.GenericSchemasDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
+					var allGenericArgumentsHaveSchema = propertyType.GetGenericArguments().All(_generatedSchemas.HasSchemaForType);
+					return hasRelatedType && allGenericArgumentsHaveSchema;
 				}
 
 				return false;
@@ -134,35 +139,34 @@ public class ZodSchemaConverter : ISchemaConverter
 				if (propertyType.IsGenericType)
 				{
 					var genericSchema = _configuration.CreateGenericSchema(x);
-					if (genericSchema is null)
-					{
-						throw new InvalidOperationException($"No generic schema found for {propertyType.GetGenericTypeDefinition().Name}");
-					}
-
 					return KeyValuePair.Create(x, genericSchema);
 				}
 
-				if (partialZodSchema is null)
-				{
-					throw new InvalidOperationException($"No schema found for {propertyType.Name}");
-				}
-
-				return KeyValuePair.Create(x, partialZodSchema);
+				throw new InvalidOperationException($"No schema found for {propertyType.Name}");
 			})
 			.ToDictionary(x => x.Key, x => x.Value);
+		
+		var invalidProperties = pocoObject.Properties
+			.Where(x => !validSchemas.ContainsKey(x))
+			.ToArray();
 
-		return partialSchema.Populate(validSchemas, _configuration);
+		return (partialSchema.Populate(validSchemas, _configuration), invalidProperties);
 	}
 
 	private FileInformation GenerateMolecule(PocoObject pocoObject)
 	{
-		var molecularSchema = GenerateMolecularSchema(pocoObject);
+		var (molecularSchema, invalidProperties) = GenerateMolecularSchema(pocoObject);
+		
+		_generatedSchemas.Update(pocoObject.Type, molecularSchema);
 
-		return new FileInformation
+		var generateMolecule = new FileInformation
 		{
 			Content = GenerateFileContent(molecularSchema),
 			Name = GenerateFileName(molecularSchema),
 		};
+		
+		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(pocoObject.Type, molecularSchema, invalidProperties));
+		return generateMolecule;
 	}
 
 	/// <summary>
@@ -182,8 +186,15 @@ public class ZodSchemaConverter : ISchemaConverter
 	}
 
 	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
-		=> pocoObjects
+	{
+		var definitions = pocoObjects
 			.Select(GenerateMoleculeDefinition)
-			.ToArray()
-			.Select(GenerateMolecule);
+			.ToArray();
+		
+		_configuration.CreatedSchemasDictionary = _generatedSchemas;
+		
+		return definitions
+			.Select(GenerateMolecule)
+			.ToArray();
+	}
 }

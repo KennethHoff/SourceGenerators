@@ -15,19 +15,47 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
-	public required TypeTypeDictionary GenericSchemaDictionary { get; init; }
-	public required TypeSchemaDictionary<IPartialZodSchema> SchemaDictionary { get; init; }
+	
+	/// <summary>
+	/// Dictionary containing the generic types that will be generated
+	/// </summary>
+	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
+	
+	/// <summary>
+	/// Dictionary containing the non-generic types that will be generated <br />
+	/// Don't use this if you want to find the schema to use for other types. <br />
+	/// Use <see cref="CreatedSchemasDictionary"/> instead.
+	/// </summary>
+	public required TypeSchemaDictionary<IPartialZodSchema> AtomicSchemasToCreateDictionary { get; init; }
+	
+	/// <summary>
+	/// Dictionary containing fully created schemas
+	/// </summary>
+	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemasDictionary { get; set; }
 
 	public IPartialZodSchema CreateGenericSchema(PropertyInfo propertyInfo)
 	{
 		var genericTypeDefinition = propertyInfo.PropertyType.GetGenericTypeDefinition();
 		var genericArguments = propertyInfo.PropertyType.GetGenericArguments();
-		var genericSchema = GenericSchemaDictionary.GetRelatedType(genericTypeDefinition);
+		var genericSchema = GenericSchemasDictionary.GetRelatedType(genericTypeDefinition);
 
 		var argumentSchemas = genericArguments
-			.Select(x => SchemaDictionary[x])
+			.Select(type =>
+			{
+				var schema = CreatedSchemasDictionary.GetSchemaForType(type);
+				return (Schema: schema, Type: type);
+			})
 			.ToArray();
-		var genericSchemaType = genericSchema.MakeGenericType(argumentSchemas.Select(x => x.GetType()).ToArray());
+
+		if (argumentSchemas.Any(x => x.Schema is null))
+		{
+			var nullSchemas = string.Join(", ", argumentSchemas.Where(x => x.Schema is null).Select(x => x.Type.Name));
+			throw new InvalidOperationException("Could not find schema for generic type arguments: " + nullSchemas);
+		}
+
+		var typeArguments = argumentSchemas.Select(x => x.Schema!.GetType()).ToArray();
+
+		var genericSchemaType = genericSchema.MakeGenericType(typeArguments);
 
 		// if genericSchemaType does not implement IGenericZodSchema, throw an exception
 		if (!typeof(IGenericZodSchema).IsAssignableFrom(genericSchemaType))
@@ -36,19 +64,16 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		}
 
 		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
-		partialZodSchema.SetConfiguration(this);
-		partialZodSchema.SetPropertyInfo(propertyInfo);
+		partialZodSchema.Configuration = this;
+		partialZodSchema.PropertyInfo = propertyInfo;
 		return partialZodSchema;
 	}
-
-	public IPartialZodSchema CreateSchema(Type type)
-		=> SchemaDictionary[type];
 
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInAtomicZodSchema or IAdditionalImportZodSchema => ZodImport.None,
-			_                                                     => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
+			IBuiltInAtomicZodSchema => ZodImport.None,
+			_                       => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
 		};
 
 	public string FormatFilePath(IPartialZodSchema schema)

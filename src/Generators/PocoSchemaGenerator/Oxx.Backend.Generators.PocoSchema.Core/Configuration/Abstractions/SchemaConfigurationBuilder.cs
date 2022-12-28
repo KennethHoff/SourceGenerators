@@ -12,8 +12,8 @@ public abstract class
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
-	protected readonly TypeTypeDictionary GenericSchemaTypeDictionary = new();
-	protected readonly TypeSchemaDictionary<TSchemaType> SchemaTypeDictionary = new();
+	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
+	protected readonly TypeSchemaDictionary<TSchemaType> AtomicSchemasToCreateDictionary = new();
 	protected TSchemaEventConfiguration? EventConfiguration;
 	protected string OutputDirectory = string.Empty;
 
@@ -36,8 +36,8 @@ public abstract class
 		Type genericSchema)
 	{
 		var genericTypeDefinition = genericType.GetTypeInfo().GetGenericTypeDefinition();
-		var genericSchemaDefinition = genericSchema.GetTypeInfo().GetGenericTypeDefinition();
-		UpsertGenericSchemaTypeDictionary(genericTypeDefinition, genericSchemaDefinition);
+		var genericSchemasDefinition = genericSchema.GetTypeInfo().GetGenericTypeDefinition();
+		UpsertGenericSchemaTypeDictionary(genericTypeDefinition, genericSchemasDefinition);
 		return this;
 	}
 
@@ -161,13 +161,13 @@ public abstract class
 				$"The generic type {genericTypeTypeInfo.Name} and the generic schema {genericSchemaTypeInfo.Name} do not have the same number of generic arguments.");
 		}
 
-		if (GenericSchemaTypeDictionary.ContainsKey(genericType))
+		if (GenericSchemasDictionary.ContainsKey(genericType))
 		{
-			GenericSchemaTypeDictionary[genericType] = genericSchema;
+			GenericSchemasDictionary[genericType] = genericSchema;
 		}
 		else
 		{
-			GenericSchemaTypeDictionary.Add(genericType, genericSchema);
+			GenericSchemasDictionary.Add(genericType, genericSchema);
 		}
 	}
 
@@ -175,15 +175,15 @@ public abstract class
 	{
 		var type = typeof(TType);
 
-		if (SchemaTypeDictionary.ContainsKey(type))
+		if (AtomicSchemasToCreateDictionary.ContainsKey(type))
 		{
-			SchemaTypeDictionary[type] = substituteFactory is null
+			AtomicSchemasToCreateDictionary[type] = substituteFactory is null
 				? new TSchema()
 				: substituteFactory();
 		}
 		else
 		{
-			SchemaTypeDictionary.Add(type, substituteFactory is null
+			AtomicSchemasToCreateDictionary.Add(type, substituteFactory is null
 				? new TSchema()
 				: substituteFactory());
 		}
@@ -191,15 +191,15 @@ public abstract class
 
 	private void UpsertSchemaTypeDictionary<TSchema>(Type genericType, Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
 	{
-		if (SchemaTypeDictionary.ContainsKey(genericType))
+		if (AtomicSchemasToCreateDictionary.ContainsKey(genericType))
 		{
-			SchemaTypeDictionary[genericType] = substituteFactory is null
+			AtomicSchemasToCreateDictionary[genericType] = substituteFactory is null
 				? new TSchema()
 				: substituteFactory();
 		}
 		else
 		{
-			SchemaTypeDictionary.Add(genericType, substituteFactory is null
+			AtomicSchemasToCreateDictionary.Add(genericType, substituteFactory is null
 				? new TSchema()
 				: substituteFactory());
 		}

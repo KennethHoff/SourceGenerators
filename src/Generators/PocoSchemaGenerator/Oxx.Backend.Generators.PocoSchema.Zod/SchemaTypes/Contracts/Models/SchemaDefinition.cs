@@ -11,5 +11,5 @@ public readonly record struct SchemaDefinition(string Value)
 
 	// Implicit conversion from SchemaDefinition to string
 	public static implicit operator string(SchemaDefinition schemaDefinition)
-		=> schemaDefinition.Value;
+		=> schemaDefinition.ToString();
 }
