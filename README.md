@@ -83,7 +83,7 @@ The following options are available:
   * Note: This will also apply to all derived types of the type you specified (Unless otherwise overridden - the more specific type will be used).
   * Note: This will also apply to all types that implement the type you specified (Unless otherwise overridden - the more specific type will be used).
   * Note: This will apply the schema to both nullable and non-nullable types.
-    * This only applies to Value Types (int, double, etc.) and not Reference Types. You can currently not have a separate schema for a nullable and non-nullable reference type.
+    * This only applies to Value Types (int, double, etc.) and not Reference Types. You can currently not have a separate schema for a nullable and non-nullable reference type, so reference types will always use the same schema (It will however have .nullable() applied to it if it is nullable - as will ValueTypes)
     * Note: If you want to apply a schema to a nullable type, but not to a non-nullable type, you can use the `ApplySchema<TType?, TSchema>` method.
     * Note: If you want to apply a schema to a non-nullable type, but not to a nullable type, you have to first apply the schema to both (using the `ApplySchema<TType, TSchema>` method), and then override the schema for the nullable type (using the `ApplySchema<TType?, TSchema>` method).
 
