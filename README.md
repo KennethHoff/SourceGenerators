@@ -72,7 +72,14 @@ The following options are available:
 
 * `ApplySchema<TType, TSchema>` - Applies a schema to a type.
   * Example: `ApplySchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
-  * Note: This is useful if you want to apply a schema to a type you don't own, or is otherwise not possible to add the `[PocoObject]` attribute to.
+  * This is useful in the following scenarios:
+    * You want to apply a schema to a type you don't own
+    * It is not possible to add the `[PocoObject]` attribute to the type
+    * You want to apply the schema to a type that is not a POCO
+    * You want to apply the schema to a type that is not a class or struct
+    * You want to apply a different schema to a type than the default one
+    * You want to apply a different schema to nullable and non-nullable types
+      * Example: `ApplySchema<int?, MyNullableIntSchema>()` will apply the schema `MyNullableIntSchema` to the type `int?`, but keeps the default schema for `int`.
   * Note: This will override any previously applied schemas.
   * Note: This will also apply to all derived types of the type you specified (Unless otherwise overridden - the more specific type will be used).
   * Note: This will also apply to all types that implement the type you specified (Unless otherwise overridden - the more specific type will be used).
@@ -83,7 +90,7 @@ The following options are available:
 
 * `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a type.
   * Example: `ApplyGenericSchema(typeof(MyClass<>), typeof(MySchema<>))` will apply the schema `MySchema<T>` to the type `MyClass<>`.
-  * Note: This is useful if you want to apply a schema to a generic type.
+  * This is useful if you want to apply a schema to a generic type.
   * Note: The number of generic arguments must match.
 
 * `ConfigureEvents(Action<TSchemaEventConfiguration> action)` - Configures the events that are fired during the generation process.
