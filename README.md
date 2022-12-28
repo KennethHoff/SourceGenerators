@@ -114,8 +114,11 @@ Issues that are currently blocking the release of the package.
 
 Issues that are less common and/or can be worked around.
 
-* The schema generator doesn't support enums.
+* The schema generator only partially support enums.
     * Example: `enum MyEnum { MyValue }`
+    * The schema generator has a `SimpleEnumBuiltInAtomicZodSchema` schema, but it is very limited.
+      * It does not generate a custom schema&type for each enum, but rather spews out `z.enum(<values>)` everywhere it's used.
+      * This means that you can't access the type of the enum
 * The schema generator only partially supports inheritance.
     * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
     * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for
@@ -147,6 +150,7 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
 
 ## Future plans
 
+* Add tests - and a lot of them.
 * Add Roslyn analyzers to ensure that the classes are valid for the schema generator.
   * This will be a separate - recommended - package.
     * There might even be a separate package for each Schema, as there might be some issues that are specific to each schema.

@@ -15,6 +15,7 @@ var configuration = new ZodSchemaConfigurationBuilder()
 	.ApplySchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
 	.ApplySchema<PersonId?, StringBuiltInAtomicZodSchema>()
 	.ApplySchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
+	.ApplySchema<Gender, SimpleEnumBuiltInAtomicZodSchema<Gender>>()
 	.ApplySchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 	.Build();
 

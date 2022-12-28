@@ -58,19 +58,23 @@ internal abstract class Person
 
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
 	public PocoFromAnotherProject? PocoFromAnotherNullable { get; init; }
-	
-	[PocoPropertyIgnore]
-	public string Ignored { get; init; } = string.Empty;
-	
+
+	public Gender Gender { get; init; }
+
 	private string Private { get; init; } = string.Empty;
 	internal string Internal { get; init; } = string.Empty;
 	protected string Protected { get; init; } = string.Empty;
 
 	protected abstract string ProtectedAbstract { get; init; }
+	
 
 	// All of the following should be ignored as they are either:
 	// - not a property (field, method, etc.)
 	// - not an instance property (static)
+	// - has [PocoPropertyIgnore] attribute
+
+	[PocoPropertyIgnore]
+	public string Ignored { get; init; } = string.Empty;
 	
 	public static string PublicStatic { get; set; } = string.Empty;
 	private static string PrivateStatic { get; set; } = string.Empty;
@@ -124,4 +128,11 @@ public readonly record struct CeremonyId(Guid Id)
 {
 	public override string ToString()
 		=> Id.ToString();
+}
+
+public enum Gender
+{
+	Male,
+	Female,
+	Other,
 }
