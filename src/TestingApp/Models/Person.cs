@@ -58,6 +58,7 @@ internal sealed class Person
 	public PersonId? PersonIdNullable { get; init; }
 
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
+	public PocoFromAnotherProject? PocoFromAnotherNullable { get; init; }
 }
 
 [PocoObject]

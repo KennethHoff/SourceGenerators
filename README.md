@@ -97,10 +97,6 @@ Currently the generator lacks a lot of context. There are a few issues with the 
 
 Issues that are currently blocking the release of the package.
 
-* The schema generator doesn't support nullable "molecular" types.
-    * A "molecular" type is a type that is created from the `[PocoObject]` attribute.
-    * Example: `class MyClass { MyOtherClass? MyProperty { get; set; } }` would be identical to `class MyClass { MyOtherClass MyProperty { get; set; } }`
-
 ### Medium priority
 
 Issues that are less common and/or can be worked around.
