@@ -34,9 +34,9 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	public IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects)
 	{
-		var atoms = GenerateAtoms(_configuration.AppliedSchemaDictionary);
-		var molecules = GenerateMolecules(pocoObjects);
-		return atoms.Concat(molecules).Where(x => x != FileInformation.None);
+		var statics = GenerateStatics(_configuration.SchemaToCreateDictionary);
+		var dynamics = GenerateDynamics(pocoObjects);
+		return statics.Concat(dynamics).Where(x => x != FileInformation.None);
 	}
 
 	#endregion
@@ -67,7 +67,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
-	private IEnumerable<FileInformation> GenerateAtoms(TypeSchemaDictionary<IPartialZodSchema> configurationAtomicSchemaDictionary)
+	private IEnumerable<FileInformation> GenerateStatics(TypeSchemaDictionary<IPartialZodSchema> configurationAtomicSchemaDictionary)
 		=> configurationAtomicSchemaDictionary
 			.Select(GenerateAtom)
 			.ToArray();
@@ -178,13 +178,13 @@ public class ZodSchemaConverter : ISchemaConverter
 		return pocoObject;
 	}
 
-	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
+	private IEnumerable<FileInformation> GenerateDynamics(IEnumerable<PocoObject> pocoObjects)
 	{
 		var definitions = pocoObjects
 			.Select(GenerateMoleculeDefinition)
 			.ToArray();
 		
-		_configuration.SchemaDictionary = _generatedSchemas;
+		_configuration.CreatedSchemaDictionary = _generatedSchemas;
 		
 		return definitions
 			.Select(GenerateMolecule)

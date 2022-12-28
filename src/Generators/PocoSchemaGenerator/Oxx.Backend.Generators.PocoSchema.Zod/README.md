@@ -105,6 +105,7 @@ Currently the generator lacks a lot of context. There are a few issues with the 
 
 1. It doesn't know of the full context of the schema it's generating, each property is mapped individually, so it doesn't know if the "surrounding" class is
    generic, or if it's a class or struct, etc.
+2. Naming is somewhat inconsistent. "Statics" and "Atoms" are used somewhat interchangeably, and not logically. Same with "Dynamics" and "Molecules".
 
 ### Very high priority
 

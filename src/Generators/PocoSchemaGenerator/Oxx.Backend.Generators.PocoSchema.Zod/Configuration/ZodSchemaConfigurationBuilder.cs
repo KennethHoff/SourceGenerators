@@ -10,7 +10,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 {
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
-		AppliedSchemaDictionary = AppliedSchemaTypeDictionary,
+		SchemaToCreateDictionary = AppliedSchemaTypeDictionary,
 		GenericSchemaDictionary = GenericSchemaTypeDictionary,
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,
@@ -20,7 +20,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		SchemaTypeNamingFormat = SchemaTypeNamingFormat,
 		SchemaFileNameFormat = FileNameFormat,
 		FileExtension = FileExtension,
-		SchemaDictionary = new TypeSchemaDictionary<IPartialZodSchema>(),
+		CreatedSchemaDictionary = new TypeSchemaDictionary<IPartialZodSchema>(),
 	};
 
 	protected override string FileExtension { get; set; } = ".ts";

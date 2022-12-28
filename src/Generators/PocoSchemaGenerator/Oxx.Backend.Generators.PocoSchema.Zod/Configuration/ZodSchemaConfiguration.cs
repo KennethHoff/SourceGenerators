@@ -22,14 +22,16 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required TypeTypeDictionary GenericSchemaDictionary { get; init; }
 	
 	/// <summary>
-	/// Dictionary containing the non-generic types that will be generated
+	/// Dictionary containing the non-generic types that will be generated <br />
+	/// Don't use this if you want to find the schema to use for other types. <br />
+	/// Use <see cref="CreatedSchemaDictionary"/> instead.
 	/// </summary>
-	public required TypeSchemaDictionary<IPartialZodSchema> AppliedSchemaDictionary { get; init; }
+	public required TypeSchemaDictionary<IPartialZodSchema> SchemaToCreateDictionary { get; init; }
 	
 	/// <summary>
 	/// Dictionary containing fully created schemas
 	/// </summary>
-	public required TypeSchemaDictionary<IPartialZodSchema> SchemaDictionary { get; set; }
+	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemaDictionary { get; set; }
 
 	public IPartialZodSchema CreateGenericSchema(PropertyInfo propertyInfo)
 	{
@@ -40,7 +42,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		var argumentSchemas = genericArguments
 			.Select(type =>
 			{
-				var schema = SchemaDictionary.GetSchemaForType(type);
+				var schema = CreatedSchemaDictionary.GetSchemaForType(type);
 				return (Schema: schema, Type: type);
 			})
 			.ToArray();
@@ -93,7 +95,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 	public IPartialZodSchema GetSchemaForType(Type getGenericArgument)
 	{
-		var schema = SchemaDictionary.GetSchemaForType(getGenericArgument);
+		var schema = CreatedSchemaDictionary.GetSchemaForType(getGenericArgument);
 		if (schema is null)
 		{
 			throw new InvalidOperationException($"Could not find schema for type {getGenericArgument.Name}");
