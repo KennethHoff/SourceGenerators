@@ -75,7 +75,6 @@ The following options are available:
   * This is useful in the following scenarios:
     * You want to apply a schema to a type you don't own
     * It is not possible to add the `[PocoObject]` attribute to the type
-    * You want to apply the schema to a type that is not a POCO
     * You want to apply the schema to a type that is not a class or struct
     * You want to apply a different schema to a type than the default one
     * You want to apply a different schema to nullable and non-nullable types
