@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
@@ -94,7 +95,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
-	private IMolecularZodSchema GenerateMolecularSchema(PocoObject pocoObject)
+	private (IMolecularZodSchema Schema, IReadOnlyCollection<PropertyInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
 	{
 		var partialSchema = _generatedSchemas[pocoObject.Type] switch
 		{
@@ -145,21 +146,28 @@ public class ZodSchemaConverter : ISchemaConverter
 				throw new InvalidOperationException($"No schema found for {propertyType.Name}");
 			})
 			.ToDictionary(x => x.Key, x => x.Value);
+		
+		var invalidProperties = pocoObject.Properties
+			.Where(x => !validSchemas.ContainsKey(x))
+			.ToArray();
 
-		return partialSchema.Populate(validSchemas, _configuration);
+		return (partialSchema.Populate(validSchemas, _configuration), invalidProperties);
 	}
 
 	private FileInformation GenerateMolecule(PocoObject pocoObject)
 	{
-		var molecularSchema = GenerateMolecularSchema(pocoObject);
+		var (molecularSchema, invalidProperties) = GenerateMolecularSchema(pocoObject);
 		
 		_generatedSchemas.Update(pocoObject.Type, molecularSchema);
 
-		return new FileInformation
+		var generateMolecule = new FileInformation
 		{
 			Content = GenerateFileContent(molecularSchema),
 			Name = GenerateFileName(molecularSchema),
 		};
+		
+		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(pocoObject.Type, molecularSchema, invalidProperties));
+		return generateMolecule;
 	}
 
 	/// <summary>

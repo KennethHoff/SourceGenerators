@@ -8,4 +8,5 @@ public sealed class ZodSchemaEventConfiguration : ISchemaEventConfiguration
 	public EventHandler<FileCreatingEventArgs>? FileCreating { get; set; }
 	public EventHandler<FilesCreatedEventArgs>? FilesCreated { get; set; }
 	public EventHandler<FilesCreatingEventArgs>? FilesCreating { get; set; }
+	public EventHandler<MoleculeSchemaCreatedEventArgs>? MoleculeSchemaCreated { get; set; }
 }
