@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using AnotherProject;
 using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using TestingApp.SchemaTypes;
@@ -6,7 +5,7 @@ using TestingApp.SchemaTypes;
 namespace TestingApp.Models;
 
 [PocoObject]
-internal sealed class Person
+internal abstract class Person
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
 	public IEnumerable<string?> NamesNullableUnderlying { get; init; } = Enumerable.Empty<string?>();
@@ -59,6 +58,44 @@ internal sealed class Person
 
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
 	public PocoFromAnotherProject? PocoFromAnotherNullable { get; init; }
+	
+	[PocoPropertyIgnore]
+	public string Ignored { get; init; } = string.Empty;
+	
+	private string Private { get; init; } = string.Empty;
+	internal string Internal { get; init; } = string.Empty;
+	protected string Protected { get; init; } = string.Empty;
+
+	protected abstract string ProtectedAbstract { get; init; }
+
+	// All of the following should be ignored as they are either:
+	// - not a property (field, method, etc.)
+	// - not an instance property (static)
+	
+	public static string PublicStatic { get; set; } = string.Empty;
+	private static string PrivateStatic { get; set; } = string.Empty;
+	internal static string InternalStatic { get; set; } = string.Empty;
+	protected static string ProtectedStatic { get; set; } = string.Empty;
+
+	private readonly string PrivateReadonlyField = string.Empty;
+	internal readonly string InternalReadonlyField = string.Empty;
+	public readonly string PublicReadonlyField = string.Empty;
+	protected readonly string ProtectedReadonlyField = string.Empty;
+	private string PrivateField = string.Empty;
+	internal string InternalField = string.Empty;
+	public string PublicField = string.Empty;
+	protected string ProtectedField = string.Empty;
+	
+	private static readonly string PrivateStaticReadonlyField = string.Empty;
+	internal static readonly string InternalStaticReadonlyField = string.Empty;
+	public static readonly string PublicStaticReadonlyField = string.Empty;
+	protected static readonly string ProtectedStaticReadonlyField = string.Empty;
+	private static string PrivateStaticField = string.Empty;
+	internal static string InternalStaticField = string.Empty;
+	public static string PublicStaticField = string.Empty;
+	protected static string ProtectedStaticField = string.Empty;
+	
+	
 }
 
 [PocoObject]

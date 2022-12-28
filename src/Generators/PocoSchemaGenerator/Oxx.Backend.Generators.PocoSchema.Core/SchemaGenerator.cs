@@ -78,7 +78,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 	}
 
 	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
-		=> type.GetProperties()
+		=> type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(IsPropertyOrField())
 			.Where(DoesNotHaveIgnoreAttribute());
 
