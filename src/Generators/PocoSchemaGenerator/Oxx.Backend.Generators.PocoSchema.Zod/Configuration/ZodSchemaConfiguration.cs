@@ -26,7 +26,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	/// Don't use this if you want to find the schema to use for other types. <br />
 	/// Use <see cref="CreatedSchemaDictionary"/> instead.
 	/// </summary>
-	public required TypeSchemaDictionary<IPartialZodSchema> SchemaToCreateDictionary { get; init; }
+	public required TypeSchemaDictionary<IPartialZodSchema> SchemasToCreateDictionary { get; init; }
 	
 	/// <summary>
 	/// Dictionary containing fully created schemas
