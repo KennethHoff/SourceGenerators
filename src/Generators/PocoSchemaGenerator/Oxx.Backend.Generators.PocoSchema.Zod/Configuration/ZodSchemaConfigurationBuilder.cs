@@ -10,8 +10,8 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 {
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
-		SchemasToCreateDictionary = AppliedSchemaTypeDictionary,
-		GenericSchemasDictionary = GenericSchemaTypeDictionary,
+		SchemasToCreateDictionary = SchemasToCreateDictionary,
+		GenericSchemasDictionary = GenericSchemasDictionary,
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,
 		DeleteFilesOnStart = DeleteFilesOnStart,
