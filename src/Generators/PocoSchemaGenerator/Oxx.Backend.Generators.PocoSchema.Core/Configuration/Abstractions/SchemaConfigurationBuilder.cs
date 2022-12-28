@@ -5,7 +5,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
-public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : ISchemaConfigurationBuilder<TConfigurationType>
+public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : ISchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration>
 	where TSchemaType : class, ISchema
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
@@ -67,26 +67,9 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		FileExtension = fileExtension;
 		return this;
 	}
-
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ResolveTypesFromAssemblies(params Assembly[] assemblies)
-	{
-		foreach (var assembly in assemblies)
-		{
-			ResolveTypesFromAssembly(assembly);
-		}
-
-		return this;
-	}
-
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ResolveTypesFromAssembly(Assembly assembly)
-	{
-		Assemblies.Add(assembly);
-		return this;
-	}
-
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType,TSchemaEventConfiguration> ResolveTypesFromAssemblyContaining<T>()
 	{
-		ResolveTypesFromAssembly(typeof(T).GetTypeInfo().Assembly);
+		Assemblies.Add(typeof(T).Assembly);
 		return this;
 	}
 
