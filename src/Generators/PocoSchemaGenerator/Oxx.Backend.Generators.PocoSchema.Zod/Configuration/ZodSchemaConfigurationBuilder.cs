@@ -10,7 +10,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 {
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
-		SchemasToCreateDictionary = SchemasToCreateDictionary,
+		AtomicSchemasToCreateDictionary = AtomicSchemasToCreateDictionary,
 		GenericSchemasDictionary = GenericSchemasDictionary,
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,

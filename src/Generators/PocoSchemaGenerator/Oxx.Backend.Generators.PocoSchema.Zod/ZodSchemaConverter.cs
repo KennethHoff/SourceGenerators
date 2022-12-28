@@ -35,7 +35,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	public IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects)
 	{
-		var atoms = GenerateAtoms(_configuration.SchemasToCreateDictionary);
+		var atoms = GenerateAtoms(_configuration.AtomicSchemasToCreateDictionary);
 		var molecules = GenerateMolecules(pocoObjects);
 		return atoms.Concat(molecules).Where(x => x != FileInformation.None);
 	}
