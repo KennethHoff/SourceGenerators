@@ -14,6 +14,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 {
 	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
 	private readonly ISchemaConverter _schemaConverter;
+	private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
 	{
@@ -28,25 +29,27 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var contents = _schemaConverter.GenerateFileContent(pocoObjects).ToList();
 		
 		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
-		await Task.WhenAll(contents.Select(fileInformation => Task.Run(() =>
-		{
-			var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
-			_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
 
-			if (!fileCreatingEventArgs.Skip)
+		await Task.WhenAll(contents.Select(fileInformation => Task.Run(async () =>
 			{
-				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
-				lock (_configuration)
+				var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
+				_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
+
+				if (!fileCreatingEventArgs.Skip)
 				{
-					File.WriteAllText(filePath, fileInformation.Content);
+					var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
+					
+					await _semaphoreSlim.WaitAsync();
+					await File.WriteAllTextAsync(filePath, fileInformation.Content);
+					_semaphoreSlim.Release();
 				}
-			}
 
-			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
-			{
-				Skipped = fileCreatingEventArgs.Skip,
-			});
-		})));
+				_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
+				{
+					Skipped = fileCreatingEventArgs.Skip,
+				});
+			})));
+
 		_configuration.Events.FilesCreated?.Invoke(this, new FilesCreatedEventArgs(contents));
 	}
 

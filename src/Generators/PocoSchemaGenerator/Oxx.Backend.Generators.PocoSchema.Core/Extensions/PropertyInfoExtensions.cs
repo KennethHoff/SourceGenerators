@@ -9,6 +9,5 @@ public static class PropertyInfoExtensions
 	{
 		var nullabilityInfo = NullabilityInfoContext.Create(p);
 		return nullabilityInfo.WriteState is NullabilityState.Nullable;
-	}
+	} 
 }
-

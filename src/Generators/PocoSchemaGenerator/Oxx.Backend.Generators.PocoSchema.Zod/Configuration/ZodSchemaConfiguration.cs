@@ -19,14 +19,18 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required string FileExtension { get; init; }
 
 	public string FormatSchemaTypeName(IPartialZodSchema schema)
-		=> schema is IBuiltInAtomicZodSchema or IAdditionalImportZodSchema
-			? schema.SchemaBaseName
-			: string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName);
+		=> schema switch
+		{
+			IBuiltInZodSchema   => schema.SchemaBaseName,
+			_                   => string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName),
+		};
 
 	public string FormatSchemaName(IPartialZodSchema schema)
-		=> schema is IBuiltInAtomicZodSchema or IAdditionalImportZodSchema
-			? schema.SchemaBaseName
-			: string.Format(SchemaNamingFormat, schema.SchemaBaseName);
+		=> schema switch
+		{
+			IBuiltInZodSchema   => schema.SchemaBaseName,
+			_                   => string.Format(SchemaNamingFormat, schema.SchemaBaseName),
+		};
 
 	public string FormatFilePath(IPartialZodSchema schema)
 		=> $"./{FormatSchemaName(schema)}";
@@ -49,10 +53,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		}
 		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
 		partialZodSchema.SetConfiguration(this);
-		
-		var underlyingPropertyInfos = genericSchemaType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-		partialZodSchema.SetUnderlyingTypes(underlyingPropertyInfos);
+		partialZodSchema.SetPropertyInfo(propertyInfo);
 		return partialZodSchema;
 	}
 
@@ -62,7 +63,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInAtomicZodSchema or IAdditionalImportZodSchema => ZodImport.None,
-			_                                                     => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
+			IBuiltInZodSchema or IAdditionalImportZodSchema => ZodImport.None,
+			_                                               => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
 		};
 }

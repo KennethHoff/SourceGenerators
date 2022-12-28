@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Namotion.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
@@ -6,20 +7,20 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
-public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IBuiltInMolecularZodSchema
+public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInZodSchema
 	where TUnderlyingSchema: IZodSchema, new()
 {
 	public ZodSchemaConfiguration Configuration { get; private set; } = null!;
-	public IReadOnlyCollection<PropertyInfo> UnderlyingPropertyInfos { get; private set; } = null!;
+	public PropertyInfo PropertyInfo { get; private set; } = null!;
 
 	public void SetConfiguration(ZodSchemaConfiguration configuration)
 	{
 		Configuration = configuration;
 	}
 	
-	public void SetUnderlyingTypes(IReadOnlyCollection<PropertyInfo> underlyingPropertyInfos)
+	public void SetPropertyInfo(PropertyInfo propertyInfo)
 	{
-		UnderlyingPropertyInfos = underlyingPropertyInfos;
+		PropertyInfo = propertyInfo;
 	}
 
 	public SchemaDefinition SchemaDefinition
@@ -28,9 +29,11 @@ public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IBuilt
 		{
 			IZodSchema partialZodSchema = new TUnderlyingSchema();
 			var schemaName = Configuration.FormatSchemaName(partialZodSchema);
-			
-			var propertyIsNullable = UnderlyingPropertyInfos.Any(x => x.IsNullable());
-			if (propertyIsNullable)
+
+			var list = PropertyInfo.ToContextualProperty();
+			var listElement = list.PropertyType.GenericArguments.First();
+
+			if (listElement.Nullability is Nullability.Nullable)
 			{
 				schemaName += ".nullable()";
 			}

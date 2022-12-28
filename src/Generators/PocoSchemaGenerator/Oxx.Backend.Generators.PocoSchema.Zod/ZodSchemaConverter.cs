@@ -44,7 +44,7 @@ public class ZodSchemaConverter : ISchemaConverter
 	{
 		_generatedSchemas.Add(atomicSchema.Key, atomicSchema.Value);
 
-		if (atomicSchema.Value is IBuiltInAtomicZodSchema)
+		if (atomicSchema.Value is IBuiltInZodSchema)
 		{
 			return FileInformation.None;
 		}
