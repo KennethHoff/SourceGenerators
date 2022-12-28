@@ -64,6 +64,10 @@ internal abstract class Person
 	public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
 	public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
 	
+	public IReadOnlyCollection<User> RelatedUsers { get; init; } = Array.Empty<User>();
+	public IReadOnlyCollection<User?> RelatedUsersNullableUnderlying { get; init; } = Array.Empty<User?>();
+	public IReadOnlyCollection<User?>? RelatedUsersNullableUnderlyingNullable { get; init; } = Array.Empty<User?>();
+	
 	public int Int { get; init; }
 	public int? IntNullable { get; init; }
 	
