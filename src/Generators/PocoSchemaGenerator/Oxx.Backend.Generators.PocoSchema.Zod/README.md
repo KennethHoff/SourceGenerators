@@ -1,4 +1,5 @@
-# Zod Poco Schema Generator
+<h1 align="center">Zod Poco Schema Generator</h1>
+<p align="center">Streamline your development process with our comprehensive C#-to-TypeScript schema mapping library, which includes automatic schema generation and runtime type-safety.</p>
 
 ## Usage
 
