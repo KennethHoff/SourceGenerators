@@ -107,6 +107,14 @@ Currently the generator lacks a lot of context. There are a few issues with the 
    generic, or if it's a class or struct, etc.
 2. Naming needs improvement. "Atoms", "Molecules" is used in the code, but it's not really clear what they are, and they're not really used consistently.
 
+### Very high priority
+
+Issues that are currently blocking the release of the package.
+
+### High priority
+
+Issues that are common and annoying, but not blocking the release of the package.
+
 ### Medium priority
 
 Issues that are less common and/or can be worked around.
