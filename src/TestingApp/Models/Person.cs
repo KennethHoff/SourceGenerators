@@ -25,6 +25,17 @@ internal sealed class Person
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
 	public IEnumerable<string?> Names2 { get; init; } = Enumerable.Empty<string?>();
 	public IEnumerable<string?>? Names3 { get; init; } = Enumerable.Empty<string?>();
+	
+	public IReadOnlyCollection<string> Names4 { get; init; } = new List<string>();
+	public ICollection<string> Names5 { get; init; } = new List<string>();
+	public IList<string> Names6 { get; init; } = new List<string>();
+	public List<string> Names7 { get; init; } = new List<string>();
+	public List<string>? Names8 { get; init; } = new List<string>();
+	public List<string?> Names9 { get; init; } = new List<string?>();
+	public List<string?>? Names10 { get; init; } = new List<string?>();
+	public string[] Names11 { get; init; } = new string[0];
+	public string?[] Names12 { get; init; } = new string?[0];
+	public string?[]? Names13 { get; init; } = new string?[0];
 
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
 }

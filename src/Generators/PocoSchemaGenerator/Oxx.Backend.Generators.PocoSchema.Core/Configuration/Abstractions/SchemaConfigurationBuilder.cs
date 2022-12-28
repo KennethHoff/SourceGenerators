@@ -1,5 +1,6 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
+using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
@@ -9,8 +10,8 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
-	protected readonly IDictionary<Type, TSchemaType> SchemaTypeDictionary = new Dictionary<Type, TSchemaType>();
-	protected readonly IDictionary<Type, Type> GenericSchemaTypeDictionary = new Dictionary<Type, Type>();
+	protected readonly TypeSchemaDictionary<TSchemaType> SchemaTypeDictionary = new();
+	protected readonly TypeTypeDictionary GenericSchemaTypeDictionary = new();
 	protected string OutputDirectory = string.Empty;
 
 	protected abstract string SchemaNamingFormat { get; set; }

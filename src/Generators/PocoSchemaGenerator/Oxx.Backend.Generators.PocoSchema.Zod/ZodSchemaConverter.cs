@@ -22,7 +22,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private readonly ZodSchemaConfiguration _configuration;
 
-	private readonly IDictionary<Type, IPartialZodSchema> _generatedSchemas = new Dictionary<Type, IPartialZodSchema>();
+	private readonly TypeSchemaDictionary<IPartialZodSchema> _generatedSchemas = new();
 
 	public ZodSchemaConverter(ZodSchemaConfiguration configuration)
 	{
@@ -56,7 +56,7 @@ public class ZodSchemaConverter : ISchemaConverter
 		};
 	}
 
-	private IEnumerable<FileInformation> GenerateAtoms(IDictionary<Type, IPartialZodSchema> configurationAtomicSchemaDictionary)
+	private IEnumerable<FileInformation> GenerateAtoms(TypeSchemaDictionary<IPartialZodSchema> configurationAtomicSchemaDictionary)
 		=> configurationAtomicSchemaDictionary
 			.Select(GenerateAtom);
 
@@ -116,17 +116,29 @@ public class ZodSchemaConverter : ISchemaConverter
 			.Where(x =>
 			{
 				var propertyType = x.PropertyType;
+
+				if (_generatedSchemas.HasSchemaForType(propertyType))
+				{
+					return true;
+				}
 				
 				// If the propertyType is generic, we need to get the generic type definition
 				if (propertyType.IsGenericType)
 				{
-					return _configuration.GenericSchemaDictionary.ContainsKey(propertyType.GetGenericTypeDefinition());
+					return _configuration.GenericSchemaDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
 				}
-				return _generatedSchemas.ContainsKey(propertyType);
+
+				return false;
 			})
 			.Select(x =>
 			{
 				var propertyType = x.PropertyType;
+
+				var partialZodSchema = _generatedSchemas.GetSchemaForType(propertyType);
+				if (partialZodSchema is not null)
+				{
+					return KeyValuePair.Create(x, partialZodSchema);
+				}
 
 				// If the propertyType is generic, we need to get the generic type definition
 				if (propertyType.IsGenericType)
@@ -139,7 +151,10 @@ public class ZodSchemaConverter : ISchemaConverter
 					return KeyValuePair.Create(x, genericSchema);
 				}
 
-				var partialZodSchema = _generatedSchemas[propertyType];
+				if (partialZodSchema is null)
+				{
+					throw new InvalidOperationException($"No schema found for {propertyType.Name}");
+				}
 				return KeyValuePair.Create(x, partialZodSchema);
 			})
 			.ToDictionary(x => x.Key, x => x.Value);

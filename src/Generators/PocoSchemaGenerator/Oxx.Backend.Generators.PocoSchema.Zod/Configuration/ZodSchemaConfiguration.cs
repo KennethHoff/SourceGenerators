@@ -1,5 +1,6 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
+using Oxx.Backend.Generators.PocoSchema.Core.Models;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
@@ -9,8 +10,8 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required IEnumerable<Assembly> Assemblies { get; init; }
 	public required string OutputDirectory { get; init; }
 	public required bool DeleteFilesOnStart { get; init; }
-	public required IDictionary<Type, IPartialZodSchema> SchemaDictionary { get; init; }
-	public required IDictionary<Type, Type> GenericSchemaDictionary { get; init; }
+	public required TypeSchemaDictionary<IPartialZodSchema> SchemaDictionary { get; init; }
+	public required TypeTypeDictionary GenericSchemaDictionary { get; init; }
 	public required string SchemaNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
@@ -34,7 +35,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	{
 		var genericTypeDefinition = propertyInfo.PropertyType.GetGenericTypeDefinition();
 		var genericArguments = propertyInfo.PropertyType.GetGenericArguments();
-		var genericSchema = GenericSchemaDictionary[genericTypeDefinition];
+		var genericSchema = GenericSchemaDictionary.GetRelatedType(genericTypeDefinition);
 		
 		var argumentSchemas = genericArguments
 			.Select(x => SchemaDictionary[x])
@@ -64,9 +65,4 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema or IAdditionalImportZodSchema => ZodImport.None,
 			_                                                     => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
 		};
-
-	public TValue CreateGenericSchema<TValue>(PropertyInfo type)
-	{
-		throw new NotImplementedException();
-	}
 }
