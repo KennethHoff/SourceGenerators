@@ -125,7 +125,6 @@ public class ZodSchemaConverter : ISchemaConverter
 
 				return false;
 			})
-			.ToArray()
 			.Select(x =>
 			{
 				var propertyType = x.PropertyType;
