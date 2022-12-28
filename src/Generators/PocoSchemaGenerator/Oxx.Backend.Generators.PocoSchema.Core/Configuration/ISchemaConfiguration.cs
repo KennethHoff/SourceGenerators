@@ -15,9 +15,9 @@ public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : 
 public interface ISchemaConfiguration
 {
 	IEnumerable<Assembly> Assemblies { get; }
-	string OutputDirectory { get; }
 	bool DeleteFilesOnStart { get; }
+	string OutputDirectory { get; }
+	string SchemaFileNameFormat { get; }
 	string SchemaNamingFormat { get; }
 	string SchemaTypeNamingFormat { get; }
-	string SchemaFileNameFormat { get; }
 }

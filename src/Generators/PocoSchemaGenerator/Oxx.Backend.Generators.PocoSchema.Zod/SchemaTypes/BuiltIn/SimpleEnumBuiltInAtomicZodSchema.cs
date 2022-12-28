@@ -24,6 +24,5 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 public class SimpleEnumBuiltInAtomicZodSchema<TEnum> : IBuiltInAtomicZodSchema
 	where TEnum : struct, Enum
 {
-	public SchemaDefinition SchemaDefinition 
-		=> new($"z.enum([{string.Join(", ", Enum.GetValues<TEnum>().Select(x => $"\"{x}\""))}])");
+	public SchemaDefinition SchemaDefinition => new($"z.enum([{string.Join(", ", Enum.GetValues<TEnum>().Select(x => $"\"{x}\""))}])");
 }

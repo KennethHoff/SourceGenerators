@@ -27,28 +27,28 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		EnsureDirectoryExists();
 		var pocoObjects = GetPocoObjects();
 		var contents = _schemaConverter.GenerateFileContent(pocoObjects).ToList();
-		
+
 		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
 
 		await Task.WhenAll(contents.Select(fileInformation => Task.Run(async () =>
+		{
+			var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
+			_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
+
+			if (!fileCreatingEventArgs.Skip)
 			{
-				var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
-				_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
+				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
 
-				if (!fileCreatingEventArgs.Skip)
-				{
-					var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
-					
-					await _semaphoreSlim.WaitAsync();
-					await File.WriteAllTextAsync(filePath, fileInformation.Content);
-					_semaphoreSlim.Release();
-				}
+				await _semaphoreSlim.WaitAsync();
+				await File.WriteAllTextAsync(filePath, fileInformation.Content);
+				_semaphoreSlim.Release();
+			}
 
-				_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
-				{
-					Skipped = fileCreatingEventArgs.Skip,
-				});
-			})));
+			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
+			{
+				Skipped = fileCreatingEventArgs.Skip,
+			});
+		})));
 
 		_configuration.Events.FilesCreated?.Invoke(this, new FilesCreatedEventArgs(contents));
 	}
@@ -59,6 +59,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		{
 			Directory.Delete(_configuration.OutputDirectory, true);
 		}
+
 		Directory.CreateDirectory(_configuration.OutputDirectory);
 	}
 
@@ -77,6 +78,9 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		});
 	}
 
+	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
+		=> pi => pi.GetCustomAttribute<PocoPropertyIgnoreAttribute>() is null;
+
 	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
 		=> type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(IsPropertyOrField())
@@ -85,7 +89,4 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 	// More efficient than HasFlag.. I think - Rider gave me allocation warnings with HasFlag
 	private static Func<PropertyInfo, bool> IsPropertyOrField()
 		=> pi => (pi.MemberType & MemberTypes.Property) != 0 || (pi.MemberType & MemberTypes.Field) != 0;
-	
-	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
-		=> pi => pi.GetCustomAttribute<PocoPropertyIgnoreAttribute>() is null;
 }

@@ -18,11 +18,46 @@ public class PartialMolecularZodSchema : IPartialZodSchema
 
 public class MolecularZodSchema : IMolecularZodSchema
 {
-	private MolecularZodSchema()
-	{ }
+	public IEnumerable<ZodImport> AdditionalImports => SchemaDictionary
+		.Select(x => x.Value)
+		.OfType<IAdditionalImportZodSchema>()
+		.SelectMany(x => x.AdditionalImports.Where(import => import != ZodImport.None))
+		.Concat(SchemaDictionary
+			.Select(x => x.Value)
+			.Where(x => x is not IBuiltInAtomicZodSchema and not IAdditionalImportZodSchema)
+			.Select(SchemaConfiguration.CreateStandardImport))
+		.Distinct();
 
 	public SchemaBaseName SchemaBaseName { get; private init; }
-	private ZodSchemaConfiguration SchemaConfiguration { get; init; } = null!; 
+
+	public SchemaDefinition SchemaDefinition => new($$"""
+		z.object({
+		{{SchemaContent}}
+		})
+		""");
+
+	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
+	private ZodSchemaConfiguration SchemaConfiguration { get; init; } = null!;
+
+	private string SchemaContent => SchemaDictionary
+		.Aggregate(string.Empty, (a, b)
+			=>
+		{
+			var propertyName = b.Key.Name.ToCamelCaseInvariant();
+			var propertySchema = SchemaConfiguration.FormatSchemaName(b.Value);
+
+			if (b.Key.IsNullable())
+			{
+				// If the property is nullable, we need to make the property allow null (still required, and undefined is not allowed)
+				propertySchema += ".nullable()";
+			}
+
+			return $"{a}\t{propertyName}: {propertySchema},{Environment.NewLine}";
+		})
+		.TrimEnd($"{Environment.NewLine}");
+
+	private MolecularZodSchema()
+	{ }
 
 	public static MolecularZodSchema CreateFromPartial(
 		PartialMolecularZodSchema partial,
@@ -34,38 +69,4 @@ public class MolecularZodSchema : IMolecularZodSchema
 			SchemaBaseName = partial.SchemaBaseName,
 			SchemaConfiguration = zodSchemaConfiguration,
 		};
-
-	public SchemaDefinition SchemaDefinition => new($$"""
-		z.object({
-		{{SchemaContent}}
-		})
-		""");
-
-	private string SchemaContent => SchemaDictionary
-		.Aggregate(string.Empty, (a, b) 
-			=>
-		{
-			var propertyName = b.Key.Name.ToCamelCaseInvariant();
-			var propertySchema = SchemaConfiguration.FormatSchemaName(b.Value);
-			
-			if (b.Key.IsNullable())
-			{
-				// If the property is nullable, we need to make the property allow null (still required, and undefined is not allowed)
-				propertySchema += ".nullable()";
-			}
-
-			return $"{a}\t{propertyName}: {propertySchema},{Environment.NewLine}";
-		})
-		.TrimEnd($"{Environment.NewLine}");
-
-	public IEnumerable<ZodImport> AdditionalImports => SchemaDictionary
-		.Select(x => x.Value)
-		.OfType<IAdditionalImportZodSchema>()
-		.SelectMany(x => x.AdditionalImports.Where(import => import != ZodImport.None)).Concat(SchemaDictionary
-			.Select(x => x.Value)
-			.Where(x => x is not IBuiltInAtomicZodSchema and not IAdditionalImportZodSchema)
-			.Select(SchemaConfiguration.CreateStandardImport))
-		.Distinct();
-
-	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }

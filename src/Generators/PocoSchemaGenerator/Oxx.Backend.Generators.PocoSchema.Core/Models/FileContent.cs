@@ -6,10 +6,15 @@ public readonly record struct FileContent(string Value)
 	{
 		Value = string.Empty,
 	};
-	
-	// Implicit conversion from FileContent to string
-	public static implicit operator string(FileContent fileContent) => fileContent.Value;
+
+	#region Overrides
 
 	public override string ToString()
-		=> Value; 
+		=> Value;
+
+	#endregion
+
+	// Implicit conversion from FileContent to string
+	public static implicit operator string(FileContent fileContent)
+		=> fileContent.Value;
 }

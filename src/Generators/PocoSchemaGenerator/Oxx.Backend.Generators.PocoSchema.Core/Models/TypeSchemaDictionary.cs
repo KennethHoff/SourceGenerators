@@ -3,32 +3,8 @@
 namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
 
 public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchemaType>
-	where TSchemaType: class, ISchema
+	where TSchemaType : class, ISchema
 {
-	public bool HasSchemaForType(Type propertyType)
-	{
-		if (ContainsKey(propertyType))
-		{
-			return true;
-		}
-
-		// Check if the base type is in the dictionary, the more specific type will be used
-		var baseType = propertyType.BaseType;
-		if (baseType != null && ContainsKey(baseType))
-		{
-			return true;
-		}
-		
-		// Check if any of the interfaces are in the dictionary, the more specific type will be used
-		var interfaces = propertyType.GetInterfaces();
-		if (interfaces.Any(ContainsKey))
-		{
-			return true;
-		}
-		
-		return false;
-	}
-
 	public TSchemaType? GetSchemaForType(Type propertyType)
 	{
 		if (TryGetValue(propertyType, out var schema))
@@ -42,6 +18,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		{
 			return schema;
 		}
+
 		// Check if any of the interfaces are in the dictionary, the more specific type will be used
 		var interfaces = propertyType.GetInterfaces();
 		var interfaceType = interfaces.FirstOrDefault(ContainsKey);
@@ -49,7 +26,31 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		{
 			return this[interfaceType];
 		}
-		
+
 		return null;
+	}
+
+	public bool HasSchemaForType(Type propertyType)
+	{
+		if (ContainsKey(propertyType))
+		{
+			return true;
+		}
+
+		// Check if the base type is in the dictionary, the more specific type will be used
+		var baseType = propertyType.BaseType;
+		if (baseType != null && ContainsKey(baseType))
+		{
+			return true;
+		}
+
+		// Check if any of the interfaces are in the dictionary, the more specific type will be used
+		var interfaces = propertyType.GetInterfaces();
+		if (interfaces.Any(ContainsKey))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

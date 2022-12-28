@@ -4,6 +4,26 @@ namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
 
 public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 {
+	public Type GetRelatedType(Type type)
+	{
+		if (TryGetValue(type, out var relatedType))
+		{
+			return relatedType;
+		}
+
+		if (TryGetRelatedBaseType(type, out relatedType))
+		{
+			return relatedType;
+		}
+
+		if (TryGetRelatedInterface(type, out relatedType))
+		{
+			return relatedType;
+		}
+
+		throw new InvalidOperationException($"Type {type} is not registered in the dictionary.");
+	}
+
 	public bool HasRelatedType(Type type)
 		=> type switch
 		{
@@ -13,33 +33,13 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 			_                                => false,
 		};
 
-	public Type GetRelatedType(Type type)
-	{
-		if (TryGetValue(type, out var relatedType))
-		{
-			return relatedType;
-		}
-		
-		if (TryGetRelatedBaseType(type, out relatedType))
-		{
-			return relatedType;
-		}
-		
-		if (TryGetRelatedInterface(type, out relatedType))
-		{
-			return relatedType;
-		}
-
-		throw new InvalidOperationException($"Type {type} is not registered in the dictionary.");
-	}
-
 	private bool HasRelatedBaseType(Type type)
 		=> TryGetRelatedBaseType(type, out _);
-	
+
 	private bool HasRelatedInterface(Type type)
 		=> TryGetRelatedInterface(type, out _);
-	
-	
+
+
 	private bool TryGetRelatedBaseType(Type type, [NotNullWhen(true)] out Type? relatedType)
 	{
 		var baseType = type.BaseType;
@@ -57,17 +57,17 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 		var hasRelatedBaseType = TryGetRelatedBaseType(baseType, out relatedType);
 		return hasRelatedBaseType;
 	}
-	
+
 	private bool TryGetRelatedInterface(Type type, [NotNullWhen(true)] out Type? relatedType)
 	{
 		var interfaces = type.GetInterfaces();
-		
+
 		if (interfaces.Length == 0)
 		{
 			relatedType = null;
 			return false;
 		}
-		
+
 		foreach (var interfaceType in interfaces)
 		{
 			foreach (var (key, value) in this)
@@ -78,7 +78,7 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 				}
 
 				var genericInterfaceType = interfaceType.GetGenericTypeDefinition();
-				var genericKeyType       = key.GetGenericTypeDefinition();
+				var genericKeyType = key.GetGenericTypeDefinition();
 				if (genericInterfaceType == genericKeyType)
 				{
 					relatedType = value;
@@ -86,6 +86,7 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 				}
 			}
 		}
+
 		relatedType = null;
 		return false;
 	}

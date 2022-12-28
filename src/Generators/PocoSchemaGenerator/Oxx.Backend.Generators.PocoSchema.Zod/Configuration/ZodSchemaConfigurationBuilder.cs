@@ -7,6 +7,25 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
 {
+	protected override ZodSchemaConfiguration Configuration => new()
+	{
+		SchemaDictionary = SchemaTypeDictionary,
+		GenericSchemaDictionary = GenericSchemaTypeDictionary,
+		Assemblies = Assemblies,
+		OutputDirectory = OutputDirectory,
+		DeleteFilesOnStart = DeleteFilesOnStart,
+		Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
+		SchemaNamingFormat = SchemaNamingFormat,
+		SchemaTypeNamingFormat = SchemaTypeNamingFormat,
+		SchemaFileNameFormat = FileNameFormat,
+		FileExtension = FileExtension,
+	};
+
+	protected override string FileExtension { get; set; } = ".ts";
+	protected override string FileNameFormat { get; set; } = "{0}Schema";
+	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
+	protected override string SchemaTypeNamingFormat { get; set; } = "{0}SchemaType";
+
 	public ZodSchemaConfigurationBuilder()
 	{
 		ApplySchemas(() =>
@@ -22,21 +41,4 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 			ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayBuiltInAtomicZodSchema<>));
 		});
 	}
-	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
-	protected override string SchemaTypeNamingFormat { get; set; } = "{0}SchemaType";
-	protected override string FileNameFormat { get; set; } = "{0}Schema";
-	protected override ZodSchemaConfiguration Configuration => new()
-	{
-		SchemaDictionary = SchemaTypeDictionary,
-		GenericSchemaDictionary = GenericSchemaTypeDictionary,
-		Assemblies = Assemblies,
-		OutputDirectory = OutputDirectory,
-		DeleteFilesOnStart = DeleteFilesOnStart,
-		Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
-		SchemaNamingFormat = SchemaNamingFormat,
-		SchemaTypeNamingFormat = SchemaTypeNamingFormat,
-		SchemaFileNameFormat = FileNameFormat,
-		FileExtension = FileExtension,
-	};
-	protected override string FileExtension { get; set; } = ".ts";
 }

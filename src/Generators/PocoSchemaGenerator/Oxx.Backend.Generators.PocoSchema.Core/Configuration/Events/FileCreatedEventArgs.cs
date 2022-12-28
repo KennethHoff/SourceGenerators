@@ -6,10 +6,10 @@ public sealed class FileCreatedEventArgs : EventArgs
 {
 	public readonly FileInformation SchemaInformation;
 
+	public required bool Skipped { get; init; }
+
 	public FileCreatedEventArgs(FileInformation schemaInformation)
 	{
 		SchemaInformation = schemaInformation;
 	}
-
-	public required bool Skipped { get; init; }
 }

@@ -6,7 +6,7 @@ public interface IAtomicSchema : ISchema
 { }
 
 public interface IMolecularSchema<TSchema> : ISchema
-	where TSchema: ISchema
+	where TSchema : ISchema
 {
 	IDictionary<PropertyInfo, TSchema> SchemaDictionary { get; }
 }
