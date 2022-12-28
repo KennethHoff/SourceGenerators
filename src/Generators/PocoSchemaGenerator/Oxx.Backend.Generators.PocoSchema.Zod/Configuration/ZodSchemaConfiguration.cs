@@ -49,23 +49,21 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
 		partialZodSchema.SetConfiguration(this);
 		
-		var propertyInfos = genericArguments.SelectMany(x =>
-		{
-			var isNullable = x.IsGenericType && x.GetGenericTypeDefinition() == typeof(Nullable<>);
-			var type = isNullable ? x.GetGenericArguments()[0] : x;
-			return properties;
-		}).ToArray();
-		
-		
-		partialZodSchema.SetUnderlyingProperties(null!);
+		var underlyingPropertyInfos = genericSchemaType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+		partialZodSchema.SetUnderlyingTypes(underlyingPropertyInfos);
 		return partialZodSchema;
 	}
 
 	public IPartialZodSchema CreateSchema(Type type)
 		=> SchemaDictionary[type];
-	
+
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
-		=> new(FormatSchemaName(schema), FormatFilePath(schema));
+		=> schema switch
+		{
+			IBuiltInAtomicZodSchema or IAdditionalImportZodSchema => ZodImport.None,
+			_                                                     => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
+		};
 
 	public TValue CreateGenericSchema<TValue>(PropertyInfo type)
 	{

@@ -18,10 +18,10 @@ public interface IPartialZodSchema : ISchema
 public interface IGenericZodSchema : IZodSchema
 {
 	ZodSchemaConfiguration Configuration { get; }
-	IReadOnlyCollection<PropertyInfo> UnderlyingProperties { get; }
+	IReadOnlyCollection<PropertyInfo> UnderlyingPropertyInfos { get; }
 	
 	void SetConfiguration(ZodSchemaConfiguration configuration);
-	void SetUnderlyingProperties(IReadOnlyCollection<PropertyInfo> propertyInfos);
+	void SetUnderlyingTypes(IReadOnlyCollection<PropertyInfo> underlyingPropertyInfos);
 }
 
 public interface IAdditionalImportZodSchema : IZodSchema

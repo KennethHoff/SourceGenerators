@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
@@ -9,16 +10,16 @@ public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IBuilt
 	where TUnderlyingSchema: IZodSchema, new()
 {
 	public ZodSchemaConfiguration Configuration { get; private set; } = null!;
-	public IReadOnlyCollection<PropertyInfo> UnderlyingProperties { get; private set; } = null!;
+	public IReadOnlyCollection<PropertyInfo> UnderlyingPropertyInfos { get; private set; } = null!;
 
 	public void SetConfiguration(ZodSchemaConfiguration configuration)
 	{
 		Configuration = configuration;
 	}
 	
-	public void SetUnderlyingProperties(IReadOnlyCollection<PropertyInfo> propertyInfos)
+	public void SetUnderlyingTypes(IReadOnlyCollection<PropertyInfo> underlyingPropertyInfos)
 	{
-		UnderlyingProperties = propertyInfos;
+		UnderlyingPropertyInfos = underlyingPropertyInfos;
 	}
 
 	public SchemaDefinition SchemaDefinition
@@ -27,6 +28,12 @@ public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IBuilt
 		{
 			IZodSchema partialZodSchema = new TUnderlyingSchema();
 			var schemaName = Configuration.FormatSchemaName(partialZodSchema);
+			
+			var propertyIsNullable = UnderlyingPropertyInfos.Any(x => x.IsNullable());
+			if (propertyIsNullable)
+			{
+				schemaName += ".nullable()";
+			}
 			return new SchemaDefinition($"z.array({schemaName})");
 		}
 	}
@@ -36,8 +43,14 @@ public class ArrayAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IBuilt
 		{ typeof(TUnderlyingSchema).GetProperty(nameof(IZodSchema.SchemaDefinition))!, new TUnderlyingSchema() },
 	};
 
-	public IEnumerable<ZodImport> AdditionalImports => new[]
+	public IEnumerable<ZodImport> AdditionalImports
 	{
-		Configuration.CreateStandardImport(new TUnderlyingSchema()),
-	};
+		get
+		{
+			if (SchemaDictionary.TryGetValue(typeof(TUnderlyingSchema).GetProperty(nameof(IZodSchema.SchemaDefinition))!, out var schema))
+			{
+				yield return Configuration.CreateStandardImport(schema);
+			}
+		}
+	}
 }

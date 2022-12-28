@@ -61,13 +61,12 @@ public class MolecularZodSchema : IMolecularZodSchema
 	public IEnumerable<ZodImport> AdditionalImports => SchemaDictionary
 		.Select(x => x.Value)
 		.OfType<IAdditionalImportZodSchema>()
-		.SelectMany(x => x.AdditionalImports)
-		.Distinct()
+		.SelectMany(x => x.AdditionalImports.Where(import => import != ZodImport.None))
 		.Concat(SchemaDictionary
 			.Select(x => x.Value)
 			.Where(x => x is not IBuiltInAtomicZodSchema and not IAdditionalImportZodSchema)
-			.Select(SchemaConfiguration.CreateStandardImport)
-			.Distinct());
+			.Select(SchemaConfiguration.CreateStandardImport))
+		.Distinct();
 
 	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
 }
