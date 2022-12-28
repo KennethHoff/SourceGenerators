@@ -47,6 +47,6 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		}
 	}
 	
-	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemaDictionary.GetSchemaForType(PropertyInfo.PropertyType.GetGenericArguments()[0])
+	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(PropertyInfo.PropertyType.GetGenericArguments()[0])
 	?? throw new InvalidOperationException($"Could not find schema for type {PropertyInfo.PropertyType.GetGenericArguments()[0]}");
 }

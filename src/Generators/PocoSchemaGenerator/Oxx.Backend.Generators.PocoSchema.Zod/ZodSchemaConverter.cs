@@ -118,7 +118,7 @@ public class ZodSchemaConverter : ISchemaConverter
 				// If the propertyType is generic, we need to get the generic type definition
 				if (propertyType.IsGenericType)
 				{
-					var hasRelatedType = _configuration.GenericSchemaDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
+					var hasRelatedType = _configuration.GenericSchemasDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
 					var allGenericArgumentsHaveSchema = propertyType.GetGenericArguments().All(_generatedSchemas.HasSchemaForType);
 					return hasRelatedType && allGenericArgumentsHaveSchema;
 				}
@@ -191,7 +191,7 @@ public class ZodSchemaConverter : ISchemaConverter
 			.Select(GenerateMoleculeDefinition)
 			.ToArray();
 		
-		_configuration.CreatedSchemaDictionary = _generatedSchemas;
+		_configuration.CreatedSchemasDictionary = _generatedSchemas;
 		
 		return definitions
 			.Select(GenerateMolecule)

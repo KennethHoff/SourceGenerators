@@ -19,30 +19,30 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	/// <summary>
 	/// Dictionary containing the generic types that will be generated
 	/// </summary>
-	public required TypeTypeDictionary GenericSchemaDictionary { get; init; }
+	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
 	
 	/// <summary>
 	/// Dictionary containing the non-generic types that will be generated <br />
 	/// Don't use this if you want to find the schema to use for other types. <br />
-	/// Use <see cref="CreatedSchemaDictionary"/> instead.
+	/// Use <see cref="CreatedSchemasDictionary"/> instead.
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> SchemasToCreateDictionary { get; init; }
 	
 	/// <summary>
 	/// Dictionary containing fully created schemas
 	/// </summary>
-	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemaDictionary { get; set; }
+	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemasDictionary { get; set; }
 
 	public IPartialZodSchema CreateGenericSchema(PropertyInfo propertyInfo)
 	{
 		var genericTypeDefinition = propertyInfo.PropertyType.GetGenericTypeDefinition();
 		var genericArguments = propertyInfo.PropertyType.GetGenericArguments();
-		var genericSchema = GenericSchemaDictionary.GetRelatedType(genericTypeDefinition);
+		var genericSchema = GenericSchemasDictionary.GetRelatedType(genericTypeDefinition);
 
 		var argumentSchemas = genericArguments
 			.Select(type =>
 			{
-				var schema = CreatedSchemaDictionary.GetSchemaForType(type);
+				var schema = CreatedSchemasDictionary.GetSchemaForType(type);
 				return (Schema: schema, Type: type);
 			})
 			.ToArray();

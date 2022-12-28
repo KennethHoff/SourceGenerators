@@ -36,8 +36,8 @@ public abstract class
 		Type genericSchema)
 	{
 		var genericTypeDefinition = genericType.GetTypeInfo().GetGenericTypeDefinition();
-		var genericSchemaDefinition = genericSchema.GetTypeInfo().GetGenericTypeDefinition();
-		UpsertGenericSchemaTypeDictionary(genericTypeDefinition, genericSchemaDefinition);
+		var genericSchemasDefinition = genericSchema.GetTypeInfo().GetGenericTypeDefinition();
+		UpsertGenericSchemaTypeDictionary(genericTypeDefinition, genericSchemasDefinition);
 		return this;
 	}
 
