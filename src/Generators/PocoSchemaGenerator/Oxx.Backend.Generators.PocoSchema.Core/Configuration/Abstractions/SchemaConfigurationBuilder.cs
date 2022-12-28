@@ -93,7 +93,13 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		{
 			return this;
 		}
-
+		
+		var isNullable = typeof(TType).GetTypeInfo().IsGenericType && typeof(TType).GetGenericTypeDefinition() == typeof(Nullable<>);
+		if (isNullable)
+		{
+			return this;
+		}
+		
 		var nullableType = typeof(Nullable<>).MakeGenericType(typeof(TType));
 		UpsertSchemaTypeDictionary(nullableType, schemaFactory);
 		return this;

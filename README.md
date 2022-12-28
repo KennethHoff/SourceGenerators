@@ -73,6 +73,13 @@ The following options are available:
 * `ApplySchema<TType, TSchema>` - Applies a schema to a type.
   * Example: `ApplySchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
   * Note: This is useful if you want to apply a schema to a type you don't own.
+  * Note: This will apply the schema to both nullable and non-nullable types.
+    * This applies to both Value-, and Reference-Types.
+    * Note: If you want to apply a schema to a nullable type, but not to a non-nullable type, you can use the `ApplySchema<TType?, TSchema>` method.
+    * Note: If you want to apply a schema to a non-nullable type, but not to a nullable type, you have to first apply the schema to both (using the `ApplySchema<TType, TSchema>` method), and then override the schema for the nullable type (using the `ApplySchema<TType?, TSchema>` method).
+  * Note: This will override any previously applied schemas.
+  * Note: This will also apply to all derived types of the type you specified (Unless otherwise overridden - the more specific type will be used).
+  * Note: This will also apply to all types that implement the type you specified (Unless otherwise overridden - the more specific type will be used).
 
 * `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a type.
   * Example: `ApplyGenericSchema(typeof(MyClass<>), typeof(MySchema<>))` will apply the schema `MySchema<T>` to the type `MyClass<>`.
