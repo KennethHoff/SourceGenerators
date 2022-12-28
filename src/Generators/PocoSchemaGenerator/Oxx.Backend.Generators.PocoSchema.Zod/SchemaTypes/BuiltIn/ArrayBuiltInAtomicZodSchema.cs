@@ -9,26 +9,31 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInAtomicZodSchema
 	where TUnderlyingSchema : IZodSchema, new()
 {
-	public IEnumerable<ZodImport> AdditionalImports
+	private ZodSchemaConfiguration? _configuration;
+	private PropertyInfo? _propertyInfo;
+
+	public IEnumerable<ZodImport> AdditionalImports => new[]
 	{
-		get
-		{
-			if (SchemaDictionary.TryGetValue(typeof(TUnderlyingSchema).GetProperty(nameof(IZodSchema.SchemaDefinition))!, out var schema))
-			{
-				yield return Configuration.CreateStandardImport(schema);
-			}
-		}
+		Configuration.CreateStandardImport(UnderlyingSchema),
+	};
+
+	public ZodSchemaConfiguration Configuration
+	{
+		get => _configuration ?? throw new InvalidOperationException("Configuration is null");
+		set => _configuration = value;
 	}
 
-	public ZodSchemaConfiguration Configuration { get; private set; } = null!;
-	public PropertyInfo PropertyInfo { get; private set; } = null!;
+	public PropertyInfo PropertyInfo
+	{
+		get => _propertyInfo ?? throw new InvalidOperationException("PropertyInfo is null");
+		set => _propertyInfo = value;
+	}
 
 	public SchemaDefinition SchemaDefinition
 	{
 		get
 		{
-			IZodSchema partialZodSchema = new TUnderlyingSchema();
-			var schemaName = Configuration.FormatSchemaName(partialZodSchema);
+			var schemaName = Configuration.FormatSchemaName(UnderlyingSchema);
 
 			var list = PropertyInfo.ToContextualProperty();
 			var listElement = list.PropertyType.GenericArguments.First();
@@ -44,20 +49,8 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 
 	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary => new Dictionary<PropertyInfo, IPartialZodSchema>
 	{
-		{ typeof(TUnderlyingSchema).GetProperty(nameof(IZodSchema.SchemaDefinition))!, new TUnderlyingSchema() },
+		{ typeof(TUnderlyingSchema).GetProperty(nameof(IZodSchema.SchemaDefinition))!, UnderlyingSchema },
 	};
-
-	#region Interface implementations
-
-	public void SetConfiguration(ZodSchemaConfiguration configuration)
-	{
-		Configuration = configuration;
-	}
-
-	public void SetPropertyInfo(PropertyInfo propertyInfo)
-	{
-		PropertyInfo = propertyInfo;
-	}
-
-	#endregion
+	
+	private IPartialZodSchema UnderlyingSchema => Configuration.GetSchemaForType(PropertyInfo.PropertyType.GetGenericArguments()[0]);
 }

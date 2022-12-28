@@ -13,7 +13,7 @@ public abstract class
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
 	protected readonly TypeTypeDictionary GenericSchemaTypeDictionary = new();
-	protected readonly TypeSchemaDictionary<TSchemaType> SchemaTypeDictionary = new();
+	protected readonly TypeSchemaDictionary<TSchemaType> AppliedSchemaTypeDictionary = new();
 	protected TSchemaEventConfiguration? EventConfiguration;
 	protected string OutputDirectory = string.Empty;
 
@@ -175,15 +175,15 @@ public abstract class
 	{
 		var type = typeof(TType);
 
-		if (SchemaTypeDictionary.ContainsKey(type))
+		if (AppliedSchemaTypeDictionary.ContainsKey(type))
 		{
-			SchemaTypeDictionary[type] = substituteFactory is null
+			AppliedSchemaTypeDictionary[type] = substituteFactory is null
 				? new TSchema()
 				: substituteFactory();
 		}
 		else
 		{
-			SchemaTypeDictionary.Add(type, substituteFactory is null
+			AppliedSchemaTypeDictionary.Add(type, substituteFactory is null
 				? new TSchema()
 				: substituteFactory());
 		}
@@ -191,15 +191,15 @@ public abstract class
 
 	private void UpsertSchemaTypeDictionary<TSchema>(Type genericType, Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
 	{
-		if (SchemaTypeDictionary.ContainsKey(genericType))
+		if (AppliedSchemaTypeDictionary.ContainsKey(genericType))
 		{
-			SchemaTypeDictionary[genericType] = substituteFactory is null
+			AppliedSchemaTypeDictionary[genericType] = substituteFactory is null
 				? new TSchema()
 				: substituteFactory();
 		}
 		else
 		{
-			SchemaTypeDictionary.Add(genericType, substituteFactory is null
+			AppliedSchemaTypeDictionary.Add(genericType, substituteFactory is null
 				? new TSchema()
 				: substituteFactory());
 		}

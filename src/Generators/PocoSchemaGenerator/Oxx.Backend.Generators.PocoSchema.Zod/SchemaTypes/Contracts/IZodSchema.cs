@@ -17,11 +17,8 @@ public interface IPartialZodSchema : ISchema
 
 public interface IGenericZodSchema : IZodSchema
 {
-	ZodSchemaConfiguration Configuration { get; }
-	PropertyInfo PropertyInfo { get; }
-
-	void SetConfiguration(ZodSchemaConfiguration configuration);
-	void SetPropertyInfo(PropertyInfo propertyInfo);
+	ZodSchemaConfiguration Configuration { get; set; }
+	PropertyInfo PropertyInfo { get; set; }
 }
 
 public interface IAdditionalImportZodSchema : IZodSchema

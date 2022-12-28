@@ -56,9 +56,6 @@ public class MolecularZodSchema : IMolecularZodSchema
 		})
 		.TrimEnd($"{Environment.NewLine}");
 
-	private MolecularZodSchema()
-	{ }
-
 	public static MolecularZodSchema CreateFromPartial(
 		PartialMolecularZodSchema partial,
 		IDictionary<PropertyInfo, IPartialZodSchema> schemaDictionary,

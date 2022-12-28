@@ -53,4 +53,16 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 
 		return false;
 	}
+
+	public void Update(Type type, TSchemaType updatedSchema)
+	{
+		if (ContainsKey(type))
+		{
+			this[type] = updatedSchema;
+		}
+		else
+		{
+			throw new InvalidOperationException($"Type {type} could not be updated: it does not exist in the dictionary.");
+		}
+	}
 }
