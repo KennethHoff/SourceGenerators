@@ -14,7 +14,7 @@ In this section I will refer to these as POCOs (Plain Old CLR/C# Objects).
 
 [Zod Github](https://github.com/colinhacks/zod)
 
-[Generator GitHub](src/Generators/PocoSchemaGenerator/Oxx.Backend.Generators.PocoSchema.Zod/README.md)
+[Generator GitHub](src/Generators/PocoSchemaGenerator/Oxx.Backend.Generators.PocoSchema.Zod)
 
 ## Contributing
 
