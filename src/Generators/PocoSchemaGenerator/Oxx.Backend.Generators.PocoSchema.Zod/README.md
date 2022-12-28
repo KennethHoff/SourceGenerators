@@ -1,6 +1,6 @@
 # Zod Poco Schema Generator
 
-#### Usage
+## Usage
 
 Install the package:
 
@@ -25,7 +25,7 @@ await generator.CreateFilesAsync();
 // Normal Program.cs code
 ```
 
-#### Configuration
+### Configuration
 
 The configuration is done using the `ZodSchemaConfigurationBuilder` class.
 
