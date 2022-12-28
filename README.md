@@ -72,7 +72,7 @@ The following options are available:
 
 * `ApplySchema<TType, TSchema>` - Applies a schema to a type.
   * Example: `ApplySchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
-  * Note: This is useful if you want to apply a schema to a type you don't own.
+  * Note: This is useful if you want to apply a schema to a type you don't own, or is otherwise not possible to add the `[PocoObject]` attribute to.
   * Note: This will apply the schema to both nullable and non-nullable types.
     * This applies to both Value-, and Reference-Types.
     * Note: If you want to apply a schema to a nullable type, but not to a non-nullable type, you can use the `ApplySchema<TType?, TSchema>` method.
