@@ -16,10 +16,9 @@ public static class StringExtensions
 
 		return char.ToLowerInvariant(value[0]) + value[1..];
 	}
-	
+
 	public static string TrimEnd(this string str, string value)
 		=> str.EndsWith(value)
 			? str[..^value.Length]
 			: str;
 }
-

@@ -8,4 +8,7 @@
     <PackageTags>Zod TypeScript Generator TypeSafety CompileTime SourceGenerator</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Namotion.Reflection" />
+  </ItemGroup>
 </Project>

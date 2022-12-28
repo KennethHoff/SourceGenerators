@@ -5,7 +5,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
 public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : ISchemaConfiguration
-	where TSchemaType : IAtomicSchema
+	where TSchemaType : ISchema
 	where TSchemaEventConfiguration : ISchemaEventConfiguration
 {
 	TSchemaEventConfiguration Events { get; }
@@ -15,9 +15,9 @@ public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : 
 public interface ISchemaConfiguration
 {
 	IEnumerable<Assembly> Assemblies { get; }
-	string OutputDirectory { get; }
 	bool DeleteFilesOnStart { get; }
+	string OutputDirectory { get; }
+	string SchemaFileNameFormat { get; }
 	string SchemaNamingFormat { get; }
 	string SchemaTypeNamingFormat { get; }
-	string SchemaFileNameFormat { get; }
 }

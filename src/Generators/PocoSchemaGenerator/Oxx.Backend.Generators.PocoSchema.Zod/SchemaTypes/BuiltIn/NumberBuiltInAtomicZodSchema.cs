@@ -3,7 +3,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
-public class BooleanAtomicZodSchema : IBuiltInAtomicZodSchema
+public class NumberBuiltInAtomicZodSchema : IBuiltInAtomicZodSchema
 {
-	public SchemaDefinition SchemaDefinition => new("z.boolean()");
+	public SchemaDefinition SchemaDefinition => new("z.number()");
 }

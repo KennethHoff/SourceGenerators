@@ -5,36 +5,40 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IAtomicZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
 {
-	public ZodSchemaConfigurationBuilder()
+	protected override ZodSchemaConfiguration Configuration => new()
 	{
-		ApplySchema<string, StringAtomicZodSchema>();
-		ApplySchema<int, NumberAtomicZodSchema>();
-		ApplySchema<float, NumberAtomicZodSchema>();
-		ApplySchema<double, NumberAtomicZodSchema>();
-		ApplySchema<decimal, NumberAtomicZodSchema>();
-		ApplySchema<Guid, GuidAtomicZodSchema>();
-		ApplySchema<bool, BooleanAtomicZodSchema>();
-		ApplySchema<DateTime, DateAtomicZodSchema>();
-	}
+		SchemaDictionary = SchemaTypeDictionary,
+		GenericSchemaDictionary = GenericSchemaTypeDictionary,
+		Assemblies = Assemblies,
+		OutputDirectory = OutputDirectory,
+		DeleteFilesOnStart = DeleteFilesOnStart,
+		Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
+		SchemaNamingFormat = SchemaNamingFormat,
+		SchemaTypeNamingFormat = SchemaTypeNamingFormat,
+		SchemaFileNameFormat = FileNameFormat,
+		FileExtension = FileExtension,
+	};
 
+	protected override string FileExtension { get; set; } = ".ts";
+	protected override string FileNameFormat { get; set; } = "{0}Schema";
 	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
 	protected override string SchemaTypeNamingFormat { get; set; } = "{0}SchemaType";
-	protected override string FileNameFormat { get; set; } = "{0}Schema";
-	protected override string FileExtension { get; set; } = ".ts";
 
-	protected override ZodSchemaConfiguration CreateConfiguration()
-		=> new()
+	public ZodSchemaConfigurationBuilder()
+	{
+		ApplySchemas(() =>
 		{
-			AtomicSchemaDictionary = SchemaTypeDictionary,
-			Assemblies = Assemblies,
-			OutputDirectory = OutputDirectory,
-			DeleteFilesOnStart = DeleteFilesOnStart,
-			Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
-			SchemaNamingFormat = SchemaNamingFormat,
-			SchemaTypeNamingFormat = SchemaTypeNamingFormat,
-			SchemaFileNameFormat = FileNameFormat,
-			FileExtension = FileExtension,
-		};
+			ApplySchema<string, StringBuiltInAtomicZodSchema>();
+			ApplySchema<int, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<float, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<double, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<decimal, NumberBuiltInAtomicZodSchema>();
+			ApplySchema<Guid, GuidAtomicZodSchema>();
+			ApplySchema<bool, BooleanBuiltInAtomicZodSchema>();
+			ApplySchema<DateTime, DateBuiltInAtomicZodSchema>();
+			ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayBuiltInAtomicZodSchema<>));
+		});
+	}
 }

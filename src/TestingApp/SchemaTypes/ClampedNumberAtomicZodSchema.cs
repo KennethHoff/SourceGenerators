@@ -1,3 +1,4 @@
+using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
@@ -16,6 +17,7 @@ internal sealed class ClampedNumberAtomicZodSchema : IAtomicZodSchema
 		_range = range;
 	}
 	public SchemaBaseName SchemaBaseName => new("ClampedNumber");
+
 	public SchemaDefinition SchemaDefinition => new($"z.number().min({_range.Start}).max({_range.End})");
 }
 

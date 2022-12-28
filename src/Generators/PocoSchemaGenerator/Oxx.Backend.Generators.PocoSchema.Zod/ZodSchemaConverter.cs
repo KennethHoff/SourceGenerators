@@ -22,7 +22,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private readonly ZodSchemaConfiguration _configuration;
 
-	private readonly IDictionary<Type, IPartialZodSchema> _generatedSchemas = new Dictionary<Type, IPartialZodSchema>();
+	private readonly TypeSchemaDictionary<IPartialZodSchema> _generatedSchemas = new();
 
 	public ZodSchemaConverter(ZodSchemaConfiguration configuration)
 	{
@@ -33,14 +33,14 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	public IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects)
 	{
-		var atoms = GenerateAtoms(_configuration.AtomicSchemaDictionary);
+		var atoms = GenerateAtoms(_configuration.SchemaDictionary);
 		var molecules = GenerateMolecules(pocoObjects);
 		return atoms.Concat(molecules).Where(x => x != FileInformation.None);
 	}
 
 	#endregion
 
-	private FileInformation GenerateAtom(KeyValuePair<Type, IAtomicZodSchema> atomicSchema)
+	private FileInformation GenerateAtom(KeyValuePair<Type, IPartialZodSchema> atomicSchema)
 	{
 		_generatedSchemas.Add(atomicSchema.Key, atomicSchema.Value);
 
@@ -56,18 +56,6 @@ public class ZodSchemaConverter : ISchemaConverter
 		};
 	}
 
-	private IEnumerable<FileInformation> GenerateAtoms(IDictionary<Type, IAtomicZodSchema> configurationAtomicSchemaDictionary)
-		=> configurationAtomicSchemaDictionary
-			.Select(GenerateAtom);
-
-	private FileContent GenerateFileContent(IZodSchema schemaValue)
-		=> schemaValue switch
-		{
-			IAtomicZodSchema atomicZodSchema       => GenerateAtomicFileContent(atomicZodSchema),
-			IMolecularZodSchema molecularZodSchema => GenerateMolecularFileContent(molecularZodSchema),
-			_                                      => FileContent.None,
-		};
-
 	private FileContent GenerateAtomicFileContent(IAtomicZodSchema atomicZodSchema)
 		=> new($$"""
 		{{StandardHeader}}
@@ -78,10 +66,25 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
+	private IEnumerable<FileInformation> GenerateAtoms(TypeSchemaDictionary<IPartialZodSchema> configurationAtomicSchemaDictionary)
+		=> configurationAtomicSchemaDictionary
+			.Select(GenerateAtom);
+
+	private FileContent GenerateFileContent(IPartialZodSchema schemaValue)
+		=> schemaValue switch
+		{
+			IAtomicZodSchema atomicZodSchema       => GenerateAtomicFileContent(atomicZodSchema),
+			IMolecularZodSchema molecularZodSchema => GenerateMolecularFileContent(molecularZodSchema),
+			_                                      => FileContent.None,
+		};
+
+	private FileName GenerateFileName(IPartialZodSchema schemaValue)
+		=> new(string.Format(_configuration.SchemaFileNameFormat, schemaValue.SchemaBaseName));
+
 	private FileContent GenerateMolecularFileContent(IMolecularZodSchema molecularZodSchema)
 		=> new($$"""
 		{{StandardHeader}}
-		{{molecularZodSchema.AdditionalImports}}
+		{{molecularZodSchema.AdditionalImportsString}}
 		
 		export const {{_configuration.FormatSchemaName(molecularZodSchema)}} = {{molecularZodSchema.SchemaDefinition}};
 
@@ -89,13 +92,72 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
-	private FileName GenerateFileName(IZodSchema schemaValue)
-		=> new(string.Format(_configuration.SchemaFileNameFormat, schemaValue.SchemaBaseName));
+	private IMolecularZodSchema GenerateMolecularSchema(PocoObject pocoObject)
+	{
+		var partialSchema = _generatedSchemas[pocoObject.Type] switch
+		{
+			PartialMolecularZodSchema schema => schema,
+			IZodSchema schema => throw new UnreachableException(
+				$"Unexpected schema type. {pocoObject.TypeName} has already been generated as {schema.GetType().Name}"),
+			_ => throw new UnreachableException("Schema should have been generated before this point"),
+		};
+
+		var validSchemas = pocoObject.Properties
+			.Where(x =>
+			{
+				var propertyType = x.PropertyType;
+
+				if (_generatedSchemas.HasSchemaForType(propertyType))
+				{
+					return true;
+				}
+
+				// If the propertyType is generic, we need to get the generic type definition
+				if (propertyType.IsGenericType)
+				{
+					return _configuration.GenericSchemaDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
+				}
+
+				return false;
+			})
+			.Select(x =>
+			{
+				var propertyType = x.PropertyType;
+
+				var partialZodSchema = _generatedSchemas.GetSchemaForType(propertyType);
+				if (partialZodSchema is not null)
+				{
+					return KeyValuePair.Create(x, partialZodSchema);
+				}
+
+				// If the propertyType is generic, we need to get the generic type definition
+				if (propertyType.IsGenericType)
+				{
+					var genericSchema = _configuration.CreateGenericSchema(x);
+					if (genericSchema is null)
+					{
+						throw new InvalidOperationException($"No generic schema found for {propertyType.GetGenericTypeDefinition().Name}");
+					}
+
+					return KeyValuePair.Create(x, genericSchema);
+				}
+
+				if (partialZodSchema is null)
+				{
+					throw new InvalidOperationException($"No schema found for {propertyType.Name}");
+				}
+
+				return KeyValuePair.Create(x, partialZodSchema);
+			})
+			.ToDictionary(x => x.Key, x => x.Value);
+
+		return partialSchema.Populate(validSchemas, _configuration);
+	}
 
 	private FileInformation GenerateMolecule(PocoObject pocoObject)
 	{
 		var molecularSchema = GenerateMolecularSchema(pocoObject);
-		
+
 		return new FileInformation
 		{
 			Content = GenerateFileContent(molecularSchema),
@@ -103,31 +165,8 @@ public class ZodSchemaConverter : ISchemaConverter
 		};
 	}
 
-	private IMolecularZodSchema GenerateMolecularSchema(PocoObject pocoObject)
-	{
-		var partialSchema = _generatedSchemas[pocoObject.Type] switch
-		{
-			PartialMolecularZodSchema schema => schema,
-			IZodSchema schema                => throw new UnreachableException($"Unexpected schema type. {pocoObject.TypeName} has already been generated as {schema.GetType().Name}"),
-			_                                => throw new UnreachableException("Schema should have been generated before this point"),
-		};
-
-		var validSchemas = pocoObject.Properties
-			.Where(x => _generatedSchemas.ContainsKey(x.PropertyType))
-			.Select(x => KeyValuePair.Create(x, _generatedSchemas[x.PropertyType]))
-			.ToDictionary(x => x.Key, x => x.Value);
-
-		return partialSchema.Populate(validSchemas, _configuration);
-	}
-
-	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
-		=> pocoObjects
-			.Select(GenerateMoleculeDefinition)
-			.ToArray()
-			.Select(GenerateMolecule);
-
 	/// <summary>
-	/// In order to prevent circular dependencies, we need to generate the molecule definitions first.
+	///     In order to prevent circular dependencies, we need to generate the molecule definitions first.
 	/// </summary>
 	private PocoObject GenerateMoleculeDefinition(PocoObject pocoObject)
 	{
@@ -138,6 +177,13 @@ public class ZodSchemaConverter : ISchemaConverter
 				SchemaBaseName = new SchemaBaseName(pocoObject.TypeName),
 			});
 		}
+
 		return pocoObject;
 	}
+
+	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
+		=> pocoObjects
+			.Select(GenerateMoleculeDefinition)
+			.ToArray()
+			.Select(GenerateMolecule);
 }
