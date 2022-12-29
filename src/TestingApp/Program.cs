@@ -26,7 +26,7 @@ var configuration = new ZodSchemaConfigurationBuilder()
 				return;
 			}
 
-			var errorMessage = $"Invalid properties for {args.Type.Name}:" + Environment.NewLine +
+			var errorMessage = $"Unable to resolve schema for the following properties on <{args.Type.FullName}>: " + Environment.NewLine +
 							   string.Join(Environment.NewLine, args.InvalidProperties.Select(p => $"{p.Name} ({p.PropertyType})"));
 			Console.WriteLine(errorMessage + Environment.NewLine);
 		};
