@@ -105,12 +105,13 @@ The following options are available:
 ## Known issues
 
 In order to do these issues, I reckon a few full rewrites of the code generator would be required.
-Currently the generator lacks a lot of context. There are a few issues with the current context:
+Currently the generator lacks a lot of context. There are a few issues with the current implementation:
 
-1. It doesn't know of the full context of the schema it's generating, each property is mapped individually, so it doesn't know if the "surrounding" class is
+1. The schema doesn't know of the full context of the schema it's generating, each property is mapped individually, so it doesn't know if the "surrounding" class is
    generic, or if it's a class or struct, etc.
-2. Naming needs improvement. "Atoms", "Molecules" is used in the code, but it's not really clear what they are, and they're not really used consistently.
-3. I've purposely not tried to keep the code as clean as possible, as I figured it would be easier to rewrite it from scratch when I understand the full
+2. Too much logic is in the code generator, and not in the schema. This makes it hard to override the default behavior.
+3. Naming needs improvement. The word "Schema" is used a lot, and it's not particularly clear what it means. Additionally, "Atoms", "Molecules" is used in the code, but it's not really clear what they are, and they're not really used consistently.
+4. I've purposely not tried to keep the code as clean as possible, as I figured it would be easier to rewrite it from scratch when I understand the full
    extent of the issues.
    * As with most things, it started clean, but as I added more and more features, it got more and more messy and by the time I got to enums, I effectively gave up
      on keeping it clean as I knew I would have to rewrite it anyway.
