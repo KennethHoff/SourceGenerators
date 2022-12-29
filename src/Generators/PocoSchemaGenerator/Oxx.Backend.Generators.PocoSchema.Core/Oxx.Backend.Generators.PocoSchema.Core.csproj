@@ -11,8 +11,4 @@
   <ItemGroup>
     <PackageReference Include="Namotion.Reflection" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\File\Contracts" />
-    <Folder Include="Models\Type\Contracts" />
-  </ItemGroup>
 </Project>
