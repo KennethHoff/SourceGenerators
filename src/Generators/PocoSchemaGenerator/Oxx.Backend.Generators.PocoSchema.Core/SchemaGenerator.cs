@@ -68,7 +68,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var types = new List<Type>();
 		foreach (var assembly in _configuration.Assemblies)
 		{
-			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<PocoObjectAttribute>() is not null).ToList());
+			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<SchemaGenerationAttribute>() is not null).ToList());
 		}
 
 		return types.Select(t =>

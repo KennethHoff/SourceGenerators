@@ -4,10 +4,10 @@ using TestingApp.SchemaTypes;
 
 namespace TestingApp.Models;
 
-[PocoObject]
+[SchemaGeneration]
 internal readonly record struct Role(string Name);
 
-[PocoObject]
+[SchemaGeneration]
 internal sealed class User
 {
 	public required Name Name { get; init; }
@@ -17,11 +17,11 @@ internal sealed class User
 	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
 }
 
-[PocoObject]
+[SchemaGeneration]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
 
 
-[PocoObject]
+[SchemaGeneration]
 internal abstract class Person
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
@@ -131,7 +131,7 @@ internal abstract class Person
 	
 }
 
-[PocoObject]
+[SchemaGeneration]
 public interface IPersonAge
 {
 	ClampedNumber Age { get; init; }
