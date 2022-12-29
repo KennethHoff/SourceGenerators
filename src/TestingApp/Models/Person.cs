@@ -140,7 +140,7 @@ internal abstract class Person
 	// All of the following should be ignored as they are either:
 	// - not a property or a field (methods, events, etc.)
 	// - not an instance property (static)
-	// - has [SchemaIgnore] attribute
+	// - has [SchemaMemberIgnore] attribute
 
 	[SchemaMemberIgnore]
 	public string Ignored { get; init; } = string.Empty;
