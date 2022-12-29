@@ -1,13 +1,12 @@
 using AnotherProject;
-using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using TestingApp.SchemaTypes;
 
 namespace TestingApp.Models;
 
-[SchemaObject]
+// [SchemaObject]
 internal readonly record struct Role(string Name);
 
-[SchemaObject]
+// [SchemaObject]
 internal sealed class User
 {
 	public required Name Name { get; init; }
@@ -18,11 +17,11 @@ internal sealed class User
 	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
 }
 
-[SchemaObject]
+// [SchemaObject]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
 
 
-[SchemaObject]
+// // [SchemaObject]
 internal abstract class Person
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
@@ -132,7 +131,7 @@ internal abstract class Person
 	
 }
 
-[SchemaObject]
+// [SchemaObject]
 public interface IPersonAge
 {
 	ClampedNumber Age { get; init; }
@@ -160,7 +159,7 @@ public readonly record struct CeremonyId(Guid Id)
 		=> Id.ToString();
 }
 
-[SchemaEnum<Gender>]
+// [SchemaEnum<Gender>]
 public enum Gender
 {
 	Male,

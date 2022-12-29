@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 using Namotion.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
@@ -7,7 +8,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
 public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInAtomicZodSchema
-	where TUnderlyingSchema : IZodSchema, new()
+	where TUnderlyingSchema : IPartialZodSchema, new()
 {
 	private ZodSchemaConfiguration? _configuration;
 	private PropertyInfo? _propertyInfo;
@@ -29,16 +30,15 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		set => _propertyInfo = value;
 	}
 
+	private ContextualType ListElement => PropertyInfo.ToContextualProperty().PropertyType.GenericArguments.First();
+
 	public SchemaDefinition SchemaDefinition
 	{
 		get
 		{
 			var schemaName = Configuration.FormatSchemaName(UnderlyingSchema);
 
-			var list = PropertyInfo.ToContextualProperty();
-			var listElement = list.PropertyType.GenericArguments.First();
-
-			if (listElement.Nullability is Nullability.Nullable)
+			if (ListElement.Nullability is Nullability.Nullable)
 			{
 				schemaName += ".nullable()";
 			}

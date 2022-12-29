@@ -58,7 +58,17 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 		var typeArguments = argumentSchemas.Select(x => x.Schema!.GetType()).ToArray();
 
-		var genericSchemaType = genericSchema.MakeGenericType(typeArguments);
+
+		Type genericSchemaType;
+		try
+		{
+			genericSchemaType = genericSchema.MakeGenericType(typeArguments);
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			throw;
+		}
 
 		// if genericSchemaType does not implement IGenericZodSchema, throw an exception
 		if (!typeof(IGenericZodSchema).IsAssignableFrom(genericSchemaType))

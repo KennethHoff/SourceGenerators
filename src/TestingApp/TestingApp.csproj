@@ -16,4 +16,10 @@
     <ProjectReference Include="..\AnotherProject\AnotherProject.csproj" />
     <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Seremonibasen" />
+    <Folder Include="Models\Seremonibasen\Models\Completion" />
+    <Folder Include="Models\Seremonibasen\Models\TwoFactor\Abstractions" />
+  </ItemGroup>
 </Project>

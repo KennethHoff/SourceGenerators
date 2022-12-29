@@ -5,17 +5,19 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 using TestingApp;
 using TestingApp.Models;
+using TestingApp.Models.Seremonibasen.Models;
 using TestingApp.SchemaTypes;
 
 var configuration = new ZodSchemaConfigurationBuilder()
 	.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
 	.DeleteExistingFiles()
 	.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
-	.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
-	.ApplyAtomicSchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
-	.ApplyAtomicSchema<PersonId?, StringBuiltInAtomicZodSchema>()
-	.ApplyAtomicSchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
-	.ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
+	.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
+	// .ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
+	// .ApplyAtomicSchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
+	// .ApplyAtomicSchema<PersonId?, StringBuiltInAtomicZodSchema>()
+	// .ApplyAtomicSchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
+	// .ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 	.ConfigureEvents(events =>
 	{
 		events.MoleculeSchemaCreated += (_, args) =>
