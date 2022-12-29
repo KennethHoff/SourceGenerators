@@ -5,8 +5,8 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 
 public interface IEnumZodSchema : IAtomicZodSchema
 {
-	public Type EnumType { get; }
-	public IReadOnlyCollection<EnumValue> EnumValuesWithNames { get; }
-	public string EnumContent { get; }
+	Type EnumType { get; }
+	IReadOnlyCollection<EnumValue> EnumValuesWithNames { get; }
+	string EnumContent { get; }
 	string EnumValuesString { get; }
 }
