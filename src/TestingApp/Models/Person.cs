@@ -82,12 +82,13 @@ internal abstract class Person
 	public List<Guid> ListGuids { get; init; } = new List<Guid>();
 	public List<Guid?> ListGuidsNullableUnderlying { get; init; } = new List<Guid?>();
 	public List<Guid?>? ListGuidsNullableUnderlyingNullable { get; init; } = new List<Guid?>();
-	
-	
+
 	public IReadOnlyCollection<User> RelatedUsers { get; init; } = Array.Empty<User>();
 	public IReadOnlyCollection<User?> RelatedUsersNullableUnderlying { get; init; } = Array.Empty<User?>();
 	public IReadOnlyCollection<User?>? RelatedUsersNullableUnderlyingNullable { get; init; } = Array.Empty<User?>();
 	
+	public required IReadOnlyCollection<Gender> Genders { get; init; }
+
 	public int Int { get; init; }
 	public int? IntNullable { get; init; }
 	
