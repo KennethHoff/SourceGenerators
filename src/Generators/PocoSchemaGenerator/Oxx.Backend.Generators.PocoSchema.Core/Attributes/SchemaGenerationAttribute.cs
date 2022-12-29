@@ -8,6 +8,6 @@
 ///     The schema generator only exports properties, not fields, and includes all properties regardless of their access modifiers, unless they are marked with the
 ///     <see cref="PocoPropertyIgnoreAttribute" /> attribute.
 /// </remarks>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Enum, Inherited = false)]
 public class SchemaGenerationAttribute : Attribute
 { }

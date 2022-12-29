@@ -159,6 +159,7 @@ public readonly record struct CeremonyId(Guid Id)
 		=> Id.ToString();
 }
 
+[SchemaGeneration]
 public enum Gender
 {
 	Male,
