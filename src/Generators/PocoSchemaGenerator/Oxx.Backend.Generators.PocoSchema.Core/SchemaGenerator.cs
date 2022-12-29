@@ -68,7 +68,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var types = new List<Type>();
 		foreach (var assembly in _configuration.Assemblies)
 		{
-			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<PocoObjectAttribute>() is not null).ToList());
+			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<SchemaObjectAttribute>() is not null).ToList());
 		}
 
 		return types.Select(t =>
@@ -79,7 +79,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 	}
 
 	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
-		=> pi => pi.GetCustomAttribute<PocoPropertyIgnoreAttribute>() is null;
+		=> pi => pi.GetCustomAttribute<SchemaPropertyIgnoreAttribute>() is null;
 
 	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
 		=> type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)

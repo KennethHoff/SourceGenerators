@@ -9,5 +9,5 @@ namespace Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 ///     However, it may be necessary in a legacy codebase where the POCO is not well designed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Property)]
-public class PocoPropertyIgnoreAttribute : Attribute
+public class SchemaPropertyIgnoreAttribute : Attribute
 { }
