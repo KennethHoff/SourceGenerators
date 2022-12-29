@@ -227,7 +227,6 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       }
       ```
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
-    * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
 
 * The schema generator doesn't support custom schemas for molecular types
     * Example:
