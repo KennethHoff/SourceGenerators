@@ -188,7 +188,6 @@ Issues that are less common and/or can be worked around.
       // Program.cs
       configuration.ApplyAtomicSchema<MyClass, MySchema>()
       // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
-      // The below does not work either, as the schema generator doesn't know that MyClass is a molecular type.
       ```
 
 ### Low priority
