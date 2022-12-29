@@ -157,6 +157,7 @@ Issues that are less common and/or can be worked around.
     ```
     * Currently, the schema generator has no way of knowing that `DerivedClass` inherits from `BaseClass`, so it will generate two separate schemas for
       them.
+    * Ideally it would generate a single schema for `BaseClass` and then a separate schema for `DerivedClass` that extends the schema for `BaseClass`.
 * The schema generator only partially supports interfaces
     * Example:
     ```csharp
@@ -171,6 +172,7 @@ Issues that are less common and/or can be worked around.
         * It also names it `iMyInterfaceSchema`, which is not ideal.
     * Ideally it would generate a schema that matches the interface, but allows for additional properties.
         * I don't know what it should be named though. All I know is that it shouldn't start with a lower-case `i`.
+        * Additionally, all derived interfaces should extend this schema, and all types that implement this interface should extend this schema.
 
 ### Low priority
 
