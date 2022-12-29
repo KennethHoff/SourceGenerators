@@ -67,15 +67,15 @@ The following options are available:
     * Example: `OverrideFileExtension(".ts")` will generate a file called `myClassSchema.ts` for a class called `MyClass`.
         * Note: The file name can be changed by using the `OverrideFileNameNamingFormat(string)` method (see above).
 
-* `ApplySchema<TType, TSchema>` - Applies a schema to a type.
-    * Example: `ApplySchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
+* `ApplyAtomicSchema<TType, TSchema>` - Applies a schema to a type.
+    * Example: `ApplyAtomicSchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
     * This is useful in the following scenarios:
         * You want to apply a schema to a type you don't own
         * It is not possible to add the `[PocoObject]` attribute to the type
         * You want to apply the schema to a type that is not a class or struct
         * You want to apply a different schema to a type than the default one
         * You want to apply a different schema to nullable and non-nullable types
-            * Example: `ApplySchema<int?, MyNullableIntSchema>()` will apply the schema `MyNullableIntSchema` to the type `int?`, but keeps the default schema
+            * Example: `ApplyAtomicSchema<int?, MyNullableIntSchema>()` will apply the schema `MyNullableIntSchema` to the type `int?`, but keeps the default schema
               for `int`.
     * Note: This will override any previously applied schemas.
     * Note: This will also apply to all derived types of the type you specified (Unless otherwise overridden - the more specific type will be used).
@@ -84,9 +84,9 @@ The following options are available:
         * This only applies to Value Types (int, double, etc.) and not Reference Types. You can currently not have a separate schema for a nullable and
           non-nullable reference type, so reference types will always use the same schema (It will however have .nullable() applied to it if it is nullable - as
           will ValueTypes)
-        * Note: If you want to apply a schema to a nullable type, but not to a non-nullable type, you can use the `ApplySchema<TType?, TSchema>` method.
+        * Note: If you want to apply a schema to a nullable type, but not to a non-nullable type, you can use the `ApplyAtomicSchema<TType?, TSchema>` method.
         * Note: If you want to apply a schema to a non-nullable type, but not to a nullable type, you have to first apply the schema to both (using
-          the `ApplySchema<TType, TSchema>` method), and then override the schema for the nullable type (using the `ApplySchema<TType?, TSchema>` method).
+          the `ApplyAtomicSchema<TType, TSchema>` method), and then override the schema for the nullable type (using the `ApplyAtomicSchema<TType?, TSchema>` method).
 
 * `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a generic type.
     * Example: `ApplyGenericSchema(typeof(MyClass<>), typeof(MySchema<>))` will apply the schema `MySchema<T>` to the type `MyClass<>`.
@@ -138,8 +138,29 @@ Issues that are less common and/or can be worked around.
 * The schema generator only partially supports interfaces
     * Example: `interface IMyInterface { string MyProperty { get; set; } }`
     * Currently it will generate a schema that's identical to what it would generate for a class. That is to say, all properties will have to match the schema,
-      and all other properties will be discarded.
+      and all other properties will be discarded. 
+      * It also names it `iMyInterfaceSchema`, which is not ideal.
     * Ideally it would generate a schema that matches the interface, but allows for additional properties.
+      * I don't know what it should be named though. All I know is that it shouldn't start with a lower-case `i`.
+* The schema generator doesn't support custom schemas for molecular types
+  * Example:
+  * ```csharp
+    [PocoObject]
+    public sealed class MyClass
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+    
+    public sealed class MySchema : IZodSchema
+    {
+        // Stuff
+    }
+
+    // Program.cs
+    configuration.ApplyAtomicSchema<MyClass, MySchema>()
+    // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
+    ```
 
 ### Low priority
 
@@ -174,12 +195,17 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
     * Add more events
     * Add more configuration options
     * Add more ways to customize the schemas
+      * Currently there's no way to only apply a schema to the non-nullable type without doing the "Apply all, override nullable" workaround.
+      * Currently there's no way to apply a schema to a specific property without creating a new schema for the type.
+      * 
     * Add more ways to customize the schema generator
       * for example, add a way to specify "only generate elements with this accessibility" - public, internal, etc.
         * This would then be added to the Attribute itself, so you could do `[SchemaGenerator(BindingFlags = BindingFlags.Public | BindingFlags.Internal)]`
     * Add more ways to customize the types
-    * Add more ways to customize the naming
     * Add more ways to customize the output
+      * Everything currently gets its own file, but it would be nice to be able to customize this.
+        * For example, you could have a "schema" folder, and then have a "schema/atoms" folder, and a "schema/molecules" folder, etc.
+        * Or you could have a "schema" folder, and then have a "schema/atoms.ts" file, and a "schema/molecules.ts" file, etc.
 
 * Add Roslyn analyzers to ensure that the classes are valid for the schema generator.
     * This will be a separate - recommended - package.
@@ -190,9 +216,3 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
         * Telling you if you're using a type that is not supported by the schema generator.
             * If the intention is to not export the type, then you should use the `[PocoPropertyIgnore]` attribute on the property.
             * This might not be possible to do however.
-* Add more schema generators.
-    * TypeScript
-        * For when you don't want to use Zod - which will be the recommended schema generator, as it has runtime validation.
-    * OpenAPI
-        * For when all you want is a schema for your API.
-        * (Probably won't do this: There are already plenty of packages that do this, and I don't think it's worth it to create another one.)

@@ -11,9 +11,9 @@ public interface ISchemaConfigurationBuilder<TSchemaType, TConfigurationType, TS
 		Type genericType,
 		Type genericSchema);
 
-	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplySchema<TType, TSchema>(
+	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
 		Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, new();
+		where TSchema : TSchemaType, IAtomicSchema, new();
 
 	TConfigurationType Build();
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ConfigureEvents(Action<TSchemaEventConfiguration> action);

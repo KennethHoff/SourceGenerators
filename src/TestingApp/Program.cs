@@ -12,10 +12,10 @@ var configuration = new ZodSchemaConfigurationBuilder()
 	.DeleteExistingFiles()
 	.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 	.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
-	.ApplySchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
-	.ApplySchema<PersonId?, StringBuiltInAtomicZodSchema>()
-	.ApplySchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
-	.ApplySchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
+	.ApplyAtomicSchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
+	.ApplyAtomicSchema<PersonId?, StringBuiltInAtomicZodSchema>()
+	.ApplyAtomicSchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
+	.ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 	.ConfigureEvents(events =>
 	{
 		events.MoleculeSchemaCreated += (_, args) =>

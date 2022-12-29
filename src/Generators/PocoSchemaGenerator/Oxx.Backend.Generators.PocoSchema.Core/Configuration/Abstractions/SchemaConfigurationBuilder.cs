@@ -24,7 +24,7 @@ public abstract class
 	protected abstract string FileExtension { get; set; }
 	protected abstract string FileNameFormat { get; set; }
 
-	protected Action SchemaApplicationAction { get; private set; } = null!;
+	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
@@ -42,9 +42,9 @@ public abstract class
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplySchema<TType, TSchema>(
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
 		Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, new()
+		where TSchema : TSchemaType, IAtomicSchema, new()
 	{
 		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
 
@@ -70,7 +70,7 @@ public abstract class
 
 	public TConfigurationType Build()
 	{
-		SchemaApplicationAction();
+		AtomicSchemaApplicationAction();
 		return Configuration;
 	}
 
@@ -135,9 +135,9 @@ public abstract class
 
 	#endregion
 
-	protected void ApplySchemas(Action action)
+	protected void ApplyAtomicSchemas(Action action)
 	{
-		SchemaApplicationAction = action;
+		AtomicSchemaApplicationAction = action;
 	}
 
 	private void UpsertGenericSchemaTypeDictionary(Type genericType, Type genericSchema)

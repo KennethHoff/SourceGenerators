@@ -33,16 +33,16 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 
 	public ZodSchemaConfigurationBuilder()
 	{
-		ApplySchemas(() =>
+		ApplyAtomicSchemas(() =>
 		{
-			ApplySchema<string, StringBuiltInAtomicZodSchema>();
-			ApplySchema<int, NumberBuiltInAtomicZodSchema>();
-			ApplySchema<float, NumberBuiltInAtomicZodSchema>();
-			ApplySchema<double, NumberBuiltInAtomicZodSchema>();
-			ApplySchema<decimal, NumberBuiltInAtomicZodSchema>();
-			ApplySchema<Guid, GuidAtomicZodSchema>();
-			ApplySchema<bool, BooleanBuiltInAtomicZodSchema>();
-			ApplySchema<DateTime, DateBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<string, StringBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<int, NumberBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<float, NumberBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<double, NumberBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<decimal, NumberBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<Guid, GuidAtomicZodSchema>();
+			ApplyAtomicSchema<bool, BooleanBuiltInAtomicZodSchema>();
+			ApplyAtomicSchema<DateTime, DateBuiltInAtomicZodSchema>();
 			ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayBuiltInAtomicZodSchema<>));
 		});
 	}
