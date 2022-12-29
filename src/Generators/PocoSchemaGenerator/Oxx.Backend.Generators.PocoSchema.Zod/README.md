@@ -160,6 +160,17 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
 ## Future plans
 
 * Add tests - and a lot of them.
+* Improve customizability
+    * Add more events
+    * Add more configuration options
+    * Add more ways to customize the schemas
+    * Add more ways to customize the schema generator
+      * for example, add a way to specify "only generate elements with this accessibility" - public, internal, etc.
+        * This would then be added to the Attribute itself, so you could do `[SchemaGenerator(BindingFlags = BindingFlags.Public | BindingFlags.Internal)]`
+    * Add more ways to customize the types
+    * Add more ways to customize the naming
+    * Add more ways to customize the output
+
 * Add Roslyn analyzers to ensure that the classes are valid for the schema generator.
     * This will be a separate - recommended - package.
         * There might even be a separate package for each Schema, as there might be some issues that are specific to each schema.
