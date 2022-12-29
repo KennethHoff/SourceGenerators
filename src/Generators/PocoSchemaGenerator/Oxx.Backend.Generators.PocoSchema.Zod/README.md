@@ -71,7 +71,7 @@ The following options are available:
     * Example: `ApplyAtomicSchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
     * This is useful in the following scenarios:
         * You want to apply a schema to a type you don't own
-        * It is not possible to add the `[PocoObject]` attribute to the type
+        * It is not possible to add the `[SchemaObject]` attribute to the type
         * You want to apply the schema to a type that is not a class or struct
         * You want to apply a different schema to a type than the default one
         * You want to apply a different schema to nullable and non-nullable types
@@ -109,7 +109,7 @@ The following options are available:
 In order to do these issues, I reckon a few full rewrites of the code generator would be required.
 Currently the generator lacks a lot of context. There are a few issues with the current implementation:
 
-1. The schema doesn't know of the full context of the schema it's generating, each property is mapped individually, so it doesn't know if the "surrounding"
+1. The schema doesn't know of the full context of the schema it's generating, each member is mapped individually, so it doesn't know if the "surrounding"
    class is
    generic, or if it's a class or struct, etc.
 2. Too much logic is in the code generator, and not in the schema. This makes it hard to add new features, and makes it hard to override the default behavior.
@@ -154,22 +154,22 @@ Issues that are less common and/or can be worked around.
 * The schema generator doesn't support custom schemas for molecular types
     * Example:
     * ```csharp
-    [PocoObject]
-    public sealed class MyClass
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }
-    
-    public sealed class MySchema : IZodSchema
-    {
-        // Stuff
-    }
-
-    // Program.cs
-    configuration.ApplyAtomicSchema<MyClass, MySchema>()
-    // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
-    ```
+      [SchemaObject]
+      public sealed class MyClass
+      {
+          public string Name { get; set; }
+          public int Age { get; set; }
+      }
+      public sealed class MySchema : IZodSchema
+      {
+          // Stuff
+      }
+      
+      // Program.cs
+      configuration.ApplyAtomicSchema<MyClass, MySchema>()
+      // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
+      // The below does not work either, as the schema generator doesn't know that MyClass is a molecular type.
+      ```
 
 ### Low priority
 
@@ -224,11 +224,8 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
         * This would be very useful for development, as you could just change a schema and then refresh the page to see the changes.
 
 * Add Roslyn analyzers to ensure that the classes are valid for the schema generator.
-    * This will be a separate - recommended - package.
-        * There might even be a separate package for each Schema, as there might be some issues that are specific to each schema.
     * This will include things like:
-        * Ensuring that the `[PocoObject]` attribute is not applied to Static classes.
-        * Ensuring that the `[PocoObject]` attribute is not applied to classes that does not have a public parameterless constructor.
+        * Ensuring that the `[SchemaObject]` attribute is not applied to Static classes.
+        * Ensuring that the `[SchemaObject]` attribute is not applied to classes that does not have a public parameterless constructor.
         * Telling you if you're using a type that is not supported by the schema generator.
-            * If the intention is to not export the type, then you should use the `[PocoPropertyIgnore]` attribute on the property.
-            * This might not be possible to do however.
+            * If the intention is to not export the type, then you should use the `[SchemaMemberIgnore]` attribute on the member.

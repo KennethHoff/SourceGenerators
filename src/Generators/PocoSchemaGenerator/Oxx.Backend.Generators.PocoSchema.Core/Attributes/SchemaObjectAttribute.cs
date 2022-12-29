@@ -7,7 +7,7 @@
 /// </summary>
 /// <remarks>
 ///     The schema generator only exports properties, not fields, and includes all properties regardless of their access modifiers, unless they are marked with the
-///     <see cref="SchemaIgnoreAttribute" /> attribute.
+///     <see cref="SchemaMemberIgnoreAttribute" /> attribute.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
 public class SchemaObjectAttribute : SchemaTypeAttribute

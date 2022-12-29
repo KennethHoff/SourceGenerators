@@ -17,7 +17,7 @@ public readonly struct SchemaMemberInfo
 
 	public ContextualAccessorInfo ContextualType => _memberInfo.ToContextualAccessor();
 
-	public bool IsIgnored => _memberInfo.GetCustomAttribute<SchemaIgnoreAttribute>() is not null;
+	public bool IsIgnored => _memberInfo.GetCustomAttribute<SchemaMemberIgnoreAttribute>() is not null;
 	private readonly MemberInfo _memberInfo;
 
 	private static void EnsurePropertyOrField(MemberInfo memberInfo)

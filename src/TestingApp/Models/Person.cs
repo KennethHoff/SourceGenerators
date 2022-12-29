@@ -148,7 +148,7 @@ internal abstract class Person
 	// - not an instance property (static)
 	// - has [SchemaIgnore] attribute
 
-	[SchemaIgnore]
+	[SchemaMemberIgnore]
 	public string Ignored { get; init; } = string.Empty;
 	
 	public static string PublicStatic { get; set; } = string.Empty;
