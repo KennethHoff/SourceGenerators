@@ -171,24 +171,6 @@ Issues that are less common and/or can be worked around.
         * It also names it `iMyInterfaceSchema`, which is not ideal.
     * Ideally it would generate a schema that matches the interface, but allows for additional properties.
         * I don't know what it should be named though. All I know is that it shouldn't start with a lower-case `i`.
-* The schema generator doesn't support custom schemas for molecular types
-    * Example:
-    * ```csharp
-      [SchemaObject]
-      public sealed class MyClass
-      {
-          string Name { get; set; }
-          int Age { get; set; }
-      }
-      public sealed class MySchema : IZodSchema
-      {
-          // Schema Stuff
-      }
-      
-      // Program.cs
-      configuration.ApplyAtomicSchema<MyClass, MySchema>()
-      // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
-      ```
 
 ### Low priority
 
@@ -232,6 +214,7 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
             MyClass MyProperty { get; set; } 
         }
         ```
+
 * The schema generator doesn't support generic types.
     * Example:
     * ```csharp
@@ -243,6 +226,25 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       ```
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
     * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
+
+* The schema generator doesn't support custom schemas for molecular types
+    * Example:
+    * ```csharp
+      [SchemaObject]
+      public sealed class MyClass
+      {
+          string Name { get; set; }
+          int Age { get; set; }
+      }
+      public sealed class MySchema : IZodSchema
+      {
+          // Schema Stuff
+      }
+      
+      // Program.cs
+      configuration.ApplyAtomicSchema<MyClass, MySchema>()
+      // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
+      ```
 
 I'm sure there are tons of other issues, but these are the ones I'm aware of.
 
