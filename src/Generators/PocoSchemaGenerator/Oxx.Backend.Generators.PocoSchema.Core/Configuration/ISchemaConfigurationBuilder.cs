@@ -7,13 +7,13 @@ namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 public interface ISchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> where TSchemaType : class, ISchema
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
-	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyGenericSchema(
-		Type genericType,
-		Type genericSchema);
-
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
 		Func<TSchema>? schemaFactory = null)
 		where TSchema : TSchemaType, IAtomicSchema, new();
+
+	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyGenericSchema(
+		Type genericType,
+		Type genericSchema);
 
 	TConfigurationType Build();
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ConfigureEvents(Action<TSchemaEventConfiguration> action);

@@ -107,7 +107,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 				{
 					continue;
 				}
-				
+
 				// Throw exception if Type is Generic
 				if (type.IsGenericType)
 				{

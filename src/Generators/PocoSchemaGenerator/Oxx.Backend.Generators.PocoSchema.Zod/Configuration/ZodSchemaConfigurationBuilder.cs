@@ -27,9 +27,9 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 
 	protected override string FileExtension { get; set; } = ".ts";
 	protected override string FileNameFormat { get; set; } = "{0}Schema";
+	protected override string SchemaEnumNamingFormat { get; set; } = "{0}SchemaEnum";
 	protected override string SchemaNamingFormat { get; set; } = "{0}Schema";
 	protected override string SchemaTypeNamingFormat { get; set; } = "{0}SchemaType";
-	protected override string SchemaEnumNamingFormat { get; set; } = "{0}SchemaEnum";
 
 	public ZodSchemaConfigurationBuilder()
 	{

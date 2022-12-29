@@ -21,4 +21,3 @@ public static class TypeExtensions
 }
 
 public readonly record struct EnumValue(string Name, int Value);
-

@@ -12,25 +12,33 @@ public abstract class
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
-	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
 	protected readonly TypeSchemaDictionary<TSchemaType> AtomicSchemasToCreateDictionary = new();
+	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
 	protected TSchemaEventConfiguration? EventConfiguration;
 	protected string OutputDirectory = string.Empty;
 
 	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
+
+	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 	protected abstract TConfigurationType Configuration { get; }
 
 	protected bool DeleteFilesOnStart { get; set; }
 	protected abstract string FileExtension { get; set; }
 	protected abstract string FileNameFormat { get; set; }
-
-	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
+	protected abstract string SchemaEnumNamingFormat { get; set; }
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
-	protected abstract string SchemaEnumNamingFormat { get; set; }
 
 	#region Interface implementations
+
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
+		Func<TSchema>? schemaFactory = null)
+		where TSchema : TSchemaType, IAtomicSchema, new()
+	{
+		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
+		return this;
+	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyGenericSchema(
 		Type genericType,
@@ -39,14 +47,6 @@ public abstract class
 		var genericTypeDefinition = genericType.GetTypeInfo().GetGenericTypeDefinition();
 		var genericSchemasDefinition = genericSchema.GetTypeInfo().GetGenericTypeDefinition();
 		UpsertGenericSchemaTypeDictionary(genericTypeDefinition, genericSchemasDefinition);
-		return this;
-	}
-
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
-		Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, IAtomicSchema, new()
-	{
-		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
 		return this;
 	}
 
@@ -95,12 +95,6 @@ public abstract class
 		SchemaTypeNamingFormat = namingFormat;
 		return this;
 	}
-	
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string namingFormat)
-	{
-		SchemaEnumNamingFormat = namingFormat;
-		return this;
-	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ResolveTypesFromAssemblyContaining<T>()
 	{
@@ -115,6 +109,12 @@ public abstract class
 	}
 
 	#endregion
+
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string namingFormat)
+	{
+		SchemaEnumNamingFormat = namingFormat;
+		return this;
+	}
 
 	protected void ApplyAtomicSchemas(Action action)
 	{

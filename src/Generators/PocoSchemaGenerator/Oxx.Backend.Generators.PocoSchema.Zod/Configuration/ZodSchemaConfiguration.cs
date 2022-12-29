@@ -15,25 +15,26 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required string OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
-	public required string SchemaEnumNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
-	
+
 	/// <summary>
-	/// Dictionary containing the generic types that will be generated
-	/// </summary>
-	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
-	
-	/// <summary>
-	/// Dictionary containing the non-generic types that will be generated <br />
-	/// Don't use this if you want to find the schema to use for other types. <br />
-	/// Use <see cref="CreatedSchemasDictionary"/> instead.
+	///     Dictionary containing the non-generic types that will be generated <br />
+	///     Don't use this if you want to find the schema to use for other types. <br />
+	///     Use <see cref="CreatedSchemasDictionary" /> instead.
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> AtomicSchemasToCreateDictionary { get; init; }
-	
+
 	/// <summary>
-	/// Dictionary containing fully created schemas
+	///     Dictionary containing fully created schemas
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemasDictionary { get; set; }
+
+	/// <summary>
+	///     Dictionary containing the generic types that will be generated
+	/// </summary>
+	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
+
+	public required string SchemaEnumNamingFormat { get; init; }
 
 	public IPartialZodSchema CreateGenericSchema(SchemaMemberInfo memberInfo)
 	{
@@ -88,6 +89,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			_                       => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
 		};
 
+	public string FormatEnumName(IEnumZodSchema schema)
+		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
+
 	public string FormatFilePath(IPartialZodSchema schema)
 		=> $"./{FormatSchemaName(schema)}";
 
@@ -97,9 +101,6 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema => schema.SchemaBaseName,
 			_                       => string.Format(SchemaNamingFormat, schema.SchemaBaseName),
 		};
-	
-	public string FormatEnumName(IEnumZodSchema schema)
-		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
 
 	public string FormatSchemaTypeName(IPartialZodSchema schema)
 		=> schema switch

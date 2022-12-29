@@ -84,6 +84,51 @@ public class ZodSchemaConverter : ISchemaConverter
 			.Select(GenerateAtom)
 			.ToArray();
 
+	private FileInformation GenerateEnum(PocoEnum pocoEnum)
+	{
+		var enumSchema = new EnumZodSchema(pocoEnum.EnumType);
+		_generatedSchemas.Add(pocoEnum.EnumType, enumSchema);
+
+		var generateEnum = new FileInformation
+		{
+			Content = GenerateFileContent(enumSchema),
+			Name = GenerateFileName(enumSchema),
+		};
+
+		return generateEnum;
+	}
+
+	private FileContent GenerateEnumFileContent(IEnumZodSchema enumZodSchema)
+		=> new($$"""
+		{{StandardHeader}}
+
+		export enum {{_configuration.FormatEnumName(enumZodSchema)}} {
+		{{enumZodSchema.EnumValuesString}},
+		}
+
+		export const {{_configuration.FormatSchemaName(enumZodSchema)}} = z.union(
+		[z.nativeEnum({{_configuration.FormatEnumName(enumZodSchema)}}), z.union([{{string.Join(", ", enumZodSchema.EnumValuesWithNames.Select(x => $"z.literal(\"{x.Name}\")"))}}])])
+		.transform((arg) =>
+		{
+			if (typeof arg === "string")
+			{
+				return {{_configuration.FormatEnumName(enumZodSchema)}}[arg];
+			}
+			return arg;
+		});
+
+		export type {{_configuration.FormatSchemaTypeName(enumZodSchema)}} = z.infer<typeof {{_configuration.FormatSchemaName(enumZodSchema)}}>;
+		""");
+
+	private IEnumerable<FileInformation> GenerateEnums(IEnumerable<PocoEnum> pocoEnums)
+	{
+		var enums = pocoEnums
+			.Select(GenerateEnum)
+			.ToArray();
+
+		return enums;
+	}
+
 
 	private FileContent GenerateFileContent(IPartialZodSchema schemaValue)
 		=> schemaValue switch
@@ -106,28 +151,6 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		export type {{_configuration.FormatSchemaTypeName(molecularZodSchema)}} = z.infer<typeof {{_configuration.FormatSchemaName(molecularZodSchema)}}>;
 
-		""");
-	
-	private FileContent GenerateEnumFileContent(IEnumZodSchema enumZodSchema)
-		=> new($$"""
-		{{StandardHeader}}
-
-		export enum {{_configuration.FormatEnumName(enumZodSchema)}} {
-		{{enumZodSchema.EnumValuesString}},
-		}
-
-		export const {{_configuration.FormatSchemaName(enumZodSchema)}} = z.union(
-		[z.nativeEnum({{_configuration.FormatEnumName(enumZodSchema)}}), z.union([{{string.Join(", ", enumZodSchema.EnumValuesWithNames.Select(x => $"z.literal(\"{x.Name}\")"))}}])])
-		.transform((arg) =>
-		{
-			if (typeof arg === "string")
-			{
-				return {{_configuration.FormatEnumName(enumZodSchema)}}[arg];
-			}
-			return arg;
-		});
-
-		export type {{_configuration.FormatSchemaTypeName(enumZodSchema)}} = z.infer<typeof {{_configuration.FormatSchemaName(enumZodSchema)}}>;
 		""");
 
 	private (IMolecularZodSchema Schema, IReadOnlyCollection<SchemaMemberInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
@@ -180,7 +203,7 @@ public class ZodSchemaConverter : ISchemaConverter
 				throw new InvalidOperationException($"No schema found for {propertyType.Name}");
 			})
 			.ToDictionary(x => x.Key, x => x.Value);
-		
+
 		var invalidProperties = pocoObject.SchemaMembers
 			.Where(x => !validSchemas.ContainsKey(x))
 			.ToArray();
@@ -191,7 +214,7 @@ public class ZodSchemaConverter : ISchemaConverter
 	private (FileInformation FileInformation, CreatedSchemaInformation SchemaInformation) GenerateMolecule(PocoObject pocoObject)
 	{
 		var (molecularSchema, invalidProperties) = GenerateMolecularSchema(pocoObject);
-		
+
 		_generatedSchemas.Update(pocoObject.ObjectType, molecularSchema);
 
 		var fileInformation = new FileInformation
@@ -232,33 +255,9 @@ public class ZodSchemaConverter : ISchemaConverter
 		var schemas = definitions
 			.Select(GenerateMolecule)
 			.ToArray();
-		
-		_configuration.Events.MoleculeSchemasCreated?.Invoke(this, new MoleculeSchemasCreatedEventArgs(
-			schemas.Select(x => x.SchemaInformation).ToArray()));
-		
+
+		_configuration.Events.MoleculeSchemasCreated?.Invoke(this, new MoleculeSchemasCreatedEventArgs(schemas.Select(x => x.SchemaInformation).ToArray()));
+
 		return schemas.Select(x => x.FileInformation);
-	}
-
-	private FileInformation GenerateEnum(PocoEnum pocoEnum)
-	{
-		var enumSchema = new EnumZodSchema(pocoEnum.EnumType);
-		_generatedSchemas.Add(pocoEnum.EnumType, enumSchema);
-
-		var generateEnum = new FileInformation
-		{
-			Content = GenerateFileContent(enumSchema),
-			Name = GenerateFileName(enumSchema),
-		};
-		
-		return generateEnum;
-	}
-
-	private IEnumerable<FileInformation> GenerateEnums(IEnumerable<PocoEnum> pocoEnums)
-	{
-		var enums = pocoEnums
-			.Select(GenerateEnum)
-			.ToArray();
-
-		return enums;
 	}
 }

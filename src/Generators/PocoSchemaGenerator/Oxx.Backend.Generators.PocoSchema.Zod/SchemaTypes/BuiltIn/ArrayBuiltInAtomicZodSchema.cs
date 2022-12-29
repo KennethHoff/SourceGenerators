@@ -9,9 +9,6 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInAtomicZodSchema
 	where TUnderlyingSchema : IPartialZodSchema, new()
 {
-	private ZodSchemaConfiguration? _configuration;
-	private SchemaMemberInfo? _memberInfo;
-
 	public IEnumerable<ZodImport> AdditionalImports => new[]
 	{
 		Configuration.CreateStandardImport(UnderlyingSchema),
@@ -29,8 +26,6 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		set => _memberInfo = value;
 	}
 
-	private ContextualType ListElement => MemberInfo.MemberType.GetGenericArguments().Single().ToContextualType();
-
 	public SchemaDefinition SchemaDefinition
 	{
 		get
@@ -45,7 +40,12 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 			return new SchemaDefinition($"z.array({schemaName})");
 		}
 	}
-	
+
+	private ZodSchemaConfiguration? _configuration;
+	private SchemaMemberInfo? _memberInfo;
+
+	private ContextualType ListElement => MemberInfo.MemberType.GetGenericArguments().Single().ToContextualType();
+
 	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(ListElement)
-	?? throw new InvalidOperationException($"Could not find schema for type {ListElement}");
+											   ?? throw new InvalidOperationException($"Could not find schema for type {ListElement}");
 }

@@ -6,28 +6,11 @@ namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 public readonly struct SchemaMemberInfo
 {
-	private readonly MemberInfo _memberInfo;
-
-	public SchemaMemberInfo(MemberInfo memberInfo)
-	{
-		EnsurePropertyOrField(memberInfo);
-
-		_memberInfo = memberInfo;
-	}
-	
-	private static void EnsurePropertyOrField(MemberInfo memberInfo)
-	{
-		if (memberInfo is not PropertyInfo and not FieldInfo)
-		{
-			throw new ArgumentException("MemberInfo must be a property or field.", nameof(memberInfo));
-		}
-	}
-	
 	public Type MemberType => _memberInfo switch
 	{
 		PropertyInfo propertyInfo => propertyInfo.PropertyType,
-		FieldInfo fieldInfo => fieldInfo.FieldType,
-		_ => throw new InvalidOperationException("MemberInfo must be a property or field.")
+		FieldInfo fieldInfo       => fieldInfo.FieldType,
+		_                         => throw new InvalidOperationException("MemberInfo must be a property or field."),
 	};
 
 	public string MemberName => _memberInfo.Name;
@@ -35,5 +18,20 @@ public readonly struct SchemaMemberInfo
 	public ContextualAccessorInfo ContextualType => _memberInfo.ToContextualAccessor();
 
 	public bool IsIgnored => _memberInfo.GetCustomAttribute<SchemaIgnoreAttribute>() is not null;
-}
+	private readonly MemberInfo _memberInfo;
 
+	private static void EnsurePropertyOrField(MemberInfo memberInfo)
+	{
+		if (memberInfo is not PropertyInfo and not FieldInfo)
+		{
+			throw new ArgumentException("MemberInfo must be a property or field.", nameof(memberInfo));
+		}
+	}
+
+	public SchemaMemberInfo(MemberInfo memberInfo)
+	{
+		EnsurePropertyOrField(memberInfo);
+
+		_memberInfo = memberInfo;
+	}
+}
