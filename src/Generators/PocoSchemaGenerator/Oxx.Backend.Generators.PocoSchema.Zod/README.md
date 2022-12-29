@@ -131,6 +131,9 @@ Issues that are common and annoying, but not blocking the release of the package
 
 Issues that are less common and/or can be worked around.
 
+* I'm not happy with how enums were implemented. They work, but they're not very clean.
+  * I'm not sure if it's possible to implement them in a cleaner way, but I'll have to look into it.
+
 * The schema generator only partially supports inheritance.
     * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
     * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for
@@ -206,6 +209,13 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
       * Everything currently gets its own file, but it would be nice to be able to customize this.
         * For example, you could have a "schema" folder, and then have a "schema/atoms" folder, and a "schema/molecules" folder, etc.
         * Or you could have a "schema" folder, and then have a "schema/atoms.ts" file, and a "schema/molecules.ts" file, etc.
+
+* CLI tool
+  * Currently, the only way to use this is to add it to your project and have it generate the schemas on startup.
+  * While this works, it's not ideal. It slows down startup time, and it's not very flexible.
+    * Technically, you could add it to a separate project and run that whenever you want, but that's not ideal either.
+  * Ideally, it would be possible to watch for schema changes and trigger a rebuild whenever a schema changes.
+    * This would be very useful for development, as you could just change a schema and then refresh the page to see the changes.
 
 * Add Roslyn analyzers to ensure that the classes are valid for the schema generator.
     * This will be a separate - recommended - package.
