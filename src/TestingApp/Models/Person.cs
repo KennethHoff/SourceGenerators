@@ -13,7 +13,8 @@ internal sealed class User
 	public required Name Name { get; init; }
 	public required string Email { get; init; }
 	public required string Password { get; init; }
-	
+	public required Gender Gender { get; init; }
+
 	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
 }
 
@@ -159,7 +160,7 @@ public readonly record struct CeremonyId(Guid Id)
 		=> Id.ToString();
 }
 
-[SchemaEnum]
+[SchemaEnum<Gender>]
 public enum Gender
 {
 	Male,

@@ -1,7 +1,7 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
-using Oxx.Backend.Generators.PocoSchema.Core.Models;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
@@ -28,6 +28,7 @@ public abstract class
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
+	protected abstract string SchemaEnumNamingFormat { get; set; }
 
 	#region Interface implementations
 
@@ -111,6 +112,12 @@ public abstract class
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaTypeNamingFormat(string namingFormat)
 	{
 		SchemaTypeNamingFormat = namingFormat;
+		return this;
+	}
+	
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string namingFormat)
+	{
+		SchemaEnumNamingFormat = namingFormat;
 		return this;
 	}
 

@@ -58,6 +58,10 @@ The following options are available:
     * Example: `OverrideFileNameNamingFormat("{0}Schema")` will generate a file called `myClassSchema.ts` for a POCO called `MyClass`.
         * Note: The file extension can be changed by using the `OverrideFileExtension(string)` method (see below).
 
+* `OverrideSchemaEnumNamingFormat(string)` - Overrides the naming format for the enums.
+    * Default: `{0}SchemaEnum` where `{0}` is the name of the enum.
+    * Example: `OverrideSchemaEnumNamingFormat("{0}SchemaEnum")` will generate an enum called `myClassSchemaEnum` for an enum called `MyClass`.
+
 * `OverrideFileExtension(string)` - Overrides the file extension for the generated files.
     * Default: `.ts`
     * Example: `OverrideFileExtension(".ts")` will generate a file called `myClassSchema.ts` for a class called `MyClass`.
@@ -119,11 +123,6 @@ Issues that are common and annoying, but not blocking the release of the package
 
 Issues that are less common and/or can be worked around.
 
-* The schema generator only partially support enums.
-    * Example: `enum MyEnum { MyValue }`
-    * The schema generator has a `SimpleEnumBuiltInAtomicZodSchema` schema, but it is very limited.
-        * It does not generate a custom schema&type for each enum, but rather spews out `z.enum(<values>)` everywhere it's used.
-            * This means that you can't access the type of the enum
 * The schema generator only partially supports inheritance.
     * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
     * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for

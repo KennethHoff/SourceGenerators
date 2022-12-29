@@ -3,9 +3,14 @@ using System.Globalization;
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.File;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Abstractions;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
@@ -33,11 +38,17 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	#region Interface implementations
 
-	public IEnumerable<FileInformation> GenerateFileContent(IEnumerable<PocoObject> pocoObjects)
+	public IEnumerable<FileInformation> GenerateFileContent(IReadOnlyCollection<IPocoStructure> pocoStructures)
 	{
 		var atoms = GenerateAtoms(_configuration.AtomicSchemasToCreateDictionary);
-		var molecules = GenerateMolecules(pocoObjects);
-		return atoms.Concat(molecules).Where(x => x != FileInformation.None);
+		var enums = GenerateEnums(pocoStructures.OfType<PocoEnum>());
+		var objects = GenerateObjects(pocoStructures.OfType<PocoObject>());
+
+		_configuration.CreatedSchemasDictionary = _generatedSchemas;
+		return atoms
+			.Concat(enums)
+			.Concat(objects)
+			.Where(x => x != FileInformation.None);
 	}
 
 	#endregion
@@ -73,9 +84,11 @@ public class ZodSchemaConverter : ISchemaConverter
 			.Select(GenerateAtom)
 			.ToArray();
 
+
 	private FileContent GenerateFileContent(IPartialZodSchema schemaValue)
 		=> schemaValue switch
 		{
+			IEnumZodSchema enumZodSchema           => GenerateEnumFileContent(enumZodSchema),
 			IAtomicZodSchema atomicZodSchema       => GenerateAtomicFileContent(atomicZodSchema),
 			IMolecularZodSchema molecularZodSchema => GenerateMolecularFileContent(molecularZodSchema),
 			_                                      => FileContent.None,
@@ -94,10 +107,32 @@ public class ZodSchemaConverter : ISchemaConverter
 		export type {{_configuration.FormatSchemaTypeName(molecularZodSchema)}} = z.infer<typeof {{_configuration.FormatSchemaName(molecularZodSchema)}}>;
 
 		""");
+	
+	private FileContent GenerateEnumFileContent(IEnumZodSchema enumZodSchema)
+		=> new($$"""
+		{{StandardHeader}}
+
+		export enum {{_configuration.FormatEnumName(enumZodSchema)}} {
+		{{enumZodSchema.EnumValuesString}},
+		}
+
+		export const {{_configuration.FormatSchemaName(enumZodSchema)}} = z.union(
+		[z.nativeEnum({{_configuration.FormatEnumName(enumZodSchema)}}), z.union([{{string.Join(", ", enumZodSchema.EnumValuesWithNames.Select(x => $"z.literal(\"{x.Name}\")"))}}])])
+		.transform((arg) =>
+		{
+			if (typeof arg === "string")
+			{
+				return {{_configuration.FormatEnumName(enumZodSchema)}}[arg];
+			}
+			return arg;
+		});
+
+		export type {{_configuration.FormatSchemaTypeName(enumZodSchema)}} = z.infer<typeof {{_configuration.FormatSchemaName(enumZodSchema)}}>;
+		""");
 
 	private (IMolecularZodSchema Schema, IReadOnlyCollection<PropertyInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
 	{
-		var partialSchema = _generatedSchemas[pocoObject.Type] switch
+		var partialSchema = _generatedSchemas[pocoObject.ObjectType] switch
 		{
 			PartialMolecularZodSchema schema => schema,
 			IZodSchema schema => throw new UnreachableException(
@@ -157,7 +192,7 @@ public class ZodSchemaConverter : ISchemaConverter
 	{
 		var (molecularSchema, invalidProperties) = GenerateMolecularSchema(pocoObject);
 		
-		_generatedSchemas.Update(pocoObject.Type, molecularSchema);
+		_generatedSchemas.Update(pocoObject.ObjectType, molecularSchema);
 
 		var generateMolecule = new FileInformation
 		{
@@ -165,7 +200,7 @@ public class ZodSchemaConverter : ISchemaConverter
 			Name = GenerateFileName(molecularSchema),
 		};
 		
-		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(pocoObject.Type, molecularSchema, invalidProperties));
+		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(pocoObject.ObjectType, molecularSchema, invalidProperties));
 		return generateMolecule;
 	}
 
@@ -174,9 +209,9 @@ public class ZodSchemaConverter : ISchemaConverter
 	/// </summary>
 	private PocoObject GenerateMoleculeDefinition(PocoObject pocoObject)
 	{
-		if (!_generatedSchemas.ContainsKey(pocoObject.Type))
+		if (!_generatedSchemas.ContainsKey(pocoObject.ObjectType))
 		{
-			_generatedSchemas.Add(pocoObject.Type, new PartialMolecularZodSchema
+			_generatedSchemas.Add(pocoObject.ObjectType, new PartialMolecularZodSchema
 			{
 				SchemaBaseName = new SchemaBaseName(pocoObject.TypeName),
 			});
@@ -185,16 +220,39 @@ public class ZodSchemaConverter : ISchemaConverter
 		return pocoObject;
 	}
 
-	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
+	private IEnumerable<FileInformation> GenerateObjects(IEnumerable<PocoObject> pocoObjects)
 	{
 		var definitions = pocoObjects
 			.Select(GenerateMoleculeDefinition)
 			.ToArray();
-		
+
 		_configuration.CreatedSchemasDictionary = _generatedSchemas;
-		
+
 		return definitions
 			.Select(GenerateMolecule)
 			.ToArray();
+	}
+
+	private FileInformation GenerateEnum(PocoEnum pocoEnum)
+	{
+		var enumSchema = new EnumZodSchema(pocoEnum.EnumType);
+		_generatedSchemas.Add(pocoEnum.EnumType, enumSchema);
+
+		var generateEnum = new FileInformation
+		{
+			Content = GenerateFileContent(enumSchema),
+			Name = GenerateFileName(enumSchema),
+		};
+		
+		return generateEnum;
+	}
+
+	private IEnumerable<FileInformation> GenerateEnums(IEnumerable<PocoEnum> pocoEnums)
+	{
+		var enums = pocoEnums
+			.Select(GenerateEnum)
+			.ToArray();
+
+		return enums;
 	}
 }

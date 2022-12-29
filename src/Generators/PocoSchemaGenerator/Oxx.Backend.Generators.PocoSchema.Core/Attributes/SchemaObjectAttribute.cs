@@ -10,5 +10,5 @@
 ///     <see cref="SchemaPropertyIgnoreAttribute" /> attribute.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false)]
-public class SchemaObjectAttribute : Attribute
+public class SchemaObjectAttribute : SchemaTypeAttribute
 { }

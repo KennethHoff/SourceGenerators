@@ -1,11 +1,11 @@
-﻿using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
+﻿using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
 
-namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
 
-public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchemaType>
+public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<System.Type, TSchemaType>
 	where TSchemaType : class, ISchema
 {
-	public TSchemaType? GetSchemaForType(Type propertyType)
+	public TSchemaType? GetSchemaForType(System.Type propertyType)
 	{
 		if (TryGetValue(propertyType, out var schema))
 		{
@@ -30,7 +30,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		return null;
 	}
 
-	public bool HasSchemaForType(Type propertyType)
+	public bool HasSchemaForType(System.Type propertyType)
 	{
 		if (ContainsKey(propertyType))
 		{
@@ -54,7 +54,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		return false;
 	}
 
-	public void Update(Type type, TSchemaType updatedSchema)
+	public void Update(System.Type type, TSchemaType updatedSchema)
 	{
 		if (ContainsKey(type))
 		{

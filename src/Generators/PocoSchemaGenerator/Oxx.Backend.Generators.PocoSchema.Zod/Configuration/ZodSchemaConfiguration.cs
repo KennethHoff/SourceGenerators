@@ -1,6 +1,8 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Core.Models;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
@@ -14,6 +16,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required string OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
+	public required string SchemaEnumNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
 	
 	/// <summary>
@@ -85,6 +88,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema => schema.SchemaBaseName,
 			_                       => string.Format(SchemaNamingFormat, schema.SchemaBaseName),
 		};
+	
+	public string FormatEnumName(IEnumZodSchema schema)
+		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
 
 	public string FormatSchemaTypeName(IPartialZodSchema schema)
 		=> schema switch

@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
 
 public interface IAtomicSchema : ISchema
 { }
