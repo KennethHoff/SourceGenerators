@@ -2,7 +2,7 @@
 
 namespace AnotherProject;
 
-[SchemaGeneration]
+[PocoObject]
 public class PocoFromAnotherProject
 {
 	public required string MyString { get; init; }
