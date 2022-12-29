@@ -174,7 +174,7 @@ public class ZodSchemaConverter : ISchemaConverter
 				}
 
 				// Edge case for Arrays using the funky [] syntax
-				if (propertyType.IsArray)
+				if (propertyType.IsArray && _generatedSchemas.HasSchemaForType(propertyType.GetElementType()!))
 				{
 					return true;
 				}
