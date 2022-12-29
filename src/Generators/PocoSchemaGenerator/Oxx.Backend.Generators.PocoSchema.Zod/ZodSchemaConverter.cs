@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using System.Globalization;
-using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events.Models;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.File;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Files;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
@@ -130,7 +130,7 @@ public class ZodSchemaConverter : ISchemaConverter
 		export type {{_configuration.FormatSchemaTypeName(enumZodSchema)}} = z.infer<typeof {{_configuration.FormatSchemaName(enumZodSchema)}}>;
 		""");
 
-	private (IMolecularZodSchema Schema, IReadOnlyCollection<PropertyInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
+	private (IMolecularZodSchema Schema, IReadOnlyCollection<SchemaMemberInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
 	{
 		var partialSchema = _generatedSchemas[pocoObject.ObjectType] switch
 		{
@@ -140,10 +140,10 @@ public class ZodSchemaConverter : ISchemaConverter
 			_ => throw new UnreachableException("Schema should have been generated before this point"),
 		};
 
-		var validSchemas = pocoObject.Properties
+		var validSchemas = pocoObject.SchemaMembers
 			.Where(x =>
 			{
-				var propertyType = x.PropertyType;
+				var propertyType = x.MemberType;
 
 				if (_generatedSchemas.HasSchemaForType(propertyType))
 				{
@@ -162,7 +162,7 @@ public class ZodSchemaConverter : ISchemaConverter
 			})
 			.Select(x =>
 			{
-				var propertyType = x.PropertyType;
+				var propertyType = x.MemberType;
 
 				var partialZodSchema = _generatedSchemas.GetSchemaForType(propertyType);
 				if (partialZodSchema is not null)
@@ -181,27 +181,28 @@ public class ZodSchemaConverter : ISchemaConverter
 			})
 			.ToDictionary(x => x.Key, x => x.Value);
 		
-		var invalidProperties = pocoObject.Properties
+		var invalidProperties = pocoObject.SchemaMembers
 			.Where(x => !validSchemas.ContainsKey(x))
 			.ToArray();
 
 		return (partialSchema.Populate(validSchemas, _configuration), invalidProperties);
 	}
 
-	private FileInformation GenerateMolecule(PocoObject pocoObject)
+	private (FileInformation FileInformation, CreatedSchemaInformation SchemaInformation) GenerateMolecule(PocoObject pocoObject)
 	{
 		var (molecularSchema, invalidProperties) = GenerateMolecularSchema(pocoObject);
 		
 		_generatedSchemas.Update(pocoObject.ObjectType, molecularSchema);
 
-		var generateMolecule = new FileInformation
+		var fileInformation = new FileInformation
 		{
 			Content = GenerateFileContent(molecularSchema),
 			Name = GenerateFileName(molecularSchema),
 		};
-		
-		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(pocoObject.ObjectType, molecularSchema, invalidProperties));
-		return generateMolecule;
+
+		var schemaInformation = new CreatedSchemaInformation(pocoObject.ObjectType, molecularSchema, invalidProperties);
+		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(schemaInformation));
+		return (fileInformation, schemaInformation);
 	}
 
 	/// <summary>
@@ -228,9 +229,14 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		_configuration.CreatedSchemasDictionary = _generatedSchemas;
 
-		return definitions
+		var schemas = definitions
 			.Select(GenerateMolecule)
 			.ToArray();
+		
+		_configuration.Events.MoleculeSchemasCreated?.Invoke(this, new MoleculeSchemasCreatedEventArgs(
+			schemas.Select(x => x.SchemaInformation).ToArray()));
+		
+		return schemas.Select(x => x.FileInformation);
 	}
 
 	private FileInformation GenerateEnum(PocoEnum pocoEnum)

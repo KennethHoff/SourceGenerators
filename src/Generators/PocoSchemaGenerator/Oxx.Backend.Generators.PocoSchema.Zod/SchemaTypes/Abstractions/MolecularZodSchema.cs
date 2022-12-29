@@ -1,5 +1,6 @@
-using System.Reflection;
+using Namotion.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
@@ -12,7 +13,7 @@ public class PartialMolecularZodSchema : IPartialZodSchema
 {
 	public SchemaBaseName SchemaBaseName { get; init; }
 
-	public MolecularZodSchema Populate(IDictionary<PropertyInfo, IPartialZodSchema> schemaDictionary, ZodSchemaConfiguration schemaConfiguration)
+	public MolecularZodSchema Populate(IDictionary<SchemaMemberInfo, IPartialZodSchema> schemaDictionary, ZodSchemaConfiguration schemaConfiguration)
 		=> MolecularZodSchema.CreateFromPartial(this, schemaDictionary, schemaConfiguration);
 }
 
@@ -36,17 +37,17 @@ public class MolecularZodSchema : IMolecularZodSchema
 		})
 		""");
 
-	public IDictionary<PropertyInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<PropertyInfo, IPartialZodSchema>();
+	public IDictionary<SchemaMemberInfo, IPartialZodSchema> SchemaDictionary { get; private init; } = new Dictionary<SchemaMemberInfo, IPartialZodSchema>();
 	private ZodSchemaConfiguration SchemaConfiguration { get; init; } = null!;
 
 	private string SchemaContent => SchemaDictionary
 		.Aggregate(string.Empty, (a, b)
 			=>
 		{
-			var propertyName = b.Key.Name.ToCamelCaseInvariant();
+			var propertyName = b.Key.MemberName.ToCamelCaseInvariant();
 			var propertySchema = SchemaConfiguration.FormatSchemaName(b.Value);
 
-			if (b.Key.IsNullable())
+			if (b.Key.ContextualType.Nullability is Nullability.Nullable)
 			{
 				// If the property is nullable, we need to make the property allow null (still required, and undefined is not allowed)
 				propertySchema += ".nullable()";
@@ -58,7 +59,7 @@ public class MolecularZodSchema : IMolecularZodSchema
 
 	public static MolecularZodSchema CreateFromPartial(
 		PartialMolecularZodSchema partial,
-		IDictionary<PropertyInfo, IPartialZodSchema> schemaDictionary,
+		IDictionary<SchemaMemberInfo, IPartialZodSchema> schemaDictionary,
 		ZodSchemaConfiguration zodSchemaConfiguration)
 		=> new()
 		{

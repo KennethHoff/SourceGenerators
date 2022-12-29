@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
@@ -79,8 +81,8 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var objects = objectTypes
 			.Select(t =>
 			{
-				var relevantProperties = GetRelevantProperties(t);
-				return new PocoObject(t, relevantProperties);
+				var propertiesAndFields = GetRelevantPropertiesAndFields(t);
+				return new PocoObject(t, propertiesAndFields);
 			})
 			.Cast<IPocoStructure>()
 			.ToArray();
@@ -105,6 +107,12 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 				{
 					continue;
 				}
+				
+				// Throw exception if Type is Generic
+				if (type.IsGenericType)
+				{
+					throw new InvalidOperationException($"Type {type.FullName} is generic and cannot be used as a schema type.");
+				}
 
 				if (!types.ContainsKey(schemaTypeAttribute))
 				{
@@ -118,15 +126,15 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		return types;
 	}
 
-	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
-		=> pi => pi.GetCustomAttribute<SchemaPropertyIgnoreAttribute>() is null;
+	private static IEnumerable<SchemaMemberInfo> GetRelevantPropertiesAndFields(Type type)
+	{
+		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+		IEnumerable<MemberInfo> properties = type.GetProperties(bindingFlags);
+		IEnumerable<MemberInfo> fields = type.GetFields(bindingFlags);
 
-	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
-		=> type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-			.Where(IsPropertyOrField())
-			.Where(DoesNotHaveIgnoreAttribute());
-
-	// More efficient than HasFlag.. I think - Rider gave me allocation warnings with HasFlag
-	private static Func<PropertyInfo, bool> IsPropertyOrField()
-		=> pi => (pi.MemberType & MemberTypes.Property) != 0 || (pi.MemberType & MemberTypes.Field) != 0;
+		return properties.Concat(fields)
+			.Where(x => x.GetCustomAttribute<CompilerGeneratedAttribute>() is null)
+			.Select(x => new SchemaMemberInfo(x))
+			.Where(x => x.IsIgnored is false);
+	}
 }

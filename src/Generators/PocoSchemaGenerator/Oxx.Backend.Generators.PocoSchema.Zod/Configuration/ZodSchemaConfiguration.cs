@@ -1,7 +1,6 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
@@ -36,10 +35,10 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemasDictionary { get; set; }
 
-	public IPartialZodSchema CreateGenericSchema(PropertyInfo propertyInfo)
+	public IPartialZodSchema CreateGenericSchema(SchemaMemberInfo memberInfo)
 	{
-		var genericTypeDefinition = propertyInfo.PropertyType.GetGenericTypeDefinition();
-		var genericArguments = propertyInfo.PropertyType.GetGenericArguments();
+		var genericTypeDefinition = memberInfo.MemberType.GetGenericTypeDefinition();
+		var genericArguments = memberInfo.MemberType.GetGenericArguments();
 		var genericSchema = GenericSchemasDictionary.GetRelatedType(genericTypeDefinition);
 
 		var argumentSchemas = genericArguments
@@ -78,7 +77,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
 		partialZodSchema.Configuration = this;
-		partialZodSchema.PropertyInfo = propertyInfo;
+		partialZodSchema.MemberInfo = memberInfo;
 		return partialZodSchema;
 	}
 

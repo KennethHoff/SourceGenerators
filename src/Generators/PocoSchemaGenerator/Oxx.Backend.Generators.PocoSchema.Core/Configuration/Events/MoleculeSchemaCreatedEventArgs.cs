@@ -1,18 +1,13 @@
-﻿using System.Reflection;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
+﻿using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
 public sealed class MoleculeSchemaCreatedEventArgs : EventArgs
 {
-	public readonly Type Type;
-	public readonly ISchema Schema;
-	public readonly IReadOnlyCollection<PropertyInfo> InvalidProperties;
+	public readonly CreatedSchemaInformation Information;
 
-	public MoleculeSchemaCreatedEventArgs(Type type, ISchema schema, IReadOnlyCollection<PropertyInfo> invalidProperties)
+	public MoleculeSchemaCreatedEventArgs(CreatedSchemaInformation information)
 	{
-		Type = type;
-		Schema = schema;
-		InvalidProperties = invalidProperties;
+		Information = information;
 	}
 }

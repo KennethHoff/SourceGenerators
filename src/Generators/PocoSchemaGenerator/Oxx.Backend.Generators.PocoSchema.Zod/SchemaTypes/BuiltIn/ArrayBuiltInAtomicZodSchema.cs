@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Reflection;
-using Namotion.Reflection;
+﻿using Namotion.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
@@ -11,7 +10,7 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 	where TUnderlyingSchema : IPartialZodSchema, new()
 {
 	private ZodSchemaConfiguration? _configuration;
-	private PropertyInfo? _propertyInfo;
+	private SchemaMemberInfo? _memberInfo;
 
 	public IEnumerable<ZodImport> AdditionalImports => new[]
 	{
@@ -24,13 +23,13 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		set => _configuration = value;
 	}
 
-	public PropertyInfo PropertyInfo
+	public SchemaMemberInfo MemberInfo
 	{
-		get => _propertyInfo ?? throw new InvalidOperationException("PropertyInfo is null");
-		set => _propertyInfo = value;
+		get => _memberInfo ?? throw new InvalidOperationException("PropertyInfo is null");
+		set => _memberInfo = value;
 	}
 
-	private ContextualType ListElement => PropertyInfo.ToContextualProperty().PropertyType.GenericArguments.First();
+	private ContextualType ListElement => MemberInfo.MemberType.GetGenericArguments().Single().ToContextualType();
 
 	public SchemaDefinition SchemaDefinition
 	{
@@ -47,6 +46,6 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		}
 	}
 	
-	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(PropertyInfo.PropertyType.GetGenericArguments()[0])
-	?? throw new InvalidOperationException($"Could not find schema for type {PropertyInfo.PropertyType.GetGenericArguments()[0]}");
+	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(ListElement)
+	?? throw new InvalidOperationException($"Could not find schema for type {ListElement}");
 }

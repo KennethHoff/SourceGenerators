@@ -1,6 +1,6 @@
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 

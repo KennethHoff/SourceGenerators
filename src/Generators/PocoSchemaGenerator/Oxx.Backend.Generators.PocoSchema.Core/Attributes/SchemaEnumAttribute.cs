@@ -3,6 +3,6 @@
 /// <summary>
 ///		This Attribute is used to mark an Enum for schema generation.
 /// </summary>
-[AttributeUsage(AttributeTargets.Enum, Inherited = false)]
+[AttributeUsage(AttributeTargets.Enum)]
 public class SchemaEnumAttribute : SchemaTypeAttribute
 { }

@@ -1,12 +1,13 @@
 using AnotherProject;
+using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using TestingApp.SchemaTypes;
 
 namespace TestingApp.Models;
 
 // [SchemaObject]
-internal readonly record struct Role(string Name);
+internal readonly record struct Role(Name Name);
 
-// [SchemaObject]
+[SchemaObject]
 internal sealed class User
 {
 	public required Name Name { get; init; }
@@ -20,8 +21,34 @@ internal sealed class User
 // [SchemaObject]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
 
+[SchemaObject]
+internal abstract class FieldyBoi
+{
+	public static string PublicStatic { get; set; } = string.Empty;
+	private static string PrivateStatic { get; set; } = string.Empty;
+	internal static string InternalStatic { get; set; } = string.Empty;
+	protected static string ProtectedStatic { get; set; } = string.Empty;
 
-// // [SchemaObject]
+	private readonly string PrivateReadonlyField = string.Empty;
+	internal readonly string InternalReadonlyField = string.Empty;
+	public readonly string PublicReadonlyField = string.Empty;
+	protected readonly string ProtectedReadonlyField = string.Empty;
+	private string PrivateField = string.Empty;
+	internal string InternalField = string.Empty;
+	public string PublicField = string.Empty;
+	protected string ProtectedField = string.Empty;
+
+	private static readonly string PrivateStaticReadonlyField = string.Empty;
+	internal static readonly string InternalStaticReadonlyField = string.Empty;
+	public static readonly string PublicStaticReadonlyField = string.Empty;
+	protected static readonly string ProtectedStaticReadonlyField = string.Empty;
+	private static string PrivateStaticField = string.Empty;
+	internal static string InternalStaticField = string.Empty;
+	public static string PublicStaticField = string.Empty;
+	protected static string ProtectedStaticField = string.Empty;
+}
+
+[SchemaObject]
 internal abstract class Person
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
@@ -102,7 +129,7 @@ internal abstract class Person
 	// - not an instance property (static)
 	// - has [PocoPropertyIgnore] attribute
 
-	[SchemaPropertyIgnore]
+	[SchemaIgnore]
 	public string Ignored { get; init; } = string.Empty;
 	
 	public static string PublicStatic { get; set; } = string.Empty;
@@ -159,7 +186,7 @@ public readonly record struct CeremonyId(Guid Id)
 		=> Id.ToString();
 }
 
-// [SchemaEnum<Gender>]
+[SchemaEnum]
 public enum Gender
 {
 	Male,

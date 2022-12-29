@@ -1,6 +1,4 @@
-﻿using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
-
-namespace AnotherProject;
+﻿namespace AnotherProject;
 
 [SchemaObject]
 public class PocoFromAnotherProject
