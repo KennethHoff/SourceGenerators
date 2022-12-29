@@ -75,7 +75,12 @@ void PrintTotalInvalidProperties(IReadOnlyCollection<CreatedSchemaInformation> i
 
 	if (informationsWithInvalidMembers.Count is 0)
 	{
-		Console.WriteLine("All types resolved successfully!");
+		Console.Write("All ");
+		Console.ForegroundColor = ConsoleColor.Green;
+		Console.Write(informations.Count);
+		Console.ResetColor();
+		Console.WriteLine(" schemas were created successfully.");
+		return;
 	}
 
 	var typesWithoutSchemas = informations
@@ -93,7 +98,6 @@ void PrintTotalInvalidProperties(IReadOnlyCollection<CreatedSchemaInformation> i
 
 	void PrintTotal()
 	{
-		Console.Write("A total of ");
 		Console.ForegroundColor = ConsoleColor.Cyan;
 		Console.Write(informations.Count);
 		Console.ResetColor();
@@ -101,12 +105,11 @@ void PrintTotalInvalidProperties(IReadOnlyCollection<CreatedSchemaInformation> i
 		Console.ForegroundColor = ConsoleColor.Green;
 		Console.Write(informations.Count - invalidTypesAmount);
 		Console.ResetColor();
-		Console.WriteLine(" were resolved successfully.");
+		Console.WriteLine(" were resolved fully.");
 	}
 	
 	void PrintInvalid()
 	{
-		Console.Write("A total of ");
 		Console.ForegroundColor = ConsoleColor.Red;
 		Console.Write(invalidSchemasAmount);
 		Console.ResetColor();
@@ -119,13 +122,17 @@ void PrintTotalInvalidProperties(IReadOnlyCollection<CreatedSchemaInformation> i
 	
 	void PrintTypesWithoutSchemas()
 	{
-		Console.WriteLine("The following types could not be resolved:");
+		Console.Write("The following ");
+		Console.ForegroundColor = ConsoleColor.Red;
+		Console.Write(invalidSchemasAmount);
+		Console.ResetColor();
+		Console.WriteLine(" schemas could not be resolved:");
 		Console.ForegroundColor = ConsoleColor.Cyan;
 		foreach (var type in typesWithoutSchemas)
 		{
 			Console.WriteLine(type);
 		}
 		Console.ResetColor();
+		Console.WriteLine("Keep in mind that generics might have failed due to their type arguments not being resolved.");
 	}
-
 }

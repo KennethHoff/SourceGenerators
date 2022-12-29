@@ -4,7 +4,7 @@ using TestingApp.SchemaTypes;
 
 namespace TestingApp.Models;
 
-// [SchemaObject]
+[SchemaObject]
 internal readonly record struct Role(Name Name);
 
 [SchemaObject]
@@ -18,7 +18,7 @@ internal sealed class User
 	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
 }
 
-// [SchemaObject]
+[SchemaObject]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
 
 [SchemaObject]
@@ -109,34 +109,6 @@ internal abstract class Person
 	protected abstract string ProtectedAbstract { get; init; }
 
 
-
-	// All of the following does not work.
-	// The generator doesn't know how to handle the array type.
-	// It's not a generic type, but at the same time it has a "generic" type parameter.
-	// All other collection types are handled correctly - it's just the [] (as opposed to <>) that's the problem.
-
-	// public int[] ArrayInts { get; init; } = Array.Empty<int>();
-	// public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
-	// public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
-	
-	// public string[] ArrayNames { get; init; } = Array.Empty<string>();
-	// public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
-	// public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
-	
-	
-	// All of the following should be ignored as they are either:
-	// - not a property (field, method, etc.)
-	// - not an instance property (static)
-	// - has [PocoPropertyIgnore] attribute
-
-	[SchemaIgnore]
-	public string Ignored { get; init; } = string.Empty;
-	
-	public static string PublicStatic { get; set; } = string.Empty;
-	private static string PrivateStatic { get; set; } = string.Empty;
-	internal static string InternalStatic { get; set; } = string.Empty;
-	protected static string ProtectedStatic { get; set; } = string.Empty;
-
 	private readonly string PrivateReadonlyField = string.Empty;
 	internal readonly string InternalReadonlyField = string.Empty;
 	public readonly string PublicReadonlyField = string.Empty;
@@ -145,7 +117,7 @@ internal abstract class Person
 	internal string InternalField = string.Empty;
 	public string PublicField = string.Empty;
 	protected string ProtectedField = string.Empty;
-	
+
 	private static readonly string PrivateStaticReadonlyField = string.Empty;
 	internal static readonly string InternalStaticReadonlyField = string.Empty;
 	public static readonly string PublicStaticReadonlyField = string.Empty;
@@ -154,8 +126,35 @@ internal abstract class Person
 	internal static string InternalStaticField = string.Empty;
 	public static string PublicStaticField = string.Empty;
 	protected static string ProtectedStaticField = string.Empty;
+
+
+
+	// All of the following does not work.
+	// The generator doesn't know how to handle the array type.
+	// It's not a generic type, but at the same time it has a "generic" type parameter.
+	// All other collection types are handled correctly - it's just the [] (as opposed to <>) that's the problem.
+
+	public int[] ArrayInts { get; init; } = Array.Empty<int>();
+	public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
+	public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
+	
+	public string[] ArrayNames { get; init; } = Array.Empty<string>();
+	public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
+	public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
 	
 	
+	// All of the following should be ignored as they are either:
+	// - not a property or a field (methods, events, etc.)
+	// - not an instance property (static)
+	// - has [SchemaIgnore] attribute
+
+	[SchemaIgnore]
+	public string Ignored { get; init; } = string.Empty;
+	
+	public static string PublicStatic { get; set; } = string.Empty;
+	private static string PrivateStatic { get; set; } = string.Empty;
+	internal static string InternalStatic { get; set; } = string.Empty;
+	protected static string ProtectedStatic { get; set; } = string.Empty;
 }
 
 // [SchemaObject]
