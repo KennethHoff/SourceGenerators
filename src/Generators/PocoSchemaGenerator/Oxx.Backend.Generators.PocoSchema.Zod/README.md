@@ -155,7 +155,7 @@ Issues that are less common and/or can be worked around.
        string DerivedProperty { get; set; }
     }
     ```
-    * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for
+    * Currently, the schema generator has no way of knowing that `DerivedClass` inherits from `BaseClass`, so it will generate two separate schemas for
       them.
 * The schema generator only partially supports interfaces
     * Example:
