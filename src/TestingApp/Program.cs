@@ -132,6 +132,6 @@ void PrintTotalInvalidProperties(IReadOnlyCollection<CreatedSchemaInformation> i
 			Console.WriteLine(type);
 		}
 		Console.ResetColor();
-		Console.WriteLine("Keep in mind that generics might have failed due to their type arguments not being resolved.");
+		Console.WriteLine("Keep in mind that generics might have failed to resolve due to their type arguments being unable to resolve.");
 	}
 }
