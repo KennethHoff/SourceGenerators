@@ -4,11 +4,6 @@ public static class TypeExtensions
 {
 	public static IReadOnlyCollection<EnumValue> GetEnumValues(this Type enumType)
 	{
-		if (!enumType.IsEnum)
-		{
-			throw new ArgumentException("Type must be an enum.", nameof(enumType));
-		}
-		
 		var enumValues = Enum.GetValues(enumType);
 		var enumNames = Enum.GetNames(enumType);
 		var enumKeyValuePairs = new List<EnumValue>();
@@ -26,4 +21,3 @@ public static class TypeExtensions
 }
 
 public readonly record struct EnumValue(string Name, int Value);
-

@@ -1,5 +1,5 @@
-using Oxx.Backend.Generators.PocoSchema.Core.Models.File;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Files;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Contracts;
 

@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Namotion.Reflection;
+﻿using Namotion.Reflection;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
@@ -7,11 +7,8 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
 public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInAtomicZodSchema
-	where TUnderlyingSchema : IZodSchema, new()
+	where TUnderlyingSchema : IPartialZodSchema, new()
 {
-	private ZodSchemaConfiguration? _configuration;
-	private PropertyInfo? _propertyInfo;
-
 	public IEnumerable<ZodImport> AdditionalImports => new[]
 	{
 		Configuration.CreateStandardImport(UnderlyingSchema),
@@ -23,10 +20,10 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		set => _configuration = value;
 	}
 
-	public PropertyInfo PropertyInfo
+	public SchemaMemberInfo MemberInfo
 	{
-		get => _propertyInfo ?? throw new InvalidOperationException("PropertyInfo is null");
-		set => _propertyInfo = value;
+		get => _memberInfo ?? throw new InvalidOperationException("PropertyInfo is null");
+		set => _memberInfo = value;
 	}
 
 	public SchemaDefinition SchemaDefinition
@@ -35,10 +32,7 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 		{
 			var schemaName = Configuration.FormatSchemaName(UnderlyingSchema);
 
-			var list = PropertyInfo.ToContextualProperty();
-			var listElement = list.PropertyType.GenericArguments.First();
-
-			if (listElement.Nullability is Nullability.Nullable)
+			if (ListElement.Nullability is Nullability.Nullable)
 			{
 				schemaName += ".nullable()";
 			}
@@ -46,7 +40,18 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 			return new SchemaDefinition($"z.array({schemaName})");
 		}
 	}
-	
-	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(PropertyInfo.PropertyType.GetGenericArguments()[0])
-	?? throw new InvalidOperationException($"Could not find schema for type {PropertyInfo.PropertyType.GetGenericArguments()[0]}");
+
+	private ZodSchemaConfiguration? _configuration;
+	private SchemaMemberInfo? _memberInfo;
+
+
+	private ContextualType ListElement => MemberInfo.MemberType switch
+	{
+		// Edge case for Arrays using the funky [] syntax
+		{ IsArray: true } arrayType => arrayType.ToContextualType().ElementType!,
+		{ } enumerableType          => enumerableType.GetGenericArguments().Single().ToContextualType(),
+	};
+
+	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(ListElement)
+											   ?? throw new InvalidOperationException($"Could not find schema for type {ListElement}");
 }

@@ -1,7 +1,7 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
@@ -16,30 +16,31 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required string OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
-	public required string SchemaEnumNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
-	
+
 	/// <summary>
-	/// Dictionary containing the generic types that will be generated
-	/// </summary>
-	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
-	
-	/// <summary>
-	/// Dictionary containing the non-generic types that will be generated <br />
-	/// Don't use this if you want to find the schema to use for other types. <br />
-	/// Use <see cref="CreatedSchemasDictionary"/> instead.
+	///     Dictionary containing the non-generic types that will be generated <br />
+	///     Don't use this if you want to find the schema to use for other types. <br />
+	///     Use <see cref="CreatedSchemasDictionary" /> instead.
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> AtomicSchemasToCreateDictionary { get; init; }
-	
+
 	/// <summary>
-	/// Dictionary containing fully created schemas
+	///     Dictionary containing fully created schemas
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemasDictionary { get; set; }
 
-	public IPartialZodSchema CreateGenericSchema(PropertyInfo propertyInfo)
+	/// <summary>
+	///     Dictionary containing the generic types that will be generated
+	/// </summary>
+	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
+
+	public required string SchemaEnumNamingFormat { get; init; }
+
+	public IPartialZodSchema CreateGenericSchema(SchemaMemberInfo memberInfo)
 	{
-		var genericTypeDefinition = propertyInfo.PropertyType.GetGenericTypeDefinition();
-		var genericArguments = propertyInfo.PropertyType.GetGenericArguments();
+		var genericTypeDefinition = memberInfo.MemberType.GetGenericTypeDefinition();
+		var genericArguments = memberInfo.MemberType.GetGenericArguments();
 		var genericSchema = GenericSchemasDictionary.GetRelatedType(genericTypeDefinition);
 
 		var argumentSchemas = genericArguments
@@ -58,7 +59,17 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 		var typeArguments = argumentSchemas.Select(x => x.Schema!.GetType()).ToArray();
 
-		var genericSchemaType = genericSchema.MakeGenericType(typeArguments);
+
+		Type genericSchemaType;
+		try
+		{
+			genericSchemaType = genericSchema.MakeGenericType(typeArguments);
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			throw;
+		}
 
 		// if genericSchemaType does not implement IGenericZodSchema, throw an exception
 		if (!typeof(IGenericZodSchema).IsAssignableFrom(genericSchemaType))
@@ -68,7 +79,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 		var partialZodSchema = (IGenericZodSchema)Activator.CreateInstance(genericSchemaType)!;
 		partialZodSchema.Configuration = this;
-		partialZodSchema.PropertyInfo = propertyInfo;
+		partialZodSchema.MemberInfo = memberInfo;
 		return partialZodSchema;
 	}
 
@@ -79,6 +90,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			_                       => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
 		};
 
+	public string FormatEnumName(IEnumZodSchema schema)
+		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
+
 	public string FormatFilePath(IPartialZodSchema schema)
 		=> $"./{FormatSchemaName(schema)}";
 
@@ -88,9 +102,6 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema => schema.SchemaBaseName,
 			_                       => string.Format(SchemaNamingFormat, schema.SchemaBaseName),
 		};
-	
-	public string FormatEnumName(IEnumZodSchema schema)
-		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
 
 	public string FormatSchemaTypeName(IPartialZodSchema schema)
 		=> schema switch
@@ -98,4 +109,21 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema => schema.SchemaBaseName,
 			_                       => string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName),
 		};
+
+	public IPartialZodSchema CreateArraySchema(SchemaMemberInfo schemaMemberInfo)
+	{
+		var elementType = schemaMemberInfo.MemberType.GetElementType()!;
+		var elementSchema = CreatedSchemasDictionary.GetSchemaForType(elementType);
+		if (elementSchema is null)
+		{
+			throw new InvalidOperationException($"Could not find schema for array element type {elementType.Name}.");
+		}
+		
+		var arraySchemaType = typeof(ArrayBuiltInAtomicZodSchema<>).MakeGenericType(elementSchema.GetType());
+		var arraySchema = (IGenericZodSchema)Activator.CreateInstance(arraySchemaType)!;
+
+		arraySchema.Configuration = this;
+		arraySchema.MemberInfo = schemaMemberInfo;
+		return arraySchema;
+	}
 }

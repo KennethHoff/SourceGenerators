@@ -5,7 +5,7 @@ using TestingApp.SchemaTypes;
 namespace TestingApp.Models;
 
 [SchemaObject]
-internal readonly record struct Role(string Name);
+internal readonly record struct Role(Name Name);
 
 [SchemaObject]
 internal sealed class User
@@ -21,6 +21,32 @@ internal sealed class User
 [SchemaObject]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
 
+[SchemaObject]
+internal abstract class FieldyBoi
+{
+	public static string PublicStatic { get; set; } = string.Empty;
+	private static string PrivateStatic { get; set; } = string.Empty;
+	internal static string InternalStatic { get; set; } = string.Empty;
+	protected static string ProtectedStatic { get; set; } = string.Empty;
+
+	private readonly string PrivateReadonlyField = string.Empty;
+	internal readonly string InternalReadonlyField = string.Empty;
+	public readonly string PublicReadonlyField = string.Empty;
+	protected readonly string ProtectedReadonlyField = string.Empty;
+	private string PrivateField = string.Empty;
+	internal string InternalField = string.Empty;
+	public string PublicField = string.Empty;
+	protected string ProtectedField = string.Empty;
+
+	private static readonly string PrivateStaticReadonlyField = string.Empty;
+	internal static readonly string InternalStaticReadonlyField = string.Empty;
+	public static readonly string PublicStaticReadonlyField = string.Empty;
+	protected static readonly string ProtectedStaticReadonlyField = string.Empty;
+	private static string PrivateStaticField = string.Empty;
+	internal static string InternalStaticField = string.Empty;
+	public static string PublicStaticField = string.Empty;
+	protected static string ProtectedStaticField = string.Empty;
+}
 
 [SchemaObject]
 internal abstract class Person
@@ -32,7 +58,7 @@ internal abstract class Person
 	public IReadOnlyCollection<string> ReadonlyNamesCollection { get; init; } = Array.Empty<string>();
 	public IReadOnlyCollection<string?> ReadonlyNamesCollectionNullableUnderlying { get; init; } = Array.Empty<string?>();
 	public IReadOnlyCollection<string?>? ReadonlyNamesCollectionNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
-
+	
 	public IReadOnlyList<string> ReadonlyNamesList { get; init; } = Array.Empty<string>();
 	public IReadOnlyList<string?> ReadonlyNamesListNullableUnderlying { get; init; } = Array.Empty<string?>();
 	public IReadOnlyList<string?>? ReadonlyNamesListNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
@@ -70,47 +96,19 @@ internal abstract class Person
 	
 	public PersonId PersonId { get; init; }
 	public PersonId? PersonIdNullable { get; init; }
-
+	
 	public required PocoFromAnotherProject PocoFromAnotherMother { get; init; }
 	public PocoFromAnotherProject? PocoFromAnotherNullable { get; init; }
-
+	
 	public Gender Gender { get; init; }
-
+	
 	private string Private { get; init; } = string.Empty;
 	internal string Internal { get; init; } = string.Empty;
 	protected string Protected { get; init; } = string.Empty;
-
+	
 	protected abstract string ProtectedAbstract { get; init; }
-
-
-
-	// All of the following does not work.
-	// The generator doesn't know how to handle the array type.
-	// It's not a generic type, but at the same time it has a "generic" type parameter.
-	// All other collection types are handled correctly - it's just the [] (as opposed to <>) that's the problem.
-
-	// public int[] ArrayInts { get; init; } = Array.Empty<int>();
-	// public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
-	// public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
-	
-	// public string[] ArrayNames { get; init; } = Array.Empty<string>();
-	// public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
-	// public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
 	
 	
-	// All of the following should be ignored as they are either:
-	// - not a property (field, method, etc.)
-	// - not an instance property (static)
-	// - has [PocoPropertyIgnore] attribute
-
-	[SchemaPropertyIgnore]
-	public string Ignored { get; init; } = string.Empty;
-	
-	public static string PublicStatic { get; set; } = string.Empty;
-	private static string PrivateStatic { get; set; } = string.Empty;
-	internal static string InternalStatic { get; set; } = string.Empty;
-	protected static string ProtectedStatic { get; set; } = string.Empty;
-
 	private readonly string PrivateReadonlyField = string.Empty;
 	internal readonly string InternalReadonlyField = string.Empty;
 	public readonly string PublicReadonlyField = string.Empty;
@@ -128,11 +126,32 @@ internal abstract class Person
 	internal static string InternalStaticField = string.Empty;
 	public static string PublicStaticField = string.Empty;
 	protected static string ProtectedStaticField = string.Empty;
+
+
+
+	public int[] ArrayInts { get; init; } = Array.Empty<int>();
+	public int?[] ArrayIntsNullableUnderlying { get; init; } = Array.Empty<int?>();
+	public int?[]? ArrayIntsNullableUnderlyingNullable { get; init; } = Array.Empty<int?>();
 	
+	public string[] ArrayNames { get; init; } = Array.Empty<string>();
+	public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
+	public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
 	
+	// All of the following should be ignored as they are either:
+	// - not a property or a field (methods, events, etc.)
+	// - not an instance property (static)
+	// - has [SchemaMemberIgnore] attribute
+
+	[SchemaMemberIgnore]
+	public string Ignored { get; init; } = string.Empty;
+	
+	public static string PublicStatic { get; set; } = string.Empty;
+	private static string PrivateStatic { get; set; } = string.Empty;
+	internal static string InternalStatic { get; set; } = string.Empty;
+	protected static string ProtectedStatic { get; set; } = string.Empty;
 }
 
-[SchemaObject]
+// [SchemaObject]
 public interface IPersonAge
 {
 	ClampedNumber Age { get; init; }
@@ -160,7 +179,7 @@ public readonly record struct CeremonyId(Guid Id)
 		=> Id.ToString();
 }
 
-[SchemaEnum<Gender>]
+[SchemaEnum]
 public enum Gender
 {
 	Male,

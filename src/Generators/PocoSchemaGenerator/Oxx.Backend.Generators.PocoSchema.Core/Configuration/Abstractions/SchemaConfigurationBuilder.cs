@@ -1,7 +1,7 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
@@ -12,25 +12,33 @@ public abstract class
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
 {
-	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
 	protected readonly TypeSchemaDictionary<TSchemaType> AtomicSchemasToCreateDictionary = new();
+	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
 	protected TSchemaEventConfiguration? EventConfiguration;
 	protected string OutputDirectory = string.Empty;
 
 	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
+
+	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 	protected abstract TConfigurationType Configuration { get; }
 
 	protected bool DeleteFilesOnStart { get; set; }
 	protected abstract string FileExtension { get; set; }
 	protected abstract string FileNameFormat { get; set; }
-
-	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
+	protected abstract string SchemaEnumNamingFormat { get; set; }
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
-	protected abstract string SchemaEnumNamingFormat { get; set; }
 
 	#region Interface implementations
+
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
+		Func<TSchema>? schemaFactory = null)
+		where TSchema : TSchemaType, IAtomicSchema, new()
+	{
+		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
+		return this;
+	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyGenericSchema(
 		Type genericType,
@@ -42,38 +50,11 @@ public abstract class
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
-		Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, IAtomicSchema, new()
-	{
-		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
-
-		// Add to Nullable<TType> if TType is a value type.
-		// Unlike Reference Types, when ValueTypes are null, they are an entirely different type.
-		// Specifically, Nullable<T> is a different type than T.
-		// Reference Types are still the same type when they are null.
-		if (typeof(TType).GetTypeInfo().IsValueType is false)
-		{
-			return this;
-		}
-
-		var isNullable = typeof(TType).GetTypeInfo().IsGenericType && typeof(TType).GetGenericTypeDefinition() == typeof(Nullable<>);
-		if (isNullable)
-		{
-			return this;
-		}
-
-		var nullableType = typeof(Nullable<>).MakeGenericType(typeof(TType));
-		UpsertSchemaTypeDictionary(nullableType, schemaFactory);
-		return this;
-	}
-
 	public TConfigurationType Build()
 	{
 		AtomicSchemaApplicationAction();
 		return Configuration;
 	}
-
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ConfigureEvents(Action<TSchemaEventConfiguration> action)
 	{
@@ -114,12 +95,6 @@ public abstract class
 		SchemaTypeNamingFormat = namingFormat;
 		return this;
 	}
-	
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string namingFormat)
-	{
-		SchemaEnumNamingFormat = namingFormat;
-		return this;
-	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ResolveTypesFromAssemblyContaining<T>()
 	{
@@ -134,6 +109,12 @@ public abstract class
 	}
 
 	#endregion
+
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string namingFormat)
+	{
+		SchemaEnumNamingFormat = namingFormat;
+		return this;
+	}
 
 	protected void ApplyAtomicSchemas(Action action)
 	{

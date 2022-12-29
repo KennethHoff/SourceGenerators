@@ -5,5 +5,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Core\Oxx.Backend.Generators.PocoSchema.Core.csproj" />
   </ItemGroup>
-
 </Project>

@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
@@ -15,6 +17,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 {
 	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
 	private readonly ISchemaConverter _schemaConverter;
+	private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
 	{
@@ -39,7 +42,9 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			{
 				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
 
+				await _semaphoreSlim.WaitAsync();
 				await File.WriteAllTextAsync(filePath, fileInformation.Content);
+				_semaphoreSlim.Release();
 			}
 
 			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
@@ -63,6 +68,35 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 
 	private IReadOnlyCollection<IPocoStructure> GetPocoStructures()
 	{
+		var typeSchemaDictionary = GetTypeSchemaDictionary();
+
+		var objectTypes = typeSchemaDictionary
+			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
+			.Value;
+
+		var enumTypes = typeSchemaDictionary
+			.FirstOrDefault(x => x.Key is SchemaEnumAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
+			.Value;
+
+		var objects = objectTypes
+			.Select(t =>
+			{
+				var propertiesAndFields = GetRelevantPropertiesAndFields(t);
+				return new PocoObject(t, propertiesAndFields);
+			})
+			.Cast<IPocoStructure>()
+			.ToArray();
+
+		var enums = enumTypes
+			.Select(t => new PocoEnum(t))
+			.Cast<IPocoStructure>()
+			.ToArray();
+
+		return objects.Concat(enums).ToArray();
+	}
+
+	private Dictionary<SchemaTypeAttribute, List<Type>> GetTypeSchemaDictionary()
+	{
 		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
 		foreach (var assembly in _configuration.Assemblies)
 		{
@@ -74,6 +108,12 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 					continue;
 				}
 
+				// Throw exception if Type is Generic
+				if (type.IsGenericType)
+				{
+					throw new InvalidOperationException($"Type {type.FullName} is generic and cannot be used as a schema type.");
+				}
+
 				if (!types.ContainsKey(schemaTypeAttribute))
 				{
 					types.Add(schemaTypeAttribute, new List<Type>());
@@ -83,43 +123,18 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			}
 		}
 
-		var objects = types.FirstOrDefault(x => x.Key is SchemaObjectAttribute)
-			.Value
-			.Select(t =>
-			{
-				var relevantProperties = GetRelevantProperties(t);
-				return new PocoObject(t, relevantProperties);
-			})
-			.Cast<IPocoStructure>()
-			.ToArray();
-
-		var enums = types.FirstOrDefault(x => x.Key is SchemaEnumAttribute)
-			.Value
-			.Select(t =>
-			{
-				var enumType = t.GetCustomAttribute<SchemaEnumAttribute>()?.EnumType;
-				if (enumType is null)
-				{
-					throw new InvalidOperationException($"Enum type is not defined for {t.Name}");
-				}
-
-				return new PocoEnum(enumType);
-			})
-			.Cast<IPocoStructure>()
-			.ToArray();
-
-		return objects.Concat(enums).ToArray();
+		return types;
 	}
 
-	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
-		=> pi => pi.GetCustomAttribute<SchemaPropertyIgnoreAttribute>() is null;
+	private static IEnumerable<SchemaMemberInfo> GetRelevantPropertiesAndFields(Type type)
+	{
+		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+		IEnumerable<MemberInfo> properties = type.GetProperties(bindingFlags);
+		IEnumerable<MemberInfo> fields = type.GetFields(bindingFlags);
 
-	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
-		=> type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-			.Where(IsPropertyOrField())
-			.Where(DoesNotHaveIgnoreAttribute());
-
-	// More efficient than HasFlag.. I think - Rider gave me allocation warnings with HasFlag
-	private static Func<PropertyInfo, bool> IsPropertyOrField()
-		=> pi => (pi.MemberType & MemberTypes.Property) != 0 || (pi.MemberType & MemberTypes.Field) != 0;
+		return properties.Concat(fields)
+			.Where(x => x.GetCustomAttribute<CompilerGeneratedAttribute>() is null)
+			.Select(x => new SchemaMemberInfo(x))
+			.Where(x => x.IsIgnored is false);
+	}
 }
