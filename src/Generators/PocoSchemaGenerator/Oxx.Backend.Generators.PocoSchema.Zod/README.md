@@ -157,10 +157,13 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
     * Example: `class MyClass<T> { public T MyProperty { get; set; } }`
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
     * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
-* The schema generator doesn't support the Array type.
-  * Example: `class MyClass { public string[] MyStrings { get; set; } }` 
+* The schema generator doesn't support the Array ( [] ) syntax.
+  * Example: `class MyClass { public string[] MyProperty { get; set; } }`
+  * This is because the schema generator doesn't know the type of the array, so it can't generate a schema for it.
   * This is because the [] syntax is very unusual. It's not a generic, but at the same time it has a backing type.
   * I imagine it would be relatively easy to support this, but how often do you really use this syntax?
+  * This can be worked around by using any other collection type, like `List<T>`, `IList<T>`, `IEnumerable<T>`, etc.
+    * Example: `class MyClass { public List<string> MyProperty { get; set; } }`
 
 I'm sure there are tons of other issues, but these are the ones I'm aware of.
 
