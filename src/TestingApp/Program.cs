@@ -1,6 +1,5 @@
 ﻿using AnotherProject;
 using AnotherProject.Seremonibasen.Models;
-using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events.Models;
 using Oxx.Backend.Generators.PocoSchema.Zod;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;

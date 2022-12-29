@@ -1,6 +1,7 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
@@ -108,4 +109,21 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 			IBuiltInAtomicZodSchema => schema.SchemaBaseName,
 			_                       => string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName),
 		};
+
+	public IPartialZodSchema CreateArraySchema(SchemaMemberInfo schemaMemberInfo)
+	{
+		var elementType = schemaMemberInfo.MemberType.GetElementType()!;
+		var elementSchema = CreatedSchemasDictionary.GetSchemaForType(elementType);
+		if (elementSchema is null)
+		{
+			throw new InvalidOperationException($"Could not find schema for array element type {elementType.Name}.");
+		}
+		
+		var arraySchemaType = typeof(ArrayBuiltInAtomicZodSchema<>).MakeGenericType(elementSchema.GetType());
+		var arraySchema = (IGenericZodSchema)Activator.CreateInstance(arraySchemaType)!;
+
+		arraySchema.Configuration = this;
+		arraySchema.MemberInfo = schemaMemberInfo;
+		return arraySchema;
+	}
 }

@@ -44,7 +44,13 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 	private ZodSchemaConfiguration? _configuration;
 	private SchemaMemberInfo? _memberInfo;
 
-	private ContextualType ListElement => MemberInfo.MemberType.GetGenericArguments().Single().ToContextualType();
+
+	private ContextualType ListElement => MemberInfo.MemberType switch
+	{
+		// Edge case for Arrays using the funky [] syntax
+		{ IsArray: true } arrayType => arrayType.ToContextualType().ElementType!,
+		{ } enumerableType          => enumerableType.GetGenericArguments().Single().ToContextualType(),
+	};
 
 	private IPartialZodSchema UnderlyingSchema => Configuration.CreatedSchemasDictionary.GetSchemaForType(ListElement)
 											   ?? throw new InvalidOperationException($"Could not find schema for type {ListElement}");

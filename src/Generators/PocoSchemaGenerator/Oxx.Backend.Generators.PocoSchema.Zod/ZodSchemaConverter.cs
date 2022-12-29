@@ -173,6 +173,12 @@ public class ZodSchemaConverter : ISchemaConverter
 					return true;
 				}
 
+				// Edge case for Arrays using the funky [] syntax
+				if (propertyType.IsArray)
+				{
+					return true;
+				}
+
 				// If the propertyType is generic, we need to get the generic type definition
 				if (propertyType.IsGenericType)
 				{
@@ -191,6 +197,13 @@ public class ZodSchemaConverter : ISchemaConverter
 				if (partialZodSchema is not null)
 				{
 					return KeyValuePair.Create(x, partialZodSchema);
+				}
+
+				// Edge case for Arrays using the funky [] syntax
+				if (propertyType.IsArray)
+				{
+					var arraySchema = _configuration.CreateArraySchema(x);
+					return KeyValuePair.Create(x, arraySchema);
 				}
 
 				// If the propertyType is generic, we need to get the generic type definition
