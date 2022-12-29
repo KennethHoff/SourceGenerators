@@ -1,4 +1,4 @@
-namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Models.File;
 
 public readonly record struct FileContent(string Value)
 {

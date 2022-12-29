@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Oxx.Backend.Generators.PocoSchema.Core.Models;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Type;
 
-public sealed class TypeTypeDictionary : Dictionary<Type, Type>
+public sealed class TypeTypeDictionary : Dictionary<System.Type, System.Type>
 {
-	public Type GetRelatedType(Type type)
+	public System.Type GetRelatedType(System.Type type)
 	{
 		if (TryGetValue(type, out var relatedType))
 		{
@@ -24,7 +24,7 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 		throw new InvalidOperationException($"Type {type} is not registered in the dictionary.");
 	}
 
-	public bool HasRelatedType(Type type)
+	public bool HasRelatedType(System.Type type)
 		=> type switch
 		{
 			_ when ContainsKey(type)         => true,
@@ -33,14 +33,14 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 			_                                => false,
 		};
 
-	private bool HasRelatedBaseType(Type type)
+	private bool HasRelatedBaseType(System.Type type)
 		=> TryGetRelatedBaseType(type, out _);
 
-	private bool HasRelatedInterface(Type type)
+	private bool HasRelatedInterface(System.Type type)
 		=> TryGetRelatedInterface(type, out _);
 
 
-	private bool TryGetRelatedBaseType(Type type, [NotNullWhen(true)] out Type? relatedType)
+	private bool TryGetRelatedBaseType(System.Type type, [NotNullWhen(true)] out System.Type? relatedType)
 	{
 		var baseType = type.BaseType;
 		if (baseType == null)
@@ -58,7 +58,7 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 		return hasRelatedBaseType;
 	}
 
-	private bool TryGetRelatedInterface(Type type, [NotNullWhen(true)] out Type? relatedType)
+	private bool TryGetRelatedInterface(System.Type type, [NotNullWhen(true)] out System.Type? relatedType)
 	{
 		var interfaces = type.GetInterfaces();
 

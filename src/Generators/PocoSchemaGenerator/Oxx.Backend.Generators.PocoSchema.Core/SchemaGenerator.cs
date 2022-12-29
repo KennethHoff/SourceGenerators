@@ -3,8 +3,9 @@ using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Poco.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Schema.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
@@ -14,7 +15,6 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 {
 	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
 	private readonly ISchemaConverter _schemaConverter;
-	private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
 	{
@@ -25,8 +25,8 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 	public async Task CreateFilesAsync()
 	{
 		EnsureDirectoryExists();
-		var pocoObjects = GetPocoObjects();
-		var contents = _schemaConverter.GenerateFileContent(pocoObjects).ToList();
+		var pocoStructures = GetPocoStructures();
+		var contents = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
 
 		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
 
@@ -39,9 +39,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			{
 				var filePath = Path.Combine(_configuration.OutputDirectory, fileInformation.Name + _configuration.FileExtension);
 
-				await _semaphoreSlim.WaitAsync();
 				await File.WriteAllTextAsync(filePath, fileInformation.Content);
-				_semaphoreSlim.Release();
 			}
 
 			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
@@ -63,23 +61,58 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		Directory.CreateDirectory(_configuration.OutputDirectory);
 	}
 
-	private IEnumerable<PocoObject> GetPocoObjects()
+	private IReadOnlyCollection<IPocoStructure> GetPocoStructures()
 	{
-		var types = new List<Type>();
+		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
 		foreach (var assembly in _configuration.Assemblies)
 		{
-			types.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<PocoObjectAttribute>() is not null).ToList());
+			foreach (var type in assembly.GetTypes())
+			{
+				var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
+				if (schemaTypeAttribute is null)
+				{
+					continue;
+				}
+
+				if (!types.ContainsKey(schemaTypeAttribute))
+				{
+					types.Add(schemaTypeAttribute, new List<Type>());
+				}
+
+				types[schemaTypeAttribute].Add(type);
+			}
 		}
 
-		return types.Select(t =>
-		{
-			var relevantProperties = GetRelevantProperties(t);
-			return new PocoObject(t, relevantProperties);
-		});
+		var objects = types.FirstOrDefault(x => x.Key is SchemaObjectAttribute)
+			.Value
+			.Select(t =>
+			{
+				var relevantProperties = GetRelevantProperties(t);
+				return new PocoObject(t, relevantProperties);
+			})
+			.Cast<IPocoStructure>()
+			.ToArray();
+
+		var enums = types.FirstOrDefault(x => x.Key is SchemaEnumAttribute)
+			.Value
+			.Select(t =>
+			{
+				var enumType = t.GetCustomAttribute<SchemaEnumAttribute>()?.EnumType;
+				if (enumType is null)
+				{
+					throw new InvalidOperationException($"Enum type is not defined for {t.Name}");
+				}
+
+				return new PocoEnum(enumType);
+			})
+			.Cast<IPocoStructure>()
+			.ToArray();
+
+		return objects.Concat(enums).ToArray();
 	}
 
 	private static Func<PropertyInfo, bool> DoesNotHaveIgnoreAttribute()
-		=> pi => pi.GetCustomAttribute<PocoPropertyIgnoreAttribute>() is null;
+		=> pi => pi.GetCustomAttribute<SchemaPropertyIgnoreAttribute>() is null;
 
 	private static IEnumerable<PropertyInfo> GetRelevantProperties(Type type)
 		=> type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)

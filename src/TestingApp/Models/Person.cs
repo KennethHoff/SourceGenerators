@@ -4,24 +4,25 @@ using TestingApp.SchemaTypes;
 
 namespace TestingApp.Models;
 
-[PocoObject]
+[SchemaObject]
 internal readonly record struct Role(string Name);
 
-[PocoObject]
+[SchemaObject]
 internal sealed class User
 {
 	public required Name Name { get; init; }
 	public required string Email { get; init; }
 	public required string Password { get; init; }
-	
+	public required Gender Gender { get; init; }
+
 	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
 }
 
-[PocoObject]
+[SchemaObject]
 internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
 
 
-[PocoObject]
+[SchemaObject]
 internal abstract class Person
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
@@ -102,7 +103,7 @@ internal abstract class Person
 	// - not an instance property (static)
 	// - has [PocoPropertyIgnore] attribute
 
-	[PocoPropertyIgnore]
+	[SchemaPropertyIgnore]
 	public string Ignored { get; init; } = string.Empty;
 	
 	public static string PublicStatic { get; set; } = string.Empty;
@@ -131,7 +132,7 @@ internal abstract class Person
 	
 }
 
-[PocoObject]
+[SchemaObject]
 public interface IPersonAge
 {
 	ClampedNumber Age { get; init; }
@@ -159,6 +160,7 @@ public readonly record struct CeremonyId(Guid Id)
 		=> Id.ToString();
 }
 
+[SchemaEnum<Gender>]
 public enum Gender
 {
 	Male,

@@ -1,4 +1,4 @@
-using Oxx.Backend.Generators.PocoSchema.Core.Models;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.File;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
