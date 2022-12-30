@@ -6,9 +6,9 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
-public abstract class
-	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : ISchemaConfigurationBuilder<TSchemaType, TConfigurationType,
-		TSchemaEventConfiguration>
+public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : 
+	ISchemaConfigurationBuilder<SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration>, 
+		TSchemaType, TConfigurationType, TSchemaEventConfiguration>
 	where TSchemaType : class, ISchema
 	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
@@ -19,18 +19,15 @@ public abstract class
 	protected string OutputDirectory = string.Empty;
 
 	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
-
 	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 	protected abstract TConfigurationType Configuration { get; }
-
 	protected FileDeletionMode FileDeletionMode { get; set; }
 	protected abstract string FileExtension { get; set; }
+	protected abstract string FileExtensionInfix { get; set; }
 	protected abstract string FileNameFormat { get; set; }
 	protected abstract string SchemaEnumNamingFormat { get; set; }
-
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
-	protected abstract string FileExtensionInfix { get; set; }
 
 	#region Interface implementations
 
@@ -83,6 +80,13 @@ public abstract class
 		return this;
 	}
 
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string format)
+	{
+		SchemaEnumNamingFormat = EnsureValidFormat(format);
+		;
+		return this;
+	}
+
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaNamingFormat(string format)
 	{
 		SchemaNamingFormat = EnsureValidFormat(format);
@@ -101,6 +105,7 @@ public abstract class
 		{
 			throw new InvalidOperationException($"Assembly {typeof(T).Assembly.FullName} is already added");
 		}
+
 		Assemblies.Add(typeof(T).Assembly);
 		return this;
 	}
@@ -112,12 +117,6 @@ public abstract class
 	}
 
 	#endregion
-
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string format)
-	{
-		SchemaEnumNamingFormat = EnsureValidFormat(format); ;
-		return this;
-	}
 
 	protected void ApplyAtomicSchemas(Action action)
 	{
@@ -193,7 +192,7 @@ public abstract class
 		{
 			exceptions.Add(new ArgumentException("The format must not contain any other placeholders than {0}"));
 		}
-		
+
 		if (exceptions.Any())
 		{
 			throw new AggregateException(exceptions);
