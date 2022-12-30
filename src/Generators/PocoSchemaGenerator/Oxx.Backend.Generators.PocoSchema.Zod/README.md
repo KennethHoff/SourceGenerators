@@ -41,9 +41,11 @@ The following options are available:
 
 * `SetRootDirectory(string path)` - Sets the root directory for the schema files. This is required.
 
-* `DeleteExistingFiles(bool)` - Deletes all existing files in the root directory before generating new ones.
-    * Default: `false`
-    * Note: This will first check if all the files follow the naming convention of the generator. If they don't, the generator will immediately exit.
+* `OverrideFileDeletionMode(FileDeletionMode)` - Sets the file deletion mode.
+    * Default: `FileDeletionMode.OverwriteExisting`
+    * `FileDeletionMode.OverwriteExisting` - Overwrites existing files.
+    * `FileDeletionMode.All` - Deletes all files in the root directory. Will immediately quit if any of the files contained within does not match the schema.
+    * `FileDeletionMode.ForcedAll` - Deletes all files in the root directory. Will not check if the files match the schema.
 
 * `OverrideSchemaNamingFormat(string)` - Overrides the naming format for the schemas.
     * Default: `{0}Schema` where `{0}` is the name of the class.
@@ -71,7 +73,7 @@ The following options are available:
     * This is useful in the following scenarios:
         * You want to apply a schema to a type you don't own
         * It is not possible to add the `[SchemaObject]` attribute to the type
-        * You want to apply the schema to a type that is not a class or struct
+        * You want to apply the schema to a structure that is not officially supported by the generator (class, struct, interface, Enum)
         * You want to apply a different schema to a type than the default one
         * You want to apply a different schema to nullable and non-nullable types
             * Example: `ApplyAtomicSchema<int?, MyNullableIntSchema>()` will apply the schema `MyNullableIntSchema` to the type `int?`, but keeps the default
