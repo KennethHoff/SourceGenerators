@@ -17,7 +17,7 @@ public interface ISchemaConfiguration
 {
 	IEnumerable<Assembly> Assemblies { get; }
 	FileDeletionMode FileDeletionMode { get; }
-	string OutputDirectory { get; }
+	DirectoryInfo OutputDirectory { get; }
 	string SchemaFileNameFormat { get; }
 	string SchemaNamingFormat { get; }
 	string SchemaTypeNamingFormat { get; }

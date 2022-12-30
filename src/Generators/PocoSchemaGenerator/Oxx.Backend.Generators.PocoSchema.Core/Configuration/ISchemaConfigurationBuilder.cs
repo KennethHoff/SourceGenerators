@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
@@ -22,5 +23,7 @@ public interface ISchemaConfigurationBuilder<out TSelf, in TSchemaType, out TCon
 	TSelf OverrideSchemaTypeNamingFormat(string format);
 	TSelf OverrideSchemaEnumNamingFormat(string format);
 	TSelf ResolveTypesFromAssemblyContaining<TType>();
-	TSelf SetRootDirectory(string rootDirectory);
+
+	/// <param name="rootDirectory">Either absolute path, or a path relative to the file where this method is called.</param>
+	TSelf SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "");
 }
