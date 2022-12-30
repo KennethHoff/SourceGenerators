@@ -30,7 +30,7 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
 		var pocoStructures = _pocoStructureExtractor.GetAll();
-		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
+		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToArray();
 		
 		await _fileCreator.CreateFilesAsync(fileInformations);
 
@@ -50,7 +50,7 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
 		var pocoStructures = _pocoStructureExtractor.Get(pocoTypes, includeDependencies);
-		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
+		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToArray();
 
 		await _fileCreator.CreateFilesAsync(fileInformations);
 

@@ -48,9 +48,9 @@ internal static class TestingAppSchemaGenerationConfiguration
 
 		var informationsWithInvalidMembers = informations
 			.Where(x => x.InvalidMembers.Any())
-			.ToList();
+			.ToArray();
 
-		switch (informationsWithInvalidMembers.Count)
+		switch (informationsWithInvalidMembers.Length)
 		{
 			case 0:
 				PrintAllSchemasResolved();
@@ -65,7 +65,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 
 		void PrintTotal()
 		{
-			var invalidTypesAmount = informationsWithInvalidMembers.Count;
+			var invalidTypesAmount = informationsWithInvalidMembers.Length;
 			ColoredConsole.Write(informations.Count, ConsoleColor.Cyan);
 			Console.Write(" type-schemas were resolved, of which ");
 			ColoredConsole.Write(informations.Count - invalidTypesAmount, ConsoleColor.Green);
