@@ -23,22 +23,17 @@ public class MolecularZodSchema : IMolecularZodSchema
 	{
 		get
 		{
-			
+
 			var standardImports = SchemaDictionary
 				.Select(x => x.Value)
 				.Where(x => x is not IBuiltInAtomicZodSchema)
-				.Select(SchemaConfiguration.CreateStandardImport)
-				.ToArray();
+				.Select(SchemaConfiguration.CreateStandardImport);
 
-			var additionalImportZodSchemata = SchemaDictionary
+			var additionalImports = SchemaDictionary
 				.Select(x => x.Value)
 				.Where(x => x is not IMolecularZodSchema)
 				.OfType<IAdditionalImportZodSchema>()
-				.ToArray();
-
-			var additionalImports = additionalImportZodSchemata
-				.SelectMany(x => x.AdditionalImports)
-				.ToArray();
+				.SelectMany(x => x.AdditionalImports);
 
 			var distinct = standardImports.Concat(additionalImports)
 				.Distinct()
