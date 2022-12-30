@@ -15,7 +15,7 @@ public interface ISchemaGenerator
 	/// <param name="includeDependencies"> If true, all dependencies of the given type will be included in the schema file </param>
 	Task GenerateAsync(Type pocoType, bool includeDependencies = true);
 
-	/// <summary> Generates a schema file for the given type </summary> 
+	/// <summary> Generates schema files for the given types </summary> 
 	/// <param name="pocoTypes"> The types to generate a schema file for </param>
 	/// <param name="includeDependencies"> If true, all dependencies of the given types will be included in the schema file </param>
 	Task GenerateAsync(IEnumerable<Type> pocoTypes, bool includeDependencies = true);

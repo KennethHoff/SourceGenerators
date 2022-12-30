@@ -39,7 +39,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 
 		ISchemaGenerator generator = new ZodSchemaGenerator(configuration);
 		// await generator.GenerateAllAsync();
-		await generator.GenerateAsync<MoleculeTest>();
+		await generator.GenerateAsync<BigBoiTest>();
 	}
 
 	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)

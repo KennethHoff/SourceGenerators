@@ -50,6 +50,16 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		{
 			return;
 		}
+
+		// if is generic, check if all generic arguments are supported
+		if (type.IsGenericType)
+		{
+			var genericArguments = type.GetGenericArguments();
+			foreach (var genericArgument in genericArguments)
+			{
+				CheckSupport(genericArgument, includeDependencies, supported, unsupported);
+			}
+		}
 		
 		var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
 		if (schemaTypeAttribute is null)
