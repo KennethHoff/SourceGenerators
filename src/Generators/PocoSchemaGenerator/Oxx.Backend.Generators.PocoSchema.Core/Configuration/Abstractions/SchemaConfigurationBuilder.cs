@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -7,9 +8,8 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
-public abstract class SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> : 
-	ISchemaConfigurationBuilder<SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents>, 
-		TSchema, TSchemaConfiguration, TSchemaEvents>
+public abstract class SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> 
+	: ISchemaConfigurationBuilder<SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents>, TSchema, TSchemaConfiguration, TSchemaEvents>
 	where TSchema : class, ISchema
 	where TSchemaConfiguration : ISchemaConfiguration<TSchemaEvents>
 	where TSchemaEvents : ISchemaEvents, new()
@@ -19,7 +19,7 @@ public abstract class SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, 
 	protected TSchemaEvents? EventConfiguration;
 	protected DirectoryInfo OutputDirectory = null!;
 
-	protected List<Assembly> Assemblies { get; } = new List<Assembly>();
+	protected ICollection<Assembly> Assemblies { get; } = new List<Assembly>();
 	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 	protected abstract TSchemaConfiguration Configuration { get; }
 	protected FileDeletionMode FileDeletionMode { get; set; }
