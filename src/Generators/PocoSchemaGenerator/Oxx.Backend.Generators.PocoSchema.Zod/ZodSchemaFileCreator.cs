@@ -17,18 +17,14 @@ internal sealed class ZodSchemaFileCreator : ISchemaFileCreator
 		_configuration = configuration;
 	}
 
-	public Task CreateFilesAsync(IEnumerable<FileInformation> fileInformations)
-		=> GenerateFilesAsync(fileInformations.ToArray());
-	
-	private async Task GenerateFilesAsync(IReadOnlyCollection<FileInformation> fileInformations)
+	public async Task CreateFilesAsync(IEnumerable<FileInformation> fileInformations)
 	{
 		EnsureDirectoryExists();
-		
-		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(fileInformations));
+		var readOnlyCollection = fileInformations.ToArray();
 
-		await Task.WhenAll(fileInformations.Select(CreateFileAsync));
-
-		_configuration.Events.FilesCreated?.Invoke(this, new FilesCreatedEventArgs(fileInformations));
+		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(readOnlyCollection));
+		await Task.WhenAll(readOnlyCollection.Select(CreateFileAsync));
+		_configuration.Events.FilesCreated?.Invoke(this, new FilesCreatedEventArgs(readOnlyCollection));
 	}
 
 	public async Task CreateFileAsync(FileInformation fileInformation)
