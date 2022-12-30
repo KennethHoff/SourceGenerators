@@ -263,7 +263,6 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       ```
   * Note: TypeScript will complain about this, but the schema will still be valid.
 
-
 * The schema generator doesn't support generic types.
     * Example:
     * ```csharp
@@ -286,10 +285,11 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
     * Add more ways to customize the schemas
         * Currently there's no way to only apply a schema to the non-nullable type without doing the "Apply all, override nullable" workaround.
         * Currently there's no way to apply a schema to a specific property without creating a new schema for the type.
-        *
+
     * Add more ways to customize the schema generator
         * for example, add a way to specify "only generate elements with this accessibility" - public, internal, etc.
             * This would then be added to the Attribute itself, so you could do `[SchemaGenerator(BindingFlags = BindingFlags.Public | BindingFlags.Internal)]`
+
     * Add more ways to customize the types
     * Add more ways to customize the output
         * Everything currently gets its own file, but it would be nice to be able to customize this.
