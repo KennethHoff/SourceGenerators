@@ -13,7 +13,7 @@ public interface ISchemaConfiguration<out TSchemaEvents> : ISchemaConfiguration
 
 public interface ISchemaConfiguration
 {
-	List<Assembly> Assemblies { get; }
+	IEnumerable<Assembly> Assemblies { get; }
 	FileDeletionMode FileDeletionMode { get; }
 	DirectoryInfo OutputDirectory { get; }
 	string SchemaFileNameFormat { get; }
