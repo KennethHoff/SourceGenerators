@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
@@ -16,7 +17,7 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	protected readonly TypeSchemaDictionary<TSchemaType> AtomicSchemasToCreateDictionary = new();
 	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
 	protected TSchemaEventConfiguration? EventConfiguration;
-	protected string OutputDirectory = string.Empty;
+	protected DirectoryInfo OutputDirectory = null!;
 
 	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
 	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
@@ -51,6 +52,10 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 
 	public TConfigurationType Build()
 	{
+		if (OutputDirectory is null)
+		{
+			throw new InvalidOperationException("Output directory is not set.");
+		}
 		AtomicSchemaApplicationAction();
 		return Configuration;
 	}
@@ -110,9 +115,15 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> SetRootDirectory(string rootDirectory)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "")
 	{
-		OutputDirectory = rootDirectory;
+		var callerDirectory = Path.GetDirectoryName(callerFilePath);
+		OutputDirectory = new DirectoryInfo(Path.Combine(callerDirectory!, rootDirectory));
+
+		if (OutputDirectory.Parent?.Exists is not true)
+		{
+			throw new InvalidOperationException($"Directory {OutputDirectory.Parent?.FullName} does not exist");
+		}
 		return this;
 	}
 
