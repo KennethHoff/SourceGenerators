@@ -84,7 +84,7 @@ void PrintTotalInvalidProperties(IReadOnlyCollection<CreatedSchemaInformation> i
 
 	var typesWithoutSchemas = informations
 		.SelectMany(information => information.InvalidMembers)
-		.Select(memberInfo => memberInfo.MemberType)
+		.Select(memberInfo => memberInfo.Type)
 		.Distinct()
 		.ToArray();
 

@@ -12,7 +12,6 @@ public class School
 	public required Guid CountyId { get; set; }
 	public required bool Approved { get; set; }
 
-
 	[ForeignKey("CountyId")]
 	public virtual required County County { get; set; }
 }

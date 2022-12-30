@@ -166,7 +166,7 @@ public class ZodSchemaConverter : ISchemaConverter
 		var validSchemas = pocoObject.SchemaMembers
 			.Where(x =>
 			{
-				var propertyType = x.MemberType;
+				var propertyType = x.Type;
 
 				if (_generatedSchemas.HasSchemaForType(propertyType))
 				{
@@ -191,7 +191,7 @@ public class ZodSchemaConverter : ISchemaConverter
 			})
 			.Select(x =>
 			{
-				var propertyType = x.MemberType;
+				var propertyType = x.Type;
 
 				var partialZodSchema = _generatedSchemas.GetSchemaForType(propertyType);
 				if (partialZodSchema is not null)

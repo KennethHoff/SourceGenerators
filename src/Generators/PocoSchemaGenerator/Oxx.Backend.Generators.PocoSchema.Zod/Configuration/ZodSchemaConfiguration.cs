@@ -39,8 +39,8 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 	public IPartialZodSchema CreateGenericSchema(SchemaMemberInfo memberInfo)
 	{
-		var genericTypeDefinition = memberInfo.MemberType.GetGenericTypeDefinition();
-		var genericArguments = memberInfo.MemberType.GetGenericArguments();
+		var genericTypeDefinition = memberInfo.Type.GetGenericTypeDefinition();
+		var genericArguments = memberInfo.Type.GetGenericArguments();
 		var genericSchema = GenericSchemasDictionary.GetRelatedType(genericTypeDefinition);
 
 		var argumentSchemas = genericArguments
@@ -112,7 +112,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 	public IPartialZodSchema CreateArraySchema(SchemaMemberInfo schemaMemberInfo)
 	{
-		var elementType = schemaMemberInfo.MemberType.GetElementType()!;
+		var elementType = schemaMemberInfo.Type.GetElementType()!;
 		var elementSchema = CreatedSchemasDictionary.GetSchemaForType(elementType);
 		if (elementSchema is null)
 		{

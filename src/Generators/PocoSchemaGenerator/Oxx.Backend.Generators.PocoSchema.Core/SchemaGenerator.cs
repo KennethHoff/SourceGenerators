@@ -4,6 +4,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
@@ -81,8 +82,8 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var objects = objectTypes
 			.Select(t =>
 			{
-				var propertiesAndFields = GetRelevantPropertiesAndFields(t);
-				return new PocoObject(t, propertiesAndFields);
+				var validSchemaMembers = t.GetValidSchemaMembers();
+				return new PocoObject(t, validSchemaMembers);
 			})
 			.Cast<IPocoStructure>()
 			.ToArray();
@@ -108,10 +109,9 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 					continue;
 				}
 
-				// Throw exception if Type is Generic
-				if (type.IsGenericType)
+				if (!IsSupported(type))
 				{
-					throw new InvalidOperationException($"Type {type.FullName} is generic and cannot be used as a schema type.");
+					continue;
 				}
 
 				if (!types.ContainsKey(schemaTypeAttribute))
@@ -122,19 +122,23 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 				types[schemaTypeAttribute].Add(type);
 			}
 		}
-
+		
 		return types;
 	}
 
-	private static IEnumerable<SchemaMemberInfo> GetRelevantPropertiesAndFields(Type type)
+	private static bool IsSupported(Type type)
 	{
-		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-		IEnumerable<MemberInfo> properties = type.GetProperties(bindingFlags);
-		IEnumerable<MemberInfo> fields = type.GetFields(bindingFlags);
+		if (type.IsGenericType)
+		{
+			return false;
+		}
 
-		return properties.Concat(fields)
-			.Where(x => x.GetCustomAttribute<CompilerGeneratedAttribute>() is null)
-			.Select(x => new SchemaMemberInfo(x))
-			.Where(x => x.IsIgnored is false);
+		var validMemberInfos = type.GetValidSchemaMembers().ToArray();
+		if (!validMemberInfos.Any())
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

@@ -45,7 +45,7 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 	private SchemaMemberInfo? _memberInfo;
 
 
-	private ContextualType ListElement => MemberInfo.MemberType switch
+	private ContextualType ListElement => MemberInfo.Type switch
 	{
 		// Edge case for Arrays using the funky [] syntax
 		{ IsArray: true } arrayType => arrayType.ToContextualType().ElementType!,

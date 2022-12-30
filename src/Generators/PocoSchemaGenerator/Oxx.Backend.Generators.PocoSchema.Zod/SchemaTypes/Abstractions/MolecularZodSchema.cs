@@ -19,15 +19,33 @@ public class PartialMolecularZodSchema : IPartialZodSchema
 
 public class MolecularZodSchema : IMolecularZodSchema
 {
-	public IEnumerable<ZodImport> AdditionalImports => SchemaDictionary
-		.Select(x => x.Value)
-		.OfType<IAdditionalImportZodSchema>()
-		.SelectMany(x => x.AdditionalImports.Where(import => import != ZodImport.None))
-		.Concat(SchemaDictionary
-			.Select(x => x.Value)
-			.Where(x => x is not IBuiltInAtomicZodSchema and not IAdditionalImportZodSchema)
-			.Select(SchemaConfiguration.CreateStandardImport))
-		.Distinct();
+	public IEnumerable<ZodImport> AdditionalImports
+	{
+		get
+		{
+			
+			var standardImports = SchemaDictionary
+				.Select(x => x.Value)
+				.Where(x => x is not IBuiltInAtomicZodSchema)
+				.Select(SchemaConfiguration.CreateStandardImport)
+				.ToArray();
+
+			var additionalImportZodSchemata = SchemaDictionary
+				.Select(x => x.Value)
+				.Where(x => x is not IMolecularZodSchema)
+				.OfType<IAdditionalImportZodSchema>()
+				.ToArray();
+
+			var additionalImports = additionalImportZodSchemata
+				.SelectMany(x => x.AdditionalImports)
+				.ToArray();
+
+			var distinct = standardImports.Concat(additionalImports)
+				.Distinct()
+				.ToArray();
+			return distinct;
+		}
+	}
 
 	public SchemaBaseName SchemaBaseName { get; private init; }
 
@@ -44,7 +62,7 @@ public class MolecularZodSchema : IMolecularZodSchema
 		.Aggregate(string.Empty, (a, b)
 			=>
 		{
-			var propertyName = b.Key.MemberName.ToCamelCaseInvariant();
+			var propertyName = b.Key.Name.ToCamelCaseInvariant();
 			var propertySchema = SchemaConfiguration.FormatSchemaName(b.Value);
 
 			if (b.Key.ContextualType.Nullability is Nullability.Nullable)
