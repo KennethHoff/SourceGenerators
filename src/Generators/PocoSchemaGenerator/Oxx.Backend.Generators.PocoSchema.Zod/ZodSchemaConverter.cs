@@ -42,12 +42,12 @@ public class ZodSchemaConverter : ISchemaConverter
 	{
 		var atoms = GenerateAtoms(_configuration.AtomicSchemasToCreateDictionary);
 		var enums = GenerateEnums(pocoStructures.OfType<PocoEnum>());
-		var objects = GenerateObjects(pocoStructures.OfType<PocoObject>());
+		var molecules = GenerateMolecules(pocoStructures.OfType<PocoObject>());
 
 		_configuration.CreatedSchemasDictionary = _generatedSchemas;
 		return atoms
 			.Concat(enums)
-			.Concat(objects)
+			.Concat(molecules)
 			.Where(x => x != FileInformation.None);
 	}
 
@@ -221,28 +221,23 @@ public class ZodSchemaConverter : ISchemaConverter
 	/// <summary>
 	///     In order to prevent circular dependencies, we need to generate the molecule definitions first.
 	/// </summary>
-	private PocoObject GenerateMoleculeDefinition(PocoObject pocoObject)
-	{
-		if (!_generatedSchemas.ContainsKey(pocoObject.ObjectType))
+	private void GenerateMoleculeDefinition(PocoObject pocoObject)
+		=> _generatedSchemas.Add(pocoObject.ObjectType, new PartialMolecularZodSchema
 		{
-			_generatedSchemas.Add(pocoObject.ObjectType, new PartialMolecularZodSchema
-			{
-				SchemaBaseName = new SchemaBaseName(pocoObject.TypeName),
-			});
-		}
+			SchemaBaseName = new SchemaBaseName(pocoObject.TypeName),
+		});
 
-		return pocoObject;
-	}
-
-	private IEnumerable<FileInformation> GenerateObjects(IEnumerable<PocoObject> pocoObjects)
+	private IEnumerable<FileInformation> GenerateMolecules(IEnumerable<PocoObject> pocoObjects)
 	{
-		var definitions = pocoObjects
-			.Select(GenerateMoleculeDefinition)
-			.ToArray();
+		var enumerated = pocoObjects as IReadOnlyCollection<PocoObject> ?? pocoObjects.ToArray();
+		foreach (var pocoObject in enumerated)
+		{
+			GenerateMoleculeDefinition(pocoObject);
+		}
 
 		_configuration.CreatedSchemasDictionary = _generatedSchemas;
 
-		var schemas = definitions
+		var schemas = enumerated
 			.Select(GenerateMolecule)
 			.ToArray();
 
