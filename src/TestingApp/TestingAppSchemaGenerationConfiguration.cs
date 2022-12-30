@@ -65,9 +65,9 @@ internal static class TestingAppSchemaGenerationConfiguration
 		void PrintTotal()
 		{
 			var invalidTypesAmount = informationsWithInvalidMembers.Count;
-			ColoredConsole.WriteLine(informations.Count, ConsoleColor.Cyan);
+			ColoredConsole.Write(informations.Count, ConsoleColor.Cyan);
 			Console.Write(" type-schemas were resolved, of which ");
-			ColoredConsole.WriteLine(informations.Count - invalidTypesAmount, ConsoleColor.Green);
+			ColoredConsole.Write(informations.Count - invalidTypesAmount, ConsoleColor.Green);
 			Console.WriteLine(" were resolved fully.");
 		}
 
@@ -81,9 +81,9 @@ internal static class TestingAppSchemaGenerationConfiguration
 
 			var invalidSchemasAmount = typesWithoutSchemas.Length;
 			Console.Write("The following ");
-			ColoredConsole.WriteLine(invalidSchemasAmount, ConsoleColor.Red);
+			ColoredConsole.Write(invalidSchemasAmount, ConsoleColor.Red);
 			Console.Write(" schemas could not be resolved in ");
-			ColoredConsole.WriteLine(typesWithoutSchemas.Length, ConsoleColor.Cyan);
+			ColoredConsole.Write(typesWithoutSchemas.Length, ConsoleColor.Cyan);
 			Console.WriteLine(" type-schemas:");
 			foreach (var type in typesWithoutSchemas)
 			{
@@ -104,7 +104,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		void PrintAllSchemasResolved()
 		{
 			Console.Write("All ");
-			ColoredConsole.WriteLine(informations.Count, ConsoleColor.Green);
+			ColoredConsole.Write(informations.Count, ConsoleColor.Green);
 			Console.WriteLine(" type-schemas were created successfully.");
 		}
 	}
@@ -130,7 +130,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		void PrintUnsupportedTypes()
 		{
 			Console.Write("The following ");
-			ColoredConsole.WriteLine(unsupportedTypes.Count, ConsoleColor.Red);
+			ColoredConsole.Write(unsupportedTypes.Count, ConsoleColor.Red);
 			Console.WriteLine(" types could not be resolved:");
 			foreach (var (type, exception) in unsupportedTypes)
 			{
