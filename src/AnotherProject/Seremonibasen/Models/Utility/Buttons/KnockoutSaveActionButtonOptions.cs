@@ -15,11 +15,3 @@ public class KnockoutSaveActionButtonOptions
         OptionValue = optionValue;
     }
 }
-
-[SchemaEnum]
-public enum SaveButtonType
-{
-    Dark,
-    Text,
-    Light,
-}

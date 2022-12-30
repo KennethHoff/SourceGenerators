@@ -14,11 +14,3 @@ public class ListData<TListData> : BasePocoObject, ISearchStats
 
     #endregion
 }
-
-[SchemaObject]
-public interface ISearchStats
-{
-    int PageIndex { get; set; }
-    int PageSize { get; set; }
-    int TotalResult { get; set; }
-}

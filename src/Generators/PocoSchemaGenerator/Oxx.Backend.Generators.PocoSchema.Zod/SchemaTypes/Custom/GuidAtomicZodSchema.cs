@@ -9,8 +9,3 @@ public class GuidAtomicZodSchema : IAtomicZodSchema
 	public SchemaDefinition SchemaDefinition => new($"""z.string().uuid().brand<"{Brand}">()""");
 	public virtual string Brand => "guid";
 }
-
-public class TypedIdAtomicZodSchema<TTypedId> : GuidAtomicZodSchema
-{
-	public override string Brand => typeof(TTypedId).Name;
-}

@@ -7,7 +7,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 
 public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema, IAdditionalImportZodSchema, IBuiltInAtomicZodSchema
-	where TUnderlyingSchema : IPartialZodSchema, new()
+	where TUnderlyingSchema : IPartialZodSchema
 {
 	public IEnumerable<ZodImport> AdditionalImports => new[]
 	{
@@ -45,7 +45,7 @@ public class ArrayBuiltInAtomicZodSchema<TUnderlyingSchema> : IGenericZodSchema,
 	private SchemaMemberInfo? _memberInfo;
 
 
-	private ContextualType ListElement => MemberInfo.MemberType switch
+	private ContextualType ListElement => MemberInfo.Type switch
 	{
 		// Edge case for Arrays using the funky [] syntax
 		{ IsArray: true } arrayType => arrayType.ToContextualType().ElementType!,

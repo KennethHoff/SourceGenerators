@@ -5,51 +5,7 @@ using TestingApp.SchemaTypes;
 namespace TestingApp.Models;
 
 [SchemaObject]
-internal readonly record struct Role(Name Name);
-
-[SchemaObject]
-internal sealed class User
-{
-	public required Name Name { get; init; }
-	public required string Email { get; init; }
-	public required string Password { get; init; }
-	public required Gender Gender { get; init; }
-
-	public IEnumerable<Role> Roles { get; init; } = Enumerable.Empty<Role>();
-}
-
-[SchemaObject]
-internal readonly record struct Name(string Firstname, string? MiddleName, string Lastname);
-
-[SchemaObject]
-internal abstract class FieldyBoi
-{
-	public static string PublicStatic { get; set; } = string.Empty;
-	private static string PrivateStatic { get; set; } = string.Empty;
-	internal static string InternalStatic { get; set; } = string.Empty;
-	protected static string ProtectedStatic { get; set; } = string.Empty;
-
-	private readonly string PrivateReadonlyField = string.Empty;
-	internal readonly string InternalReadonlyField = string.Empty;
-	public readonly string PublicReadonlyField = string.Empty;
-	protected readonly string ProtectedReadonlyField = string.Empty;
-	private string PrivateField = string.Empty;
-	internal string InternalField = string.Empty;
-	public string PublicField = string.Empty;
-	protected string ProtectedField = string.Empty;
-
-	private static readonly string PrivateStaticReadonlyField = string.Empty;
-	internal static readonly string InternalStaticReadonlyField = string.Empty;
-	public static readonly string PublicStaticReadonlyField = string.Empty;
-	protected static readonly string ProtectedStaticReadonlyField = string.Empty;
-	private static string PrivateStaticField = string.Empty;
-	internal static string InternalStaticField = string.Empty;
-	public static string PublicStaticField = string.Empty;
-	protected static string ProtectedStaticField = string.Empty;
-}
-
-[SchemaObject]
-internal abstract class Person
+internal abstract class Personerino
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
 	public IEnumerable<string?> NamesNullableUnderlying { get; init; } = Enumerable.Empty<string?>();
@@ -82,12 +38,13 @@ internal abstract class Person
 	public List<Guid> ListGuids { get; init; } = new List<Guid>();
 	public List<Guid?> ListGuidsNullableUnderlying { get; init; } = new List<Guid?>();
 	public List<Guid?>? ListGuidsNullableUnderlyingNullable { get; init; } = new List<Guid?>();
-	
-	
+
 	public IReadOnlyCollection<User> RelatedUsers { get; init; } = Array.Empty<User>();
 	public IReadOnlyCollection<User?> RelatedUsersNullableUnderlying { get; init; } = Array.Empty<User?>();
 	public IReadOnlyCollection<User?>? RelatedUsersNullableUnderlyingNullable { get; init; } = Array.Empty<User?>();
 	
+	public required IReadOnlyCollection<Gender> Genders { get; init; }
+
 	public int Int { get; init; }
 	public int? IntNullable { get; init; }
 	
@@ -137,6 +94,8 @@ internal abstract class Person
 	public string?[] ArrayNamesNullableUnderlying { get; init; } = Array.Empty<string?>();
 	public string?[]? ArrayNamesNullableUnderlyingNullable { get; init; } = Array.Empty<string?>();
 	
+	public IEnumerable<ClampedNumber> ClampedNumbers { get; init; } = Enumerable.Empty<ClampedNumber>();
+
 	// All of the following should be ignored as they are either:
 	// - not a property or a field (methods, events, etc.)
 	// - not an instance property (static)
@@ -149,40 +108,4 @@ internal abstract class Person
 	private static string PrivateStatic { get; set; } = string.Empty;
 	internal static string InternalStatic { get; set; } = string.Empty;
 	protected static string ProtectedStatic { get; set; } = string.Empty;
-}
-
-// [SchemaObject]
-public interface IPersonAge
-{
-	ClampedNumber Age { get; init; }
-}
-
-public interface IPersonName
-{
-	string Name { get; init; }
-}
-
-public interface IPersonId
-{
-	PersonId Id { get; init; }
-}
-
-public readonly record struct PersonId(Guid Id)
-{
-	public override string ToString()
-		=> Id.ToString();
-}
-
-public readonly record struct CeremonyId(Guid Id)
-{
-	public override string ToString()
-		=> Id.ToString();
-}
-
-[SchemaEnum]
-public enum Gender
-{
-	Male,
-	Female,
-	Other,
 }

@@ -1,18 +1,21 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration>
 {
 	public required IEnumerable<Assembly> Assemblies { get; init; }
-	public required bool DeleteFilesOnStart { get; init; }
+	public required FileDeletionMode FileDeletionMode { get; init; }
 	public required ZodSchemaEventConfiguration Events { get; init; }
 	public required string FileExtension { get; init; }
+	public required string FileExtensionInfix { get; init; }
 	public required string OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
@@ -39,8 +42,8 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 	public IPartialZodSchema CreateGenericSchema(SchemaMemberInfo memberInfo)
 	{
-		var genericTypeDefinition = memberInfo.MemberType.GetGenericTypeDefinition();
-		var genericArguments = memberInfo.MemberType.GetGenericArguments();
+		var genericTypeDefinition = memberInfo.Type.GetGenericTypeDefinition();
+		var genericArguments = memberInfo.Type.GetGenericArguments();
 		var genericSchema = GenericSchemasDictionary.GetRelatedType(genericTypeDefinition);
 
 		var argumentSchemas = genericArguments
@@ -94,7 +97,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
 
 	public string FormatFilePath(IPartialZodSchema schema)
-		=> $"./{FormatSchemaName(schema)}";
+		=> $"./{FormatSchemaName(schema)}{FileExtensionInfix}";
 
 	public string FormatSchemaName(IPartialZodSchema schema)
 		=> schema switch
@@ -112,7 +115,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 
 	public IPartialZodSchema CreateArraySchema(SchemaMemberInfo schemaMemberInfo)
 	{
-		var elementType = schemaMemberInfo.MemberType.GetElementType()!;
+		var elementType = schemaMemberInfo.Type.GetElementType()!;
 		var elementSchema = CreatedSchemasDictionary.GetSchemaForType(elementType);
 		if (elementSchema is null)
 		{

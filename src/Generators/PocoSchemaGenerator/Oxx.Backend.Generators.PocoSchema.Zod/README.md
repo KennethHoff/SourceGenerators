@@ -1,5 +1,5 @@
 <h1 align="center">Zod Poco Schema Generator</h1>
-<p align="center">Streamline your development process with our comprehensive C#-to-TypeScript schema mapping library, which includes automatic schema generation and runtime type-safety.</p>
+<p align="center"><i>Streamline your development process with our comprehensive C#-to-TypeScript schema mapping library, which includes automatic schema generation and runtime type-safety.</i></p>
 
 ## Usage
 
@@ -41,9 +41,11 @@ The following options are available:
 
 * `SetRootDirectory(string path)` - Sets the root directory for the schema files. This is required.
 
-* `DeleteExistingFiles(bool)` - Deletes all existing files in the root directory before generating new ones.
-    * Default: `false`
-    * Note: This will delete the entire directory, so make sure you don't have any other files in there.
+* `OverrideFileDeletionMode(FileDeletionMode)` - Sets the file deletion mode.
+    * Default: `FileDeletionMode.OverwriteExisting`
+    * `FileDeletionMode.OverwriteExisting` - Overwrites existing files.
+    * `FileDeletionMode.All` - Deletes all files in the root directory. Will immediately quit if any of the files contained within does not match the schema.
+    * `FileDeletionMode.ForcedAll` - Deletes all files in the root directory. Will not check if the files match the schema.
 
 * `OverrideSchemaNamingFormat(string)` - Overrides the naming format for the schemas.
     * Default: `{0}Schema` where `{0}` is the name of the class.
@@ -55,24 +57,23 @@ The following options are available:
 
 * `OverrideFileNameNamingFormat(string)` - Overrides the naming format for the file names.
     * Default: `{0}Schema` where `{0}` is the name of the class.
-    * Example: `OverrideFileNameNamingFormat("{0}Schema")` will generate a file called `myClassSchema.ts` for a POCO called `MyClass`.
-        * Note: The file extension can be changed by using the `OverrideFileExtension(string)` method (see below).
+    * Example: `OverrideFileNameNamingFormat("{0}Schema")` will generate a file called `myClassSchema.g.ts` for a POCO called `MyClass`.
+        * Note: The file extension infix(`.g`) can be changed by using the `OverrideFileExtensionInfix(string)` method (see below).
 
 * `OverrideSchemaEnumNamingFormat(string)` - Overrides the naming format for the enums.
     * Default: `{0}SchemaEnum` where `{0}` is the name of the enum.
     * Example: `OverrideSchemaEnumNamingFormat("{0}SchemaEnum")` will generate an enum called `myClassSchemaEnum` for an enum called `MyClass`.
 
-* `OverrideFileExtension(string)` - Overrides the file extension for the generated files.
-    * Default: `.ts`
-    * Example: `OverrideFileExtension(".ts")` will generate a file called `myClassSchema.ts` for a class called `MyClass`.
-        * Note: The file name can be changed by using the `OverrideFileNameNamingFormat(string)` method (see above).
+* `OverrideFileExtensionInfix(string)` - Overrides the infix for the file extension
+  * Default: `.g`
+  * Example: `OverrideFileExtensionInfix(".g")` will generate a file called `myClassSchema.g.ts` for a POCO called `MyClass`.
 
-* `ApplyAtomicSchema<TType, TSchema>` - Applies a schema to a type.
+* `ApplyAtomicSchema<TType, TSchema>` - Applies an atomic schema to a type.
     * Example: `ApplyAtomicSchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
     * This is useful in the following scenarios:
         * You want to apply a schema to a type you don't own
         * It is not possible to add the `[SchemaObject]` attribute to the type
-        * You want to apply the schema to a type that is not a class or struct
+        * You want to apply the schema to a structure that is not officially supported by the generator (class, struct, interface, Enum)
         * You want to apply a different schema to a type than the default one
         * You want to apply a different schema to nullable and non-nullable types
             * Example: `ApplyAtomicSchema<int?, MyNullableIntSchema>()` will apply the schema `MyNullableIntSchema` to the type `int?`, but keeps the default
@@ -92,7 +93,6 @@ The following options are available:
 
 * `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a generic type.
     * Example: `ApplyGenericSchema(typeof(MyClass<>), typeof(MySchema<>))` will apply the schema `MySchema<T>` to the type `MyClass<>`.
-    * This is useful if you want to apply a schema to a generic type.
     * Note: The number of generic parameters must match.
     * Note: The number of generic arguments must match.
 
@@ -137,38 +137,85 @@ Issues that are common and annoying, but not blocking the release of the package
 
 Issues that are less common and/or can be worked around.
 
+* The schema generator doesn't support multiple types with the same name
+  * Example:
+  * ```csharp
+    [SchemaObject]
+    public class MyClass
+    {
+        public int Id { get; set; }
+    }
+
+    [SchemaObject]
+    public class MyClass
+    {
+        public string Name { get; set; }
+    }
+    ```
+  * The last type will overwrite the first type.
+
 * I'm not happy with how enums were implemented. They work, but they're not very clean.
     * I'm not sure if it's possible to implement them in a cleaner way, but I'll have to look into it.
 
 * The schema generator only partially supports inheritance.
-    * Example: `class MyParentClass { string MyProperty { get; set; } } class MyChildClass : MyParentClass { }`
-    * Currently, the schema generator has no way of knowing that `MyChildClass` inherits from `MyParentClass`, so it will generate two separate schemas for
+    * Example:
+    ```csharp
+    [SchemaObject]
+    class BaseClass
+    {
+       string BaseProperty { get; set; }
+    }
+  
+    [SchemaObject]
+    class DerivedClass : BaseClass
+    {
+       string DerivedProperty { get; set; }
+    }
+    ```
+    * Currently, the schema generator has no way of knowing that `DerivedClass` inherits from `BaseClass`, so it will generate two separate schemas for
       them.
+    * Ideally it would generate a single schema for `BaseClass` and then a separate schema for `DerivedClass` that extends the schema for `BaseClass`.
 * The schema generator only partially supports interfaces
-    * Example: `interface IMyInterface { string MyProperty { get; set; } }`
+    * Example:
+    ```csharp
+    [SchemaObject]
+    interface IMyInterface
+    {
+       string MyProperty { get; set; }
+    }
+    ```
     * Currently it will generate a schema that's identical to what it would generate for a class. That is to say, all properties will have to match the schema,
       and all other properties will be discarded.
         * It also names it `iMyInterfaceSchema`, which is not ideal.
     * Ideally it would generate a schema that matches the interface, but allows for additional properties.
         * I don't know what it should be named though. All I know is that it shouldn't start with a lower-case `i`.
+        * Additionally, all derived interfaces should extend this schema, and all types that implement this interface should extend this schema.
+    * .. Or maybe I should just remove the schema generation for interfaces altogether. I'm not sure if it's really useful other than for IEnumerable\<T> and
+      similar interfaces.
+
 * The schema generator doesn't support custom schemas for molecular types
     * Example:
     * ```csharp
       [SchemaObject]
       public sealed class MyClass
       {
-          public string Name { get; set; }
-          public int Age { get; set; }
+          string Name { get; set; }
+          int Age { get; set; }
       }
-      public sealed class MySchema : IZodSchema
+      public sealed class MySchema : IMolecularZodSchema
       {
-          // Stuff
+          // Schema Stuff
       }
-      
+
       // Program.cs
-      configuration.ApplyAtomicSchema<MyClass, MySchema>()
-      // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
-      // The below does not work either, as the schema generator doesn't know that MyClass is a molecular type.
+
+      configuration.ApplyMolecularSchema<MyClass, MySchema>()
+      // The above method doesn't exist, but it should 
+      // And it should probably be renamed to ApplySchema, 
+      // and merged with ApplyAtomicSchema.
+
+      // .. That used to be the case, but it never worked 🤷‍♂️
+      // ..so I renamed it and gave it more constraints 
       ```
 
 ### Low priority
@@ -176,17 +223,57 @@ Issues that are less common and/or can be worked around.
 Issues that are very uncommon and/or can easily be worked around and/or are very difficult to fix.
 
 * The schema generator doesn't support self-referencing types.
-    * Example: `class MyClass { public MyClass MyProperty { get; set; } }`
+    * Example:
+    * ```csharp
+      [SchemaObject]
+      class MyClass
+      {
+          MyClass MyProperty { get; set; }
+      }
+      ```
     * There is a way to do this in Zod, but it's quite complicated and I don't think it's worth it.
         * https://github.com/colinhacks/zod#recursive-types
-    * This can partially be worked around by making an inherited class instead
-        * Example: `class MyClass { public MyOtherClass MyProperty { get; set; } } class MyOtherClass : MyClass { }`
-        * However, the `MyOtherClass` will have TypeScript errors as it will then have a reference to itself (`MyOtherClass.MyProperty` will be of
-          type `MyOtherClass`).
+    * Note: This is one of the issues that currently is not caught by the code generator, and will generate an invalid schema. 
+* The schema generator doesn't support circular references.
+    * Example:
+    * ```csharp
+      [SchemaObject]
+      class MyClass
+      {
+          MyClass MyProperty { get; set; }
+      }
+      [SchemaObject]
+      class MyOtherClass
+      {
+          IEnumerable<MyClass> MyOtherProperties { get; set; }
+      }
+
+      // Or
+
+      [SchemaObject]
+      class MyClass
+      {
+          MyOtherClass MyProperty { get; set; }
+      }
+      [SchemaObject]
+      class MyOtherClass
+      {
+          MyClass MyOtherProperty { get; set; }
+      }
+      ```
+  * Note: TypeScript will complain about this, but the schema will still be valid.
+
+
 * The schema generator doesn't support generic types.
-    * Example: `class MyClass<T> { public T MyProperty { get; set; } }`
+    * Example:
+    * ```csharp
+      [SchemaObject]
+      class MyClass<T>
+      {
+          T MyProperty { get; set; }
+      }
+      ```
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
-    * Although, it might be easier to do this than self-referencing types as this is entirely in the scope of the schema generator.
 
 I'm sure there are tons of other issues, but these are the ones I'm aware of.
 

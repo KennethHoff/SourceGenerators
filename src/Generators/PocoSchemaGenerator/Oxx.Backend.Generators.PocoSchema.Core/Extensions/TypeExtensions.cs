@@ -1,4 +1,8 @@
-﻿namespace Oxx.Backend.Generators.PocoSchema.Core.Extensions;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
+
+namespace Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 
 public static class TypeExtensions
 {
@@ -18,6 +22,16 @@ public static class TypeExtensions
 
 		return enumKeyValuePairs;
 	}
-}
+	
+	public static IEnumerable<SchemaMemberInfo> GetValidSchemaMembers(this Type type)
+	{
+		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+		IEnumerable<MemberInfo> properties = type.GetProperties(bindingFlags);
+		IEnumerable<MemberInfo> fields = type.GetFields(bindingFlags);
 
-public readonly record struct EnumValue(string Name, int Value);
+		return properties.Concat(fields)
+			.Where(x => x.GetCustomAttribute<CompilerGeneratedAttribute>() is null)
+			.Select(x => new SchemaMemberInfo(x))
+			.Where(x => x.IsIgnored is false);
+	}
+}

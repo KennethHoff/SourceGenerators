@@ -8,7 +8,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 	where TSchemaType : class, ISchema
 {
 	public TSchemaType? GetMemberForMemberInfo(SchemaMemberInfo memberInfo)
-		=> GetSchemaForType(memberInfo.MemberType);
+		=> GetSchemaForType(memberInfo.Type);
 
 	public TSchemaType? GetSchemaForType(Type propertyType)
 	{
