@@ -8,7 +8,6 @@ using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
@@ -29,7 +28,8 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 	public async Task CreateFilesAsync()
 	{
 		EnsureDirectoryExists();
-		var pocoStructures = GetPocoStructures();
+		var (pocoStructures, unsupportedTypes) = GetPocoStructures();
+		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes));
 		var contents = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
 
 		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
@@ -67,15 +67,15 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		Directory.CreateDirectory(_configuration.OutputDirectory);
 	}
 
-	private IReadOnlyCollection<IPocoStructure> GetPocoStructures()
+	private (IPocoStructure[] pocoStructures, List<(Type Type, Exception Exception)> unsupportedTypes) GetPocoStructures()
 	{
-		var typeSchemaDictionary = GetTypeSchemaDictionary();
+		var (types, unsupportedTypes) = GetTypeSchemaDictionary();
 
-		var objectTypes = typeSchemaDictionary
+		var objectTypes = types
 			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
 			.Value;
 
-		var enumTypes = typeSchemaDictionary
+		var enumTypes = types
 			.FirstOrDefault(x => x.Key is SchemaEnumAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
 			.Value;
 
@@ -93,12 +93,14 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			.Cast<IPocoStructure>()
 			.ToArray();
 
-		return objects.Concat(enums).ToArray();
+		var pocoStructures = objects.Concat(enums).ToArray();
+		return (pocoStructures, unsupportedTypes);
 	}
 
-	private Dictionary<SchemaTypeAttribute, List<Type>> GetTypeSchemaDictionary()
+	private (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary()
 	{
 		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
+		var unsupportedTypes = new List<(Type Type, Exception Exception)>();
 		foreach (var assembly in _configuration.Assemblies)
 		{
 			foreach (var type in assembly.GetTypes())
@@ -109,8 +111,10 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 					continue;
 				}
 
-				if (!IsSupported(type))
+				if (IsSupported(type) is {} exception)
 				{
+					unsupportedTypes.Add((type, exception));
+					// _configuration.Events.UnsupportedTypeFound?.Invoke(this, new UnsupportedTypeFoundEventArgs(type, exception));
 					continue;
 				}
 
@@ -123,22 +127,22 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 			}
 		}
 		
-		return types;
+		return (types, unsupportedTypes);
 	}
 
-	private static bool IsSupported(Type type)
+	private static Exception? IsSupported(Type type)
 	{
 		if (type.IsGenericType)
 		{
-			return false;
+			return new ArgumentException("Generic types are not supported");
 		}
 
 		var validMemberInfos = type.GetValidSchemaMembers().ToArray();
 		if (!validMemberInfos.Any())
 		{
-			return false;
+			return new ArgumentException("No fields or properties found");
 		}
 
-		return true;
+		return null;
 	}
 }

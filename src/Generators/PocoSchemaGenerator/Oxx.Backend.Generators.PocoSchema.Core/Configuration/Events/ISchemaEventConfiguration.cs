@@ -6,4 +6,5 @@ public interface ISchemaEventConfiguration
 	EventHandler<FileCreatingEventArgs>? FileCreating { get; set; }
 	EventHandler<FilesCreatedEventArgs>? FilesCreated { get; set; }
 	EventHandler<FilesCreatingEventArgs>? FilesCreating { get; set; }
+	EventHandler<PocoStructuresCreatedEventArgs>? PocoStructuresCreated { get; set; }
 }
