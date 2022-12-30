@@ -173,6 +173,7 @@ Issues that are less common and/or can be worked around.
     * Ideally it would generate a schema that matches the interface, but allows for additional properties.
         * I don't know what it should be named though. All I know is that it shouldn't start with a lower-case `i`.
         * Additionally, all derived interfaces should extend this schema, and all types that implement this interface should extend this schema.
+    * .. Or maybe I should just remove the schema generation for interfaces altogether. I'm not sure if it's really useful.
 
 ### Low priority
 
