@@ -1,5 +1,5 @@
 <h1 align="center">Zod Poco Schema Generator</h1>
-<p align="center">Streamline your development process with our comprehensive C#-to-TypeScript schema mapping library, which includes automatic schema generation and runtime type-safety.</p>
+<p align="center"><i>Streamline your development process with our comprehensive C#-to-TypeScript schema mapping library, which includes automatic schema generation and runtime type-safety.</i></p>
 
 ## Usage
 
@@ -66,7 +66,7 @@ The following options are available:
   * Default: `.g`
   * Example: `OverrideFileExtensionInfix(".g")` will generate a file called `myClassSchema.g.ts` for a POCO called `MyClass`.
 
-* `ApplyAtomicSchema<TType, TSchema>` - Applies a schema to a type.
+* `ApplyAtomicSchema<TType, TSchema>` - Applies an atomic schema to a type.
     * Example: `ApplyAtomicSchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.
     * This is useful in the following scenarios:
         * You want to apply a schema to a type you don't own
@@ -91,7 +91,6 @@ The following options are available:
 
 * `ApplyGenericSchema(Type, Type)` - Applies a generic schema to a generic type.
     * Example: `ApplyGenericSchema(typeof(MyClass<>), typeof(MySchema<>))` will apply the schema `MySchema<T>` to the type `MyClass<>`.
-    * This is useful if you want to apply a schema to a generic type.
     * Note: The number of generic parameters must match.
     * Note: The number of generic arguments must match.
 
