@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using AnotherProject;
+﻿using AnotherProject;
 using AnotherProject.Seremonibasen.Models;
-using AnotherProject.Seremonibasen.Models.WebProject.Models;
 using Oxx.Backend.Generators.PocoSchema.Core;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
@@ -15,7 +13,7 @@ using TestingApp.SchemaTypes;
 
 namespace TestingApp;
 
-internal sealed class TestingAppSchemaGenerationConfiguration
+internal static class TestingAppSchemaGenerationConfiguration
 {
 	public static async Task GenerateSchemaAsync()
 	{
@@ -39,12 +37,8 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 			})
 			.Build();
 
-		var schema = new ZodSchemaConverter(configuration);
-		var generator = new ZodSchemaGenerator(schema, configuration);
-
+		ISchemaGenerator generator = new ZodSchemaGenerator(configuration);
 		await generator.GenerateAllAsync();
-
-		// await generator.GenerateAsync<User>();
 	}
 
 	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)

@@ -14,7 +14,7 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 	private readonly ISchemaFileCreator _fileCreator;
 
-	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaEvents> configuration, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
+	protected SchemaGenerator(ISchemaConfiguration<TSchemaEvents> configuration, ISchemaConverter schemaConverter, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
 	{
 		_schemaConverter = schemaConverter;
 		_configuration = configuration;

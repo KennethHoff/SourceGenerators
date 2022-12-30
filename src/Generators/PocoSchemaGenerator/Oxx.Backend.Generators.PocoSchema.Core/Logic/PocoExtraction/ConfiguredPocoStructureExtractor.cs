@@ -18,9 +18,6 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		_events = configuration.Events;
 	}
 
-	public IPocoStructure Get<T>()
-		=> Get(typeof(T));
-
 	public IReadOnlyCollection<IPocoStructure> GetAllFromAssemblies(IReadOnlyCollection<Assembly> assemblies)
 	{
 		var (types, unsupportedTypes) = GetTypeSchemaDictionary(assemblies);
@@ -57,7 +54,7 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		=> throw new NotImplementedException();
 
 	public IReadOnlyCollection<IPocoStructure> Get(IEnumerable<Type> types)
-		=> throw new NotImplementedException();
+		=> types.Select(Get).ToArray();
 
 	private static (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary(IReadOnlyCollection<Assembly> assemblies)
 	{

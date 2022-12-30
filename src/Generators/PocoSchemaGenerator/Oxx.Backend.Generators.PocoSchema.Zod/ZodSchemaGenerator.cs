@@ -9,13 +9,23 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
 public sealed class ZodSchemaGenerator : SchemaGenerator<ZodSchemaEvents>
 {
-	public ZodSchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<ZodSchemaEvents> configuration)
-		: base(schemaConverter, configuration, CreatePocoStructureExtractor(configuration), CreateSchemaExtractor(configuration))
+	public ZodSchemaGenerator(
+		ZodSchemaConfiguration configuration,
+		ISchemaConverter? schemaConverter = null,
+		ISchemaFileCreator? schemaFileCreator = null,
+		IPocoStructureExtractor? pocoStructureExtractor = null)
+		: base(configuration,
+			schemaConverter ?? CreateSchemaConverter(configuration),
+			pocoStructureExtractor ?? CreatePocoStructureExtractor(configuration),
+			schemaFileCreator ?? CreateSchemaFileCreator(configuration))
 	{ }
 
 	private static IPocoStructureExtractor CreatePocoStructureExtractor(ISchemaConfiguration<ZodSchemaEvents> configuration)
 		=> new ZodConfiguredPocoStructureExtractor(configuration);
 
-	private static ISchemaFileCreator CreateSchemaExtractor(ISchemaConfiguration<ZodSchemaEvents> configuration)
+	private static ISchemaFileCreator CreateSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents> configuration)
 		=> new ZodSchemaFileCreator(configuration);
+
+	private static ISchemaConverter CreateSchemaConverter(ZodSchemaConfiguration configuration)
+		=> new ZodSchemaConverter(configuration);
 }
