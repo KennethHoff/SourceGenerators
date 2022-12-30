@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
@@ -22,7 +23,7 @@ public abstract class
 	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 	protected abstract TConfigurationType Configuration { get; }
 
-	protected bool DeleteFilesOnStart { get; set; }
+	protected FileDeletionMode FileDeletionMode { get; set; }
 	protected abstract string FileExtension { get; set; }
 	protected abstract string FileNameFormat { get; set; }
 	protected abstract string SchemaEnumNamingFormat { get; set; }
@@ -64,12 +65,9 @@ public abstract class
 		return this;
 	}
 
-	/// <summary>
-	///     Be careful with this method, it will delete all files in the output directory
-	/// </summary>
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> DeleteExistingFiles(bool shouldDelete = true)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileDeletionMode(FileDeletionMode fileDeletionMode)
 	{
-		DeleteFilesOnStart = shouldDelete;
+		FileDeletionMode = fileDeletionMode;
 		return this;
 	}
 
@@ -79,26 +77,30 @@ public abstract class
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileNameNamingFormat(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileNameNamingFormat(string format)
 	{
-		FileNameFormat = namingFormat;
+		FileNameFormat = EnsureValidFormat(format);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaNamingFormat(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaNamingFormat(string format)
 	{
-		SchemaNamingFormat = namingFormat;
+		SchemaNamingFormat = EnsureValidFormat(format);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaTypeNamingFormat(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaTypeNamingFormat(string format)
 	{
-		SchemaTypeNamingFormat = namingFormat;
+		SchemaTypeNamingFormat = EnsureValidFormat(format);
 		return this;
 	}
 
 	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ResolveTypesFromAssemblyContaining<T>()
 	{
+		if (Assemblies.Contains(typeof(T).Assembly))
+		{
+			throw new InvalidOperationException($"Assembly {typeof(T).Assembly.FullName} is already added");
+		}
 		Assemblies.Add(typeof(T).Assembly);
 		return this;
 	}
@@ -111,9 +113,9 @@ public abstract class
 
 	#endregion
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string namingFormat)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string format)
 	{
-		SchemaEnumNamingFormat = namingFormat;
+		SchemaEnumNamingFormat = EnsureValidFormat(format); ;
 		return this;
 	}
 
@@ -178,19 +180,25 @@ public abstract class
 		}
 	}
 
-	private void UpsertSchemaTypeDictionary<TSchema>(Type genericType, Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
+	private static string EnsureValidFormat(string format)
 	{
-		if (AtomicSchemasToCreateDictionary.ContainsKey(genericType))
+		var regex = new Regex(@"\{[\d]+\}", RegexOptions.Compiled);
+		var exceptions = new List<Exception>();
+		if (!format.Contains("{0}"))
 		{
-			AtomicSchemasToCreateDictionary[genericType] = substituteFactory is null
-				? new TSchema()
-				: substituteFactory();
+			exceptions.Add(new ArgumentException("The format must contain a {0} placeholder"));
 		}
-		else
+
+		if (regex.IsMatch(format))
 		{
-			AtomicSchemasToCreateDictionary.Add(genericType, substituteFactory is null
-				? new TSchema()
-				: substituteFactory());
+			exceptions.Add(new ArgumentException("The format must not contain any other placeholders than {0}"));
 		}
+		
+		if (exceptions.Any())
+		{
+			throw new AggregateException(exceptions);
+		}
+
+		return format;
 	}
 }

@@ -35,5 +35,3 @@ public static class TypeExtensions
 			.Where(x => x.IsIgnored is false);
 	}
 }
-
-public readonly record struct EnumValue(string Name, int Value);

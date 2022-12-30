@@ -17,10 +17,3 @@ public abstract class BasePocoObject : IBasePocoObject, IHasAccessToContent
 
     #endregion
 }
-
-public interface IHasAccessToContent
-{
-    bool HasDeleteAccess { get; set; }
-    bool HasReadAccess { get; set; }
-    bool HasWriteAccess { get; set; }
-}

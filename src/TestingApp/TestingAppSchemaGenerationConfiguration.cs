@@ -1,5 +1,6 @@
 ﻿using AnotherProject;
 using AnotherProject.Seremonibasen.Models;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Exceptions;
 using Oxx.Backend.Generators.PocoSchema.Zod;
@@ -7,6 +8,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 using TestingApp.Models;
+using TestingApp.SchemaTypes;
 
 namespace TestingApp;
 
@@ -16,14 +18,13 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 	{
 		var configuration = new ZodSchemaConfigurationBuilder()
 			.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
-			.DeleteExistingFiles()
+			.OverrideFileDeletionMode(FileDeletionMode.None)
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
-			// .ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
-			// .ApplyAtomicSchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
-			// .ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
+			.ApplyAtomicSchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
+			.ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 			.ConfigureEvents(events =>
 			{
 				events.PocoStructuresCreated += (_, args) => PrintPocoStructuresCreated(args);
@@ -65,13 +66,9 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		void PrintTotal()
 		{
 			var invalidTypesAmount = informationsWithInvalidMembers.Count;
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			Console.Write(informations.Count);
-			Console.ResetColor();
+			ColoredConsole.WriteLine(informations.Count, ConsoleColor.Cyan);
 			Console.Write(" type-schemas were resolved, of which ");
-			Console.ForegroundColor = ConsoleColor.Green;
-			Console.Write(informations.Count - invalidTypesAmount);
-			Console.ResetColor();
+			ColoredConsole.WriteLine(informations.Count - invalidTypesAmount, ConsoleColor.Green);
 			Console.WriteLine(" were resolved fully.");
 		}
 
@@ -85,15 +82,10 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 
 			var invalidSchemasAmount = typesWithoutSchemas.Length;
 			Console.Write("The following ");
-			Console.ForegroundColor = ConsoleColor.Red;
-			Console.Write(invalidSchemasAmount);
-			Console.ResetColor();
+			ColoredConsole.WriteLine(invalidSchemasAmount, ConsoleColor.Red);
 			Console.Write(" schemas could not be resolved in ");
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			Console.Write(invalidSchemasAmount);
-			Console.ResetColor();
+			ColoredConsole.WriteLine(typesWithoutSchemas.Length, ConsoleColor.Cyan);
 			Console.WriteLine(" type-schemas:");
-			Console.ForegroundColor = ConsoleColor.Cyan;
 			foreach (var type in typesWithoutSchemas)
 			{
 				var typesContainingSchema = informations
@@ -103,21 +95,17 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 
 				var firstTwoTypes = typesContainingSchema.Take(2).ToArray();
 				var length = typesContainingSchema.Length;
-				Console.WriteLine(type + " (" + length + "): " + string.Join(", ", firstTwoTypes.Select(x => x.Name)) + (length > 2
+				ColoredConsole.WriteLine(type + " (" + length + "): " + string.Join(", ", firstTwoTypes.Select(x => x.Name)) + (length > 2
 					? ", ..."
-					: ""));
+					: ""), ConsoleColor.Cyan);
 			}
-
-			Console.ResetColor();
 			Console.WriteLine("Keep in mind that generics might have failed to resolve due to their type arguments being unable to be resolved.");
 		}
 
 		void PrintAllSchemasResolved()
 		{
 			Console.Write("All ");
-			Console.ForegroundColor = ConsoleColor.Green;
-			Console.Write(informations.Count);
-			Console.ResetColor();
+			ColoredConsole.WriteLine(informations.Count, ConsoleColor.Green);
 			Console.WriteLine(" type-schemas were created successfully.");
 		}
 	}
@@ -143,59 +131,41 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		void PrintUnsupportedTypes()
 		{
 			Console.Write("The following ");
-			Console.ForegroundColor = ConsoleColor.Red;
-			Console.Write(unsupportedTypes.Count);
-			Console.ResetColor();
+			ColoredConsole.WriteLine(unsupportedTypes.Count, ConsoleColor.Red);
 			Console.WriteLine(" types could not be resolved:");
-			Console.ForegroundColor = ConsoleColor.Cyan;
 			foreach (var (type, exception) in unsupportedTypes)
 			{
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.Write(type);
-				Console.ResetColor();
+				ColoredConsole.Write(type, ConsoleColor.Yellow);
 				Console.Write(" (");
-				Console.ForegroundColor = ConsoleColor.Magenta;
-				Console.Write(exception.Message);
-				Console.ResetColor();
+				ColoredConsole.Write(exception.Message, ConsoleColor.Magenta);
 				Console.WriteLine(")");
 			}
-
-			Console.ResetColor();
 			Console.WriteLine();
 		}
 
 		void PrintSuccessfulStructures()
 		{
 			Console.Write("Successfully resolved ");
-			Console.ForegroundColor = ConsoleColor.Green;
-			Console.Write(eventArgs.PocoStructures.Length);
-			Console.ResetColor();
+			ColoredConsole.Write(eventArgs.PocoStructures.Length, ConsoleColor.Green);
 			Console.Write(" out of ");
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			Console.Write(eventArgs.PocoStructures.Length + unsupportedTypes.Count);
-			Console.ResetColor();
+			ColoredConsole.Write(eventArgs.PocoStructures.Length + unsupportedTypes.Count, ConsoleColor.Cyan);
 			Console.WriteLine(" types.");
 		}
 
 		void PrintAllTypesResolved()
 		{
 			Console.Write("All ");
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			Console.Write(eventArgs.PocoStructures.Length);
-			Console.ResetColor();
+			ColoredConsole.Write(eventArgs.PocoStructures.Length, ConsoleColor.Green);
 			Console.WriteLine(" types were resolved successfully.");
 		}
 	}
 
 	private static void PrintGenerationStarted(GenerationStartedEventArgs eventArgs)
 	{
-		var timeStarted = eventArgs.GenerationStartedTime;
-
 		Console.Write("Started generating at ");
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.Write(timeStarted);
-		Console.ResetColor();
+		ColoredConsole.Write(eventArgs.GenerationStartedTime, ConsoleColor.Cyan);
 		Console.WriteLine(".");
+		Console.WriteLine();
 	}
 
 	private static void PrintGenerationCompleted(GenerationCompletedEventArgs eventArgs)
@@ -203,45 +173,42 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		var duration = eventArgs.GenerationCompletedTime - eventArgs.GenerationStartedTime;
 
 		Console.Write("Generation completed in ");
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.Write(duration.TotalMilliseconds);
-		Console.ResetColor();
+		ColoredConsole.Write(duration.TotalMilliseconds, ConsoleColor.Cyan);
 		Console.WriteLine(" ms.");
+		Console.WriteLine();
 	}
 
 	private static void PrintDeletingFiles(DeletingFilesEventArgs eventArgs)
 	{
 		Console.Write("Deleting directory ");
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.Write(eventArgs.Directory);
-		Console.ResetColor();
+		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);
 		Console.Write(" containing ");
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.Write(eventArgs.Files.Count);
-		Console.ResetColor();
+		ColoredConsole.Write(eventArgs.Files.Count, ConsoleColor.Cyan);
 		Console.WriteLine(" files.");
+		Console.WriteLine();
 	}
 
 	private static void PrintDeletingFilesFailed(DeletingFilesFailedEventArgs eventArgs)
 	{
-		Console.Write("Failed to delete directory ");
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.Write(eventArgs.Directory);
-		Console.ResetColor();
-		Console.Write(" containing ");
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.Write(eventArgs.Files.Count);
-		Console.ResetColor();
-		Console.WriteLine(" files:");
+		ColoredConsole.Write("Failed to delete directory ", ConsoleColor.Red);
+		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);
+		ColoredConsole.Write(" containing ", ConsoleColor.Red);
+		ColoredConsole.Write(eventArgs.Files.Count, ConsoleColor.Cyan);
+		ColoredConsole.WriteLine(" files:", ConsoleColor.Red);
 		
-		if (eventArgs.Exception is DirectoryContainsManuallyCreatedFilesException directoryContainsManuallyCreatedFilesException)
+		if (eventArgs.Exception is DirectoryContainsFilesWithIncompatibleNamingException directoryContainsFilesWithIncompatibleNamingException)
 		{
-			Console.WriteLine("The following files have been manually created: ");
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			foreach (var file in directoryContainsManuallyCreatedFilesException.ManuallyCreatedFiles)
+			Console.WriteLine("The following files have incompatible naming. " +
+							  "This is most likely due to the files being added or renamed manually, or the naming convention being changed. " + 
+							  Environment.NewLine +
+							  "If you want to regenerate them, you will have to delete them manually, " +
+							  $"or change {nameof(FileDeletionMode)} to {nameof(FileDeletionMode.ForcedAll)} or {nameof(FileDeletionMode.None)}");
+			foreach (var file in directoryContainsFilesWithIncompatibleNamingException.FilesWithInvalidFileExtensions)
 			{
-				Console.WriteLine(file);
+				ColoredConsole.WriteLine(file, ConsoleColor.Red);
 			}
 		}
+
+		Console.WriteLine();
 	}
 }

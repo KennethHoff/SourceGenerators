@@ -2,12 +2,12 @@
 
 public sealed class GenerationCompletedEventArgs : EventArgs
 {
-	public DateTime GenerationCompletedTime { get; }
 	public DateTime GenerationStartedTime { get; } 
+	public DateTime GenerationCompletedTime { get; }
 
-	public GenerationCompletedEventArgs(DateTime generationCompletedTime, DateTime generationStartedTime)
+	public GenerationCompletedEventArgs(DateTime generationStartedTime, DateTime generationCompletedTime)
 	{
-		GenerationCompletedTime = generationCompletedTime;
 		GenerationStartedTime = generationStartedTime;
+		GenerationCompletedTime = generationCompletedTime;
 	}
 }

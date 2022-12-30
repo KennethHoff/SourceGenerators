@@ -43,7 +43,7 @@ The following options are available:
 
 * `DeleteExistingFiles(bool)` - Deletes all existing files in the root directory before generating new ones.
     * Default: `false`
-    * Note: This will delete the entire directory, so make sure you don't have any other files in there.
+    * Note: This will first check if all the files follow the naming convention of the generator. If they don't, the generator will immediately exit.
 
 * `OverrideSchemaNamingFormat(string)` - Overrides the naming format for the schemas.
     * Default: `{0}Schema` where `{0}` is the name of the class.
@@ -135,6 +135,23 @@ Issues that are common and annoying, but not blocking the release of the package
 ### Medium priority
 
 Issues that are less common and/or can be worked around.
+
+* The schema generator doesn't support multiple types with the same name
+  * Example:
+  * ```csharp
+    [SchemaObject]
+    public class MyClass
+    {
+        public int Id { get; set; }
+    }
+
+    [SchemaObject]
+    public class MyClass
+    {
+        public string Name { get; set; }
+    }
+    ```
+  * The last type will overwrite the first type.
 
 * I'm not happy with how enums were implemented. They work, but they're not very clean.
     * I'm not sure if it's possible to implement them in a cleaner way, but I'll have to look into it.

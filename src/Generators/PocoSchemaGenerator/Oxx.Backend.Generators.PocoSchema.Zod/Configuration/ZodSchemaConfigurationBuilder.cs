@@ -14,7 +14,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		GenericSchemasDictionary = GenericSchemasDictionary,
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,
-		DeleteFilesOnStart = DeleteFilesOnStart,
+		FileDeletionMode = FileDeletionMode,
 		Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
 		SchemaNamingFormat = SchemaNamingFormat,
 		SchemaEnumNamingFormat = SchemaEnumNamingFormat,
@@ -24,7 +24,6 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		FileExtensionInfix = FileExtensionInfix,
 		CreatedSchemasDictionary = new TypeSchemaDictionary<IPartialZodSchema>(),
 	};
-
 
 	protected override string FileExtension { get; set; } = ".ts";
 	protected override string FileExtensionInfix { get; set; } = string.Empty;

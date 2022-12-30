@@ -9,13 +9,6 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Abstractions;
 
 // Before fully generating the molecule, we need to generate the definitions for all molecules in order to be able to reference them
 // This PartialMolecularZodSchema is used as a stepping stone in this process
-public class PartialMolecularZodSchema : IPartialZodSchema
-{
-	public SchemaBaseName SchemaBaseName { get; init; }
-
-	public MolecularZodSchema Populate(IDictionary<SchemaMemberInfo, IPartialZodSchema> schemaDictionary, ZodSchemaConfiguration schemaConfiguration)
-		=> MolecularZodSchema.CreateFromPartial(this, schemaDictionary, schemaConfiguration);
-}
 
 public class MolecularZodSchema : IMolecularZodSchema
 {

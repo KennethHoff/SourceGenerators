@@ -1,16 +1,18 @@
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
+using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration>
 {
 	public required IEnumerable<Assembly> Assemblies { get; init; }
-	public required bool DeleteFilesOnStart { get; init; }
+	public required FileDeletionMode FileDeletionMode { get; init; }
 	public required ZodSchemaEventConfiguration Events { get; init; }
 	public required string FileExtension { get; init; }
 	public required string FileExtensionInfix { get; init; }
