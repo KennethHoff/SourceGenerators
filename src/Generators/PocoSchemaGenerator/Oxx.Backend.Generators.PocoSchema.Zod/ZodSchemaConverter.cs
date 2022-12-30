@@ -155,74 +155,51 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private (IMolecularZodSchema Schema, IReadOnlyCollection<SchemaMemberInfo> InvalidProperties) GenerateMolecularSchema(PocoObject pocoObject)
 	{
-		var partialSchema = _generatedSchemas[pocoObject.ObjectType] switch
-		{
-			PartialMolecularZodSchema schema => schema,
-			IZodSchema schema => throw new UnreachableException(
-				$"Unexpected schema type. {pocoObject.TypeName} has already been generated as {schema.GetType().Name}"),
-			_ => throw new UnreachableException("Schema should have been generated before this point"),
-		};
+		var partialSchema = GetPartialSchema(pocoObject);
 
-		var validSchemas = pocoObject.SchemaMembers
-			.Where(x =>
-			{
-				var propertyType = x.Type;
-
-				if (_generatedSchemas.HasSchemaForType(propertyType))
-				{
-					return true;
-				}
-
-				// Edge case for Arrays using the funky [] syntax
-				if (propertyType.IsArray && _generatedSchemas.HasSchemaForType(propertyType.GetElementType()!))
-				{
-					return true;
-				}
-
-				// If the propertyType is generic, we need to get the generic type definition
-				if (propertyType.IsGenericType)
-				{
-					var hasRelatedType = _configuration.GenericSchemasDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition());
-					var allGenericArgumentsHaveSchema = propertyType.GetGenericArguments().All(_generatedSchemas.HasSchemaForType);
-					return hasRelatedType && allGenericArgumentsHaveSchema;
-				}
-
-				return false;
-			})
-			.Select(x =>
-			{
-				var propertyType = x.Type;
-
-				var partialZodSchema = _generatedSchemas.GetSchemaForType(propertyType);
-				if (partialZodSchema is not null)
-				{
-					return KeyValuePair.Create(x, partialZodSchema);
-				}
-
-				// Edge case for Arrays using the funky [] syntax
-				if (propertyType.IsArray)
-				{
-					var arraySchema = _configuration.CreateArraySchema(x);
-					return KeyValuePair.Create(x, arraySchema);
-				}
-
-				// If the propertyType is generic, we need to get the generic type definition
-				if (propertyType.IsGenericType)
-				{
-					var genericSchema = _configuration.CreateGenericSchema(x);
-					return KeyValuePair.Create(x, genericSchema);
-				}
-
-				throw new InvalidOperationException($"No schema found for {propertyType.Name}");
-			})
-			.ToDictionary(x => x.Key, x => x.Value);
-
+		var validSchemas = GetValidSchemas(pocoObject);
+		
 		var invalidProperties = pocoObject.SchemaMembers
 			.Where(x => !validSchemas.ContainsKey(x))
 			.ToArray();
 
 		return (partialSchema.Populate(validSchemas, _configuration), invalidProperties);
 	}
+
+	private Dictionary<SchemaMemberInfo, IPartialZodSchema> GetValidSchemas(PocoObject pocoObject)
+		=> pocoObject.SchemaMembers.Select<SchemaMemberInfo, (SchemaMemberInfo MemberInfo, IPartialZodSchema? Schema)>(x =>
+			{
+				var propertyType = x.Type;
+
+				if (_generatedSchemas.TryGetSchemaForType(propertyType, out var schema))
+				{
+					return (x, schema);
+				}
+
+				if (propertyType.IsArray && _generatedSchemas.HasSchemaForType(propertyType.GetElementType()!))
+				{
+					return (x, _configuration.CreateArraySchema(x));
+				}
+
+				if (propertyType.IsGenericType && _configuration.GenericSchemasDictionary.HasRelatedType(propertyType.GetGenericTypeDefinition()) &&
+				    propertyType.GetGenericArguments().All(_generatedSchemas.HasSchemaForType))
+				{
+					return (x, _configuration.CreateGenericSchema(x));
+				}
+
+				return (default, null);
+			})
+			.Where(x => x.Schema is not null)
+			.ToDictionary(x => x.MemberInfo, x => x.Schema!);
+
+	private PartialMolecularZodSchema GetPartialSchema(PocoObject pocoObject)
+		=> _generatedSchemas[pocoObject.ObjectType] switch
+		{
+			PartialMolecularZodSchema schema => schema,
+			IZodSchema schema => throw new UnreachableException(
+				$"Unexpected schema type. {pocoObject.TypeName} has already been generated as {schema.GetType().Name}"),
+			_ => throw new UnreachableException("Schema should have been generated before this point"),
+		};
 
 	private (FileInformation FileInformation, CreatedSchemaInformation SchemaInformation) GenerateMolecule(PocoObject pocoObject)
 	{

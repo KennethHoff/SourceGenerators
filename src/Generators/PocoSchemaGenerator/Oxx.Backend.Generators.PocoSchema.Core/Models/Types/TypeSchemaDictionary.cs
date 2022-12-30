@@ -7,9 +7,6 @@ namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 public sealed class TypeSchemaDictionary<TSchema> : Dictionary<Type, TSchema>
 	where TSchema : class, ISchema
 {
-	public TSchema? GetMemberForMemberInfo(SchemaMemberInfo memberInfo)
-		=> GetSchemaForType(memberInfo.Type);
-
 	public TSchema? GetSchemaForType(Type propertyType)
 	{
 		if (TryGetValue(propertyType, out var schema))
@@ -35,12 +32,15 @@ public sealed class TypeSchemaDictionary<TSchema> : Dictionary<Type, TSchema>
 		return null;
 	}
 
-	public bool HasSchemaForMemberInfo(SchemaMemberInfo memberInfo)
-		=> GetMemberForMemberInfo(memberInfo) != null;
-
 	public bool HasSchemaForType(Type propertyType)
 		=> GetSchemaForType(propertyType) != null;
-
+	
+	public bool TryGetSchemaForType(Type propertyType, [NotNullWhen(true)] out TSchema? schema)
+	{
+		schema = GetSchemaForType(propertyType);
+		return schema is not null;
+	}
+	
 	public void Update(Type type, TSchema updatedSchema)
 	{
 		if (ContainsKey(type))

@@ -54,11 +54,7 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		// if is generic, check if all generic arguments are supported
 		if (type.IsGenericType)
 		{
-			var genericArguments = type.GetGenericArguments();
-			foreach (var genericArgument in genericArguments)
-			{
-				CheckSupport(genericArgument, includeDependencies, supported, unsupported);
-			}
+			CheckSupportForGenerics(type, includeDependencies, supported, unsupported);
 		}
 		
 		var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
@@ -79,10 +75,7 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 
 		if (includeDependencies)
 		{
-			foreach (var member in type.GetValidSchemaMembers())
-			{
-				CheckSupport(member.Type, includeDependencies, supported, unsupported);
-			}
+			CheckSupportForDependencies(type, includeDependencies, supported, unsupported);
 		}
 
 		if (IsSupported(type) is { } exception)
@@ -93,6 +86,23 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		}
 
 		supported[schemaTypeAttribute].Add(type);
+	}
+
+	private void CheckSupportForDependencies(Type type, bool includeDependencies, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
+	{
+		foreach (var member in type.GetValidSchemaMembers())
+		{
+			CheckSupport(member.Type, includeDependencies, supported, unsupported);
+		}
+	}
+
+	private void CheckSupportForGenerics(Type type, bool includeDependencies, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
+	{
+		var genericArguments = type.GetGenericArguments();
+		foreach (var genericArgument in genericArguments)
+		{
+			CheckSupport(genericArgument, includeDependencies, supported, unsupported);
+		}
 	}
 
 	private TypeSupport GetTypeSchemaDictionary(IEnumerable<Type> types,
