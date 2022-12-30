@@ -29,6 +29,7 @@ public abstract class
 
 	protected abstract string SchemaNamingFormat { get; set; }
 	protected abstract string SchemaTypeNamingFormat { get; set; }
+	protected abstract string FileExtensionInfix { get; set; }
 
 	#region Interface implementations
 
@@ -72,9 +73,9 @@ public abstract class
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileExtension(string fileExtension)
+	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileExtensionInfix(string infix)
 	{
-		FileExtension = fileExtension;
+		FileExtensionInfix = infix;
 		return this;
 	}
 

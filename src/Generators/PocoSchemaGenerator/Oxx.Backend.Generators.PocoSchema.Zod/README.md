@@ -55,17 +55,16 @@ The following options are available:
 
 * `OverrideFileNameNamingFormat(string)` - Overrides the naming format for the file names.
     * Default: `{0}Schema` where `{0}` is the name of the class.
-    * Example: `OverrideFileNameNamingFormat("{0}Schema")` will generate a file called `myClassSchema.ts` for a POCO called `MyClass`.
-        * Note: The file extension can be changed by using the `OverrideFileExtension(string)` method (see below).
+    * Example: `OverrideFileNameNamingFormat("{0}Schema")` will generate a file called `myClassSchema.g.ts` for a POCO called `MyClass`.
+        * Note: The file extension infix(`.g`) can be changed by using the `OverrideFileExtensionInfix(string)` method (see below).
 
 * `OverrideSchemaEnumNamingFormat(string)` - Overrides the naming format for the enums.
     * Default: `{0}SchemaEnum` where `{0}` is the name of the enum.
     * Example: `OverrideSchemaEnumNamingFormat("{0}SchemaEnum")` will generate an enum called `myClassSchemaEnum` for an enum called `MyClass`.
 
-* `OverrideFileExtension(string)` - Overrides the file extension for the generated files.
-    * Default: `.ts`
-    * Example: `OverrideFileExtension(".ts")` will generate a file called `myClassSchema.ts` for a class called `MyClass`.
-        * Note: The file name can be changed by using the `OverrideFileNameNamingFormat(string)` method (see above).
+* `OverrideFileExtensionInfix(string)` - Overrides the infix for the file extension
+  * Default: `.g`
+  * Example: `OverrideFileExtensionInfix(".g")` will generate a file called `myClassSchema.g.ts` for a POCO called `MyClass`.
 
 * `ApplyAtomicSchema<TType, TSchema>` - Applies a schema to a type.
     * Example: `ApplyAtomicSchema<MyClass, MySchema>()` will apply the schema `MySchema` to the type `MyClass`.

@@ -13,6 +13,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 	public required bool DeleteFilesOnStart { get; init; }
 	public required ZodSchemaEventConfiguration Events { get; init; }
 	public required string FileExtension { get; init; }
+	public required string FileExtensionInfix { get; init; }
 	public required string OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
@@ -94,7 +95,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, Zo
 		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
 
 	public string FormatFilePath(IPartialZodSchema schema)
-		=> $"./{FormatSchemaName(schema)}";
+		=> $"./{FormatSchemaName(schema)}{FileExtensionInfix}";
 
 	public string FormatSchemaName(IPartialZodSchema schema)
 		=> schema switch

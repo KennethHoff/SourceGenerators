@@ -10,6 +10,8 @@ public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : 
 {
 	TSchemaEventConfiguration Events { get; }
 	string FileExtension { get; }
+	string FileExtensionInfix { get; }
+	sealed string FullFileExtension => $"{FileExtensionInfix}{FileExtension}";
 }
 
 public interface ISchemaConfiguration
