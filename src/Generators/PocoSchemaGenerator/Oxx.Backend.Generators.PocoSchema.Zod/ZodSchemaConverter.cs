@@ -40,7 +40,7 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	public IEnumerable<FileInformation> GenerateFileContent(IReadOnlyCollection<IPocoStructure> pocoStructures)
 	{
-		var atoms = GenerateAtoms(_configuration.AtomicSchemasToCreateDictionary);
+		var atoms = GenerateAtoms(pocoStructures.OfType<PocoAtom>());
 		var enums = GenerateEnums(pocoStructures.OfType<PocoEnum>());
 		var molecules = GenerateMolecules(pocoStructures.OfType<PocoObject>());
 
@@ -53,19 +53,20 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	#endregion
 
-	private FileInformation GenerateAtom(KeyValuePair<Type, IPartialZodSchema> atomicSchema)
+	private FileInformation GenerateAtom(PocoAtom pocoAtom)
 	{
-		_generatedSchemas.Add(atomicSchema.Key, atomicSchema.Value);
+		var atomSchema = _configuration.CreatedSchemasDictionary[pocoAtom.Type];
+		_generatedSchemas.Add(pocoAtom.Type, atomSchema);
 
-		if (atomicSchema.Value is IBuiltInAtomicZodSchema)
+		if (atomSchema is IBuiltInAtomicZodSchema)
 		{
 			return FileInformation.None;
 		}
 
 		return new FileInformation
 		{
-			Content = GenerateFileContent(atomicSchema.Value),
-			Name = GenerateFileName(atomicSchema.Value),
+			Content = GenerateFileContent(atomSchema),
+			Name = GenerateFileName(atomSchema),
 		};
 	}
 
@@ -79,8 +80,8 @@ public class ZodSchemaConverter : ISchemaConverter
 
 		""");
 
-	private IEnumerable<FileInformation> GenerateAtoms(TypeSchemaDictionary<IPartialZodSchema> configurationAtomicSchemaDictionary)
-		=> configurationAtomicSchemaDictionary
+	private IEnumerable<FileInformation> GenerateAtoms(IEnumerable<PocoAtom> pocoAtoms)
+		=> pocoAtoms
 			.Select(GenerateAtom)
 			.ToArray();
 

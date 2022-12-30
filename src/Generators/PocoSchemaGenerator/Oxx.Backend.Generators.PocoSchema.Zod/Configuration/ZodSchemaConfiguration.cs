@@ -23,13 +23,6 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 	public required string SchemaTypeNamingFormat { get; init; }
 
 	/// <summary>
-	///     Dictionary containing the non-generic types that will be generated <br />
-	///     Don't use this if you want to find the schema to use for other types. <br />
-	///     Use <see cref="CreatedSchemasDictionary" /> instead.
-	/// </summary>
-	public required TypeSchemaDictionary<IPartialZodSchema> AtomicSchemasToCreateDictionary { get; init; }
-
-	/// <summary>
 	///     Dictionary containing fully created schemas
 	/// </summary>
 	public required TypeSchemaDictionary<IPartialZodSchema> CreatedSchemasDictionary { get; set; }

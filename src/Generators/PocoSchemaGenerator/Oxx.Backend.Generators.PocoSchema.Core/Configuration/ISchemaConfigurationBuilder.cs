@@ -6,14 +6,15 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaConfigurationBuilder<out TSelf, in TSchema, out TSchemaConfiguration, out TSchemaEvents> 
-	where TSelf : ISchemaConfigurationBuilder<TSelf, TSchema, TSchemaConfiguration, TSchemaEvents>
+public interface ISchemaConfigurationBuilder<out TSelf, in TSchema, in TAtomicSchema, out TSchemaConfiguration, out TSchemaEvents> 
+	where TSelf : ISchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents>
 	where TSchema : class, ISchema
+	where TAtomicSchema: class, TSchema, IAtomicSchema
 	where TSchemaConfiguration : ISchemaConfiguration<TSchemaEvents>
 	where TSchemaEvents : ISchemaEvents, new()
 {
-	TSelf ApplyAtomicSchema<TType, TAtomicSchema>(Func<TAtomicSchema>? schemaFactory = null)
-		where TAtomicSchema : TSchema, IAtomicSchema, new();
+	TSelf ApplyAtomicSchema<TType, TAppliedSchema>(Func<TAppliedSchema>? schemaFactory = null)
+		where TAppliedSchema : TAtomicSchema, new();
 	TSelf ApplyGenericSchema(Type genericType, Type genericSchema);
 	TSchemaConfiguration Build();
 	TSelf ConfigureEvents(Action<TSchemaEvents> action);

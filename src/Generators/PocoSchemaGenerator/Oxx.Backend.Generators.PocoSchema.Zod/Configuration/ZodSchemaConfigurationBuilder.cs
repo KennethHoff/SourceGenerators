@@ -6,11 +6,10 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, ZodSchemaConfiguration, ZodSchemaEvents>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, IAtomicZodSchema, ZodSchemaConfiguration, ZodSchemaEvents>
 {
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
-		AtomicSchemasToCreateDictionary = AtomicSchemasToCreateDictionary,
 		GenericSchemasDictionary = GenericSchemasDictionary,
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,
@@ -22,7 +21,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		SchemaFileNameFormat = FileNameFormat,
 		FileExtension = FileExtension,
 		FileExtensionInfix = FileExtensionInfix,
-		CreatedSchemasDictionary = new TypeSchemaDictionary<IPartialZodSchema>(),
+		CreatedSchemasDictionary = CreateFromAtomDictionary(),
 	};
 
 	protected override string FileExtension { get; set; } = ".ts";
@@ -34,17 +33,26 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 
 	public ZodSchemaConfigurationBuilder()
 	{
-		ApplyAtomicSchemas(() =>
+		ApplyAtomicSchema<string, StringBuiltInAtomicZodSchema>();
+		ApplyAtomicSchema<int, NumberBuiltInAtomicZodSchema>();
+		ApplyAtomicSchema<float, NumberBuiltInAtomicZodSchema>();
+		ApplyAtomicSchema<double, NumberBuiltInAtomicZodSchema>();
+		ApplyAtomicSchema<decimal, NumberBuiltInAtomicZodSchema>();
+		ApplyAtomicSchema<Guid, GuidAtomicZodSchema>();
+		ApplyAtomicSchema<bool, BooleanBuiltInAtomicZodSchema>();
+		ApplyAtomicSchema<DateTime, DateBuiltInAtomicZodSchema>();
+		ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayBuiltInAtomicZodSchema<>));
+	}
+
+	private TypeSchemaDictionary<IPartialZodSchema> CreateFromAtomDictionary()
+	{
+		var dictionary = new TypeSchemaDictionary<IPartialZodSchema>();
+
+		foreach (var (key, value) in AtomDictionary)
 		{
-			ApplyAtomicSchema<string, StringBuiltInAtomicZodSchema>();
-			ApplyAtomicSchema<int, NumberBuiltInAtomicZodSchema>();
-			ApplyAtomicSchema<float, NumberBuiltInAtomicZodSchema>();
-			ApplyAtomicSchema<double, NumberBuiltInAtomicZodSchema>();
-			ApplyAtomicSchema<decimal, NumberBuiltInAtomicZodSchema>();
-			ApplyAtomicSchema<Guid, GuidAtomicZodSchema>();
-			ApplyAtomicSchema<bool, BooleanBuiltInAtomicZodSchema>();
-			ApplyAtomicSchema<DateTime, DateBuiltInAtomicZodSchema>();
-			ApplyGenericSchema(typeof(IEnumerable<>), typeof(ArrayBuiltInAtomicZodSchema<>));
-		});
+			dictionary.Add(key, value);
+		}
+
+		return dictionary;
 	}
 }

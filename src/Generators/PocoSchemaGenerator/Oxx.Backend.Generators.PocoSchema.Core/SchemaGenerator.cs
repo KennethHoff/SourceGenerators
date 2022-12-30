@@ -35,7 +35,7 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 
 		var pocoStructures = _pocoStructureExtractor.GetAll();
 		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToArray();
-		
+
 		await _fileCreator.CreateFilesAsync(fileInformations);
 
 		var generationCompletedTime = DateTime.Now;

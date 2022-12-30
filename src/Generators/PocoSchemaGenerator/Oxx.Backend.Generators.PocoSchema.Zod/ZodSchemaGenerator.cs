@@ -20,7 +20,7 @@ public sealed class ZodSchemaGenerator : SchemaGenerator<ZodSchemaEvents>
 			schemaFileCreator ?? CreateSchemaFileCreator(configuration))
 	{ }
 
-	private static IPocoStructureExtractor CreatePocoStructureExtractor(ISchemaConfiguration<ZodSchemaEvents> configuration)
+	private static IPocoStructureExtractor CreatePocoStructureExtractor(ZodSchemaConfiguration configuration)
 		=> new ZodConfiguredPocoStructureExtractor(configuration);
 
 	private static ISchemaFileCreator CreateSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents> configuration)
