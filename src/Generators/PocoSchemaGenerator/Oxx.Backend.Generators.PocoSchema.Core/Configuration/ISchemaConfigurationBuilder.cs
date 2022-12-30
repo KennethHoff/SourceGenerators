@@ -6,8 +6,9 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaConfigurationBuilder<out TSelf, in TSchema, out TSchemaConfiguration, out TSchemaEvents> where TSchema : class, ISchema
+public interface ISchemaConfigurationBuilder<out TSelf, in TSchema, out TSchemaConfiguration, out TSchemaEvents> 
 	where TSelf : ISchemaConfigurationBuilder<TSelf, TSchema, TSchemaConfiguration, TSchemaEvents>
+	where TSchema : class, ISchema
 	where TSchemaConfiguration : ISchemaConfiguration<TSchemaEvents>
 	where TSchemaEvents : ISchemaEvents, new()
 {

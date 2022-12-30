@@ -172,7 +172,8 @@ public abstract class SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, 
 		}
 	}
 
-	private void UpsertSchemaTypeDictionary<TType, TSchemaToUpsert>(Func<TSchemaToUpsert>? substituteFactory = null) where TSchemaToUpsert : TSchema, new()
+	private void UpsertSchemaTypeDictionary<TType, TSchemaToUpsert>(Func<TSchemaToUpsert>? substituteFactory = null) 
+		where TSchemaToUpsert : TSchema, new()
 	{
 		var type = typeof(TType);
 

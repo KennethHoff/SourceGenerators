@@ -1,6 +1,7 @@
 ﻿namespace AnotherProject.Seremonibasen.Models.Utility.Select;
 
-public struct SelectOptions<TEnum> where TEnum : Enum
+public struct SelectOptions<TEnum> 
+	where TEnum : Enum
 {
     public SelectOptions()
     { }
