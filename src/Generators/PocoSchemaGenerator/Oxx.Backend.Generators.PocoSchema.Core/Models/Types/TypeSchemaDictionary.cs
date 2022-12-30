@@ -4,13 +4,10 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
-public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchemaType>
-	where TSchemaType : class, ISchema
+public sealed class TypeSchemaDictionary<TSchema> : Dictionary<Type, TSchema>
+	where TSchema : class, ISchema
 {
-	public TSchemaType? GetMemberForMemberInfo(SchemaMemberInfo memberInfo)
-		=> GetSchemaForType(memberInfo.Type);
-
-	public TSchemaType? GetSchemaForType(Type propertyType)
+	public TSchema? GetSchemaForType(Type propertyType)
 	{
 		if (TryGetValue(propertyType, out var schema))
 		{
@@ -35,13 +32,16 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		return null;
 	}
 
-	public bool HasSchemaForMemberInfo(SchemaMemberInfo memberInfo)
-		=> GetMemberForMemberInfo(memberInfo) != null;
-
 	public bool HasSchemaForType(Type propertyType)
 		=> GetSchemaForType(propertyType) != null;
-
-	public void Update(Type type, TSchemaType updatedSchema)
+	
+	public bool TryGetSchemaForType(Type propertyType, [NotNullWhen(true)] out TSchema? schema)
+	{
+		schema = GetSchemaForType(propertyType);
+		return schema is not null;
+	}
+	
+	public void Update(Type type, TSchema updatedSchema)
 	{
 		if (ContainsKey(type))
 		{
@@ -53,7 +53,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		}
 	}
 
-	private bool TryGetBaseTypeValue(Type propertyType, [NotNullWhen(true)] out TSchemaType? returnType)
+	private bool TryGetBaseTypeValue(Type propertyType, [NotNullWhen(true)] out TSchema? returnType)
 	{
 		var baseType = propertyType.BaseType;
 		if (baseType is null)
@@ -72,7 +72,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		return false;
 	}
 
-	private bool TryGetInterfaceTypeValue(Type propertyType, [NotNullWhen(true)] out TSchemaType? returnType)
+	private bool TryGetInterfaceTypeValue(Type propertyType, [NotNullWhen(true)] out TSchema? returnType)
 	{
 		var interfaces = propertyType.GetInterfaces();
 		var interfaceType = interfaces.FirstOrDefault(ContainsKey);
@@ -86,7 +86,7 @@ public sealed class TypeSchemaDictionary<TSchemaType> : Dictionary<Type, TSchema
 		return true;
 	}
 
-	private bool TryGetNonNullableTypeValue(Type propertyType, [NotNullWhen(true)] out TSchemaType? returnType)
+	private bool TryGetNonNullableTypeValue(Type propertyType, [NotNullWhen(true)] out TSchema? returnType)
 	{
 		if (propertyType.ToContextualType().IsNullableType)
 		{

@@ -6,7 +6,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, ZodSchemaConfiguration, ZodSchemaEventConfiguration>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, ZodSchemaConfiguration, ZodSchemaEvents>
 {
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
@@ -15,7 +15,7 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		Assemblies = Assemblies,
 		OutputDirectory = OutputDirectory,
 		FileDeletionMode = FileDeletionMode,
-		Events = EventConfiguration ?? new ZodSchemaEventConfiguration(),
+		Events = EventConfiguration ?? new ZodSchemaEvents(),
 		SchemaNamingFormat = SchemaNamingFormat,
 		SchemaEnumNamingFormat = SchemaEnumNamingFormat,
 		SchemaTypeNamingFormat = SchemaTypeNamingFormat,

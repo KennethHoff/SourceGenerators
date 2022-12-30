@@ -96,7 +96,7 @@ The following options are available:
     * Note: The number of generic parameters must match.
     * Note: The number of generic arguments must match.
 
-* `ConfigureEvents(Action<TSchemaEventConfiguration> action)` - Configures the events that are fired during the generation process.
+* `ConfigureEvents(Action<TSchemaEvents> action)` - Configures the events that are fired during the generation process.
     * Example: `ConfigureEvents(x => x.FileCreated += (sender, args) => { /* Do something */ })`
 
 * `ResolveTypesFromAssemblyContaining<TType>()` - Resolves types from the assembly containing the specified type.
@@ -233,8 +233,8 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       ```
     * There is a way to do this in Zod, but it's quite complicated and I don't think it's worth it.
         * https://github.com/colinhacks/zod#recursive-types
-    * Note: This is one of the issues that currently is not caught by the code generator, and will generate an invalid schema. 
-* The schema generator doesn't support circular references.
+    * Note: This is one of the issues that currently is not caught by the code generator, and will simply generate an invalid schema. 
+* The schema generator only partially supports circular references.
     * Example:
     * ```csharp
       [SchemaObject]

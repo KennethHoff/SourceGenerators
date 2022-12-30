@@ -1,190 +1,81 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
-using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
+﻿using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Exceptions;
-using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Files;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.FileCreation;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
-public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
-	where TSchemaType : ISchema
-	where TSchemaEventConfiguration : ISchemaEventConfiguration
+public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
+	where TSchemaEvents : ISchemaEvents
 {
-	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
+	private readonly ISchemaConfiguration<TSchemaEvents> _configuration;
+	private readonly ISchemaFileCreator _fileCreator;
+	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 	private readonly ISchemaConverter _schemaConverter;
-	private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
-	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
+	private bool _alreadyGenerated;
+
+	protected SchemaGenerator(ISchemaConfiguration<TSchemaEvents> configuration, ISchemaConverter schemaConverter, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
 	{
 		_schemaConverter = schemaConverter;
 		_configuration = configuration;
+		_pocoStructureExtractor = pocoStructureExtractor;
+		_fileCreator = fileCreator;
 	}
 
-	public async Task CreateFilesAsync()
+	#region Interface implementations
+
+	public async Task GenerateAllAsync()
 	{
+		EnsureNotAlreadyGenerated();
+
 		var generationStartedTime = DateTime.Now;
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
-		EnsureDirectoryExists();
-		var pocoStructures = GetPocoStructures();
-		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
-
-		await GenerateFilesAsync(fileInformations);
+		var pocoStructures = _pocoStructureExtractor.GetAll();
+		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToArray();
+		
+		await _fileCreator.CreateFilesAsync(fileInformations);
 
 		var generationCompletedTime = DateTime.Now;
 		_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
 	}
 
-	private async Task GenerateFilesAsync(List<FileInformation> contents)
-	{
-		_configuration.Events.FilesCreating?.Invoke(this, new FilesCreatingEventArgs(contents));
+	public Task GenerateAsync<TPoco>(bool includeDependencies = true)
+		=> GenerateAsync(typeof(TPoco), includeDependencies);
 
-		await Task.WhenAll(contents.Select(fileInformation => Task.Run(async () =>
+	public Task GenerateAsync(Type pocoType, bool includeDependencies = true)
+		=> GenerateAsync(new[]
 		{
-			var fileCreatingEventArgs = new FileCreatingEventArgs(fileInformation);
-			_configuration.Events.FileCreating?.Invoke(this, fileCreatingEventArgs);
+			pocoType,
+		}, includeDependencies);
 
-			if (!fileCreatingEventArgs.Skip)
-			{
-				var filePath = Path.Combine(_configuration.OutputDirectory.FullName, fileInformation.Name + _configuration.FullFileExtension);
+	public async Task GenerateAsync(IEnumerable<Type> pocoTypes, bool includeDependencies = true)
+	{
+		EnsureNotAlreadyGenerated();
 
-				await _semaphoreSlim.WaitAsync();
-				await File.WriteAllTextAsync(filePath, fileInformation.Content);
-				_semaphoreSlim.Release();
-			}
+		var generationStartedTime = DateTime.Now;
+		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
-			_configuration.Events.FileCreated?.Invoke(this, new FileCreatedEventArgs(fileInformation)
-			{
-				Skipped = fileCreatingEventArgs.Skip,
-			});
-		})));
+		var pocoStructures = _pocoStructureExtractor.Get(pocoTypes, includeDependencies);
+		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToArray();
 
-		_configuration.Events.FilesCreated?.Invoke(this, new FilesCreatedEventArgs(contents));
+		await _fileCreator.CreateFilesAsync(fileInformations);
+
+		var generationCompletedTime = DateTime.Now;
+		_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
 	}
 
-	private void EnsureDirectoryExists()
+	#endregion
+	
+	private void EnsureNotAlreadyGenerated()
 	{
-		if (_configuration.FileDeletionMode is not FileDeletionMode.OverwriteExisting && _configuration.OutputDirectory.Exists)
+		if (_alreadyGenerated)
 		{
-			var fileInfos = _configuration.OutputDirectory.GetFiles();
-
-			var deletingFilesEventArgs = new DeletingFilesEventArgs(_configuration.OutputDirectory, fileInfos);
-			_configuration.Events.DeletingFiles?.Invoke(this, deletingFilesEventArgs);
-
-			if (_configuration.FileDeletionMode is FileDeletionMode.All)
-			{
-				EnsureOnlyAutoGeneratedFilesExist(_configuration.OutputDirectory, fileInfos);
-			}
-			
-			foreach (var fileInfo in fileInfos)
-			{
-				fileInfo.Delete();
-			}
+			throw new InvalidOperationException("Schema generation has already been performed. Create a new instance of the generator to perform another generation.");
 		}
 
-		_configuration.OutputDirectory.Create();
-	}
-
-	private void EnsureOnlyAutoGeneratedFilesExist(DirectoryInfo directoryInfo, IReadOnlyCollection<FileInfo> fileInfos)
-	{
-		var filesWithInvalidNaming = fileInfos.Where(x => !_configuration.FullFileNamingRegex.IsMatch(x.Name)).ToArray();
-		if (filesWithInvalidNaming.Length is 0)
-		{
-			return;
-		}
-
-		var exception = new DirectoryContainsFilesWithIncompatibleNamingException(filesWithInvalidNaming);
-		_configuration.Events.DeletingFilesFailed?.Invoke(this, new DeletingFilesFailedEventArgs(directoryInfo, fileInfos, exception));
-		Environment.Exit(1);
-	}
-
-	private IPocoStructure[] GetPocoStructures()
-	{
-		var (types, unsupportedTypes) = GetTypeSchemaDictionary();
-
-		var objectTypes = types
-			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
-			.Value;
-
-		var enumTypes = types
-			.FirstOrDefault(x => x.Key is SchemaEnumAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
-			.Value;
-
-		var objects = objectTypes
-			.Select(t =>
-			{
-				var validSchemaMembers = t.GetValidSchemaMembers();
-				return new PocoObject(t, validSchemaMembers);
-			})
-			.Cast<IPocoStructure>()
-			.ToArray();
-
-		var enums = enumTypes
-			.Select(t => new PocoEnum(t))
-			.Cast<IPocoStructure>()
-			.ToArray();
-
-		var pocoStructures = objects.Concat(enums).ToArray();
-
-		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes));
-		return pocoStructures;
-	}
-
-	private (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary()
-	{
-		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
-		var unsupportedTypes = new List<(Type Type, Exception Exception)>();
-		foreach (var assembly in _configuration.Assemblies)
-		{
-			foreach (var type in assembly.GetTypes())
-			{
-				var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
-				if (schemaTypeAttribute is null)
-				{
-					continue;
-				}
-
-				if (IsSupported(type) is {} exception)
-				{
-					unsupportedTypes.Add((type, exception));
-					// _configuration.Events.UnsupportedTypeFound?.Invoke(this, new UnsupportedTypeFoundEventArgs(type, exception));
-					continue;
-				}
-
-				if (!types.ContainsKey(schemaTypeAttribute))
-				{
-					types.Add(schemaTypeAttribute, new List<Type>());
-				}
-
-				types[schemaTypeAttribute].Add(type);
-			}
-		}
-		
-		return (types, unsupportedTypes);
-	}
-
-	private static Exception? IsSupported(Type type)
-	{
-		if (type.IsGenericType)
-		{
-			return new ArgumentException("Generic types are not supported");
-		}
-
-		var validMemberInfos = type.GetValidSchemaMembers().ToArray();
-		if (!validMemberInfos.Any())
-		{
-			return new ArgumentException("No fields or properties found");
-		}
-
-		return null;
+		_alreadyGenerated = true;
 	}
 }

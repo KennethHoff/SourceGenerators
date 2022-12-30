@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using AnotherProject;
+﻿using AnotherProject;
 using AnotherProject.Seremonibasen.Models;
+using Oxx.Backend.Generators.PocoSchema.Core;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Exceptions;
@@ -13,13 +13,13 @@ using TestingApp.SchemaTypes;
 
 namespace TestingApp;
 
-internal sealed class TestingAppSchemaGenerationConfiguration
+internal static class TestingAppSchemaGenerationConfiguration
 {
 	public static async Task GenerateSchemaAsync()
 	{
 		var configuration = new ZodSchemaConfigurationBuilder()
 			.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
-			.OverrideFileDeletionMode(FileDeletionMode.OverwriteExisting)
+			.OverrideFileDeletionMode(FileDeletionMode.All)
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
@@ -37,10 +37,9 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 			})
 			.Build();
 
-		var schema = new ZodSchemaConverter(configuration);
-		var generator = new ZodSchemaGenerator(schema, configuration);
-		
-		await generator.CreateFilesAsync();
+		ISchemaGenerator generator = new ZodSchemaGenerator(configuration);
+		await generator.GenerateAllAsync();
+		// await generator.GenerateAsync<BigBoiTest>();
 	}
 
 	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)
@@ -49,9 +48,9 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 
 		var informationsWithInvalidMembers = informations
 			.Where(x => x.InvalidMembers.Any())
-			.ToList();
+			.ToArray();
 
-		switch (informationsWithInvalidMembers.Count)
+		switch (informationsWithInvalidMembers.Length)
 		{
 			case 0:
 				PrintAllSchemasResolved();
@@ -66,10 +65,10 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 
 		void PrintTotal()
 		{
-			var invalidTypesAmount = informationsWithInvalidMembers.Count;
-			ColoredConsole.WriteLine(informations.Count, ConsoleColor.Cyan);
+			var invalidTypesAmount = informationsWithInvalidMembers.Length;
+			ColoredConsole.Write(informations.Count, ConsoleColor.Cyan);
 			Console.Write(" type-schemas were resolved, of which ");
-			ColoredConsole.WriteLine(informations.Count - invalidTypesAmount, ConsoleColor.Green);
+			ColoredConsole.Write(informations.Count - invalidTypesAmount, ConsoleColor.Green);
 			Console.WriteLine(" were resolved fully.");
 		}
 
@@ -83,9 +82,9 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 
 			var invalidSchemasAmount = typesWithoutSchemas.Length;
 			Console.Write("The following ");
-			ColoredConsole.WriteLine(invalidSchemasAmount, ConsoleColor.Red);
+			ColoredConsole.Write(invalidSchemasAmount, ConsoleColor.Red);
 			Console.Write(" schemas could not be resolved in ");
-			ColoredConsole.WriteLine(typesWithoutSchemas.Length, ConsoleColor.Cyan);
+			ColoredConsole.Write(typesWithoutSchemas.Length, ConsoleColor.Cyan);
 			Console.WriteLine(" type-schemas:");
 			foreach (var type in typesWithoutSchemas)
 			{
@@ -106,7 +105,7 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		void PrintAllSchemasResolved()
 		{
 			Console.Write("All ");
-			ColoredConsole.WriteLine(informations.Count, ConsoleColor.Green);
+			ColoredConsole.Write(informations.Count, ConsoleColor.Green);
 			Console.WriteLine(" type-schemas were created successfully.");
 		}
 	}
@@ -132,7 +131,7 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		void PrintUnsupportedTypes()
 		{
 			Console.Write("The following ");
-			ColoredConsole.WriteLine(unsupportedTypes.Count, ConsoleColor.Red);
+			ColoredConsole.Write(unsupportedTypes.Count, ConsoleColor.Red);
 			Console.WriteLine(" types could not be resolved:");
 			foreach (var (type, exception) in unsupportedTypes)
 			{
@@ -147,16 +146,16 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		void PrintSuccessfulStructures()
 		{
 			Console.Write("Successfully resolved ");
-			ColoredConsole.Write(eventArgs.PocoStructures.Length, ConsoleColor.Green);
+			ColoredConsole.Write(eventArgs.PocoStructures.Count, ConsoleColor.Green);
 			Console.Write(" out of ");
-			ColoredConsole.Write(eventArgs.PocoStructures.Length + unsupportedTypes.Count, ConsoleColor.Cyan);
+			ColoredConsole.Write(eventArgs.PocoStructures.Count + unsupportedTypes.Count, ConsoleColor.Cyan);
 			Console.WriteLine(" types.");
 		}
 
 		void PrintAllTypesResolved()
 		{
 			Console.Write("All ");
-			ColoredConsole.Write(eventArgs.PocoStructures.Length, ConsoleColor.Green);
+			ColoredConsole.Write(eventArgs.PocoStructures.Count, ConsoleColor.Green);
 			Console.WriteLine(" types were resolved successfully.");
 		}
 	}

@@ -19,6 +19,8 @@ public class CourseDay
     [NotMapped]
     public TimeSpan Length => TimeSpan.FromMinutes(LengthInMinutes);
     public Guid CourseId { get; set; }
+	
+	public required DateTimeOffset DateAndTimeFromUtc { get; set; }
 
     [ForeignKey("CourseId")]
     public virtual Course Course { get; set; } = null!;

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -7,21 +8,20 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
-public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> : 
-	ISchemaConfigurationBuilder<SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration>, 
-		TSchemaType, TConfigurationType, TSchemaEventConfiguration>
-	where TSchemaType : class, ISchema
-	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
-	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
+public abstract class SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> 
+	: ISchemaConfigurationBuilder<SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents>, TSchema, TSchemaConfiguration, TSchemaEvents>
+	where TSchema : class, ISchema
+	where TSchemaConfiguration : ISchemaConfiguration<TSchemaEvents>
+	where TSchemaEvents : ISchemaEvents, new()
 {
-	protected readonly TypeSchemaDictionary<TSchemaType> AtomicSchemasToCreateDictionary = new();
+	protected readonly TypeSchemaDictionary<TSchema> AtomicSchemasToCreateDictionary = new();
 	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
-	protected TSchemaEventConfiguration? EventConfiguration;
+	protected TSchemaEvents? EventConfiguration;
 	protected DirectoryInfo OutputDirectory = null!;
 
-	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
+	protected ICollection<Assembly> Assemblies { get; } = new List<Assembly>();
 	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
-	protected abstract TConfigurationType Configuration { get; }
+	protected abstract TSchemaConfiguration Configuration { get; }
 	protected FileDeletionMode FileDeletionMode { get; set; }
 	protected abstract string FileExtension { get; set; }
 	protected abstract string FileExtensionInfix { get; set; }
@@ -32,15 +32,15 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 
 	#region Interface implementations
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyAtomicSchema<TType, TSchema>(
-		Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, IAtomicSchema, new()
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> ApplyAtomicSchema<TType, TAtomicSchema>(
+		Func<TAtomicSchema>? schemaFactory = null)
+		where TAtomicSchema : TSchema, IAtomicSchema, new()
 	{
-		UpsertSchemaTypeDictionary<TType, TSchema>(schemaFactory);
+		UpsertSchemaTypeDictionary<TType, TAtomicSchema>(schemaFactory);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ApplyGenericSchema(
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> ApplyGenericSchema(
 		Type genericType,
 		Type genericSchema)
 	{
@@ -50,7 +50,7 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	public TConfigurationType Build()
+	public TSchemaConfiguration Build()
 	{
 		if (OutputDirectory is null)
 		{
@@ -60,51 +60,51 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return Configuration;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ConfigureEvents(Action<TSchemaEventConfiguration> action)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> ConfigureEvents(Action<TSchemaEvents> action)
 	{
-		EventConfiguration = new TSchemaEventConfiguration();
+		EventConfiguration = new TSchemaEvents();
 		action(EventConfiguration);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileDeletionMode(FileDeletionMode fileDeletionMode)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> OverrideFileDeletionMode(FileDeletionMode fileDeletionMode)
 	{
 		FileDeletionMode = fileDeletionMode;
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileExtensionInfix(string infix)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> OverrideFileExtensionInfix(string infix)
 	{
 		FileExtensionInfix = infix;
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileNameNamingFormat(string format)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> OverrideFileNameNamingFormat(string format)
 	{
 		FileNameFormat = EnsureValidFormat(format);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaEnumNamingFormat(string format)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> OverrideSchemaEnumNamingFormat(string format)
 	{
 		SchemaEnumNamingFormat = EnsureValidFormat(format);
 		;
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaNamingFormat(string format)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> OverrideSchemaNamingFormat(string format)
 	{
 		SchemaNamingFormat = EnsureValidFormat(format);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaTypeNamingFormat(string format)
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> OverrideSchemaTypeNamingFormat(string format)
 	{
 		SchemaTypeNamingFormat = EnsureValidFormat(format);
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ResolveTypesFromAssemblyContaining<T>()
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> ResolveTypesFromAssemblyContaining<T>()
 	{
 		if (Assemblies.Contains(typeof(T).Assembly))
 		{
@@ -115,7 +115,7 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "")
+	public SchemaConfigurationBuilder<TSchema, TSchemaConfiguration, TSchemaEvents> SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "")
 	{
 		var callerDirectory = Path.GetDirectoryName(callerFilePath);
 		OutputDirectory = new DirectoryInfo(Path.Combine(callerDirectory!, rootDirectory));
@@ -143,9 +143,9 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		var genericSchemaTypeInfo = genericSchema.GetTypeInfo();
 
 		// Throw an exception if the generic schema does not implement TSchemaType
-		if (genericSchemaTypeInfo.ImplementedInterfaces.Contains(typeof(TSchemaType)) is false)
+		if (genericSchemaTypeInfo.ImplementedInterfaces.Contains(typeof(TSchema)) is false)
 		{
-			throw new ArgumentException($"The generic schema {genericSchema} does not implement {typeof(TSchemaType)}");
+			throw new ArgumentException($"The generic schema {genericSchema} does not implement {typeof(TSchema)}");
 		}
 
 		// If the two generics don't have the same number of generic parameters, throw an exception
@@ -172,20 +172,21 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 		}
 	}
 
-	private void UpsertSchemaTypeDictionary<TType, TSchema>(Func<TSchema>? substituteFactory = null) where TSchema : TSchemaType, new()
+	private void UpsertSchemaTypeDictionary<TType, TSchemaToUpsert>(Func<TSchemaToUpsert>? substituteFactory = null) 
+		where TSchemaToUpsert : TSchema, new()
 	{
 		var type = typeof(TType);
 
 		if (AtomicSchemasToCreateDictionary.ContainsKey(type))
 		{
 			AtomicSchemasToCreateDictionary[type] = substituteFactory is null
-				? new TSchema()
+				? new TSchemaToUpsert()
 				: substituteFactory();
 		}
 		else
 		{
 			AtomicSchemasToCreateDictionary.Add(type, substituteFactory is null
-				? new TSchema()
+				? new TSchemaToUpsert()
 				: substituteFactory());
 		}
 	}

@@ -68,9 +68,9 @@ public sealed class TypeTypeDictionary : Dictionary<Type, Type>
 			return false;
 		}
 
-		foreach (var interfaceType in interfaces)
+		foreach (var (key, value) in this)
 		{
-			foreach (var (key, value) in this)
+			foreach (var interfaceType in interfaces)
 			{
 				if (!interfaceType.IsGenericType || !key.IsGenericType)
 				{

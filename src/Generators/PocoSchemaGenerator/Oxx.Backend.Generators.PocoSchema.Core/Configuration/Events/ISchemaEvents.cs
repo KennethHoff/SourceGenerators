@@ -1,6 +1,6 @@
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
-public interface ISchemaEventConfiguration
+public interface ISchemaEvents
 {
 	EventHandler<FileCreatedEventArgs>? FileCreated { get; set; }
 	EventHandler<FileCreatingEventArgs>? FileCreating { get; set; }
