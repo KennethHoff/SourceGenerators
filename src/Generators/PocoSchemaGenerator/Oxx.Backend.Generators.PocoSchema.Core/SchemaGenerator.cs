@@ -73,7 +73,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 
 	private void EnsureDirectoryExists()
 	{
-		if (_configuration.FileDeletionMode is not FileDeletionMode.None && Directory.Exists(_configuration.OutputDirectory))
+		if (_configuration.FileDeletionMode is not FileDeletionMode.OverwriteExisting && Directory.Exists(_configuration.OutputDirectory))
 		{
 			var directoryInfo = new DirectoryInfo(_configuration.OutputDirectory);
 			var fileInfos = directoryInfo.GetFiles();

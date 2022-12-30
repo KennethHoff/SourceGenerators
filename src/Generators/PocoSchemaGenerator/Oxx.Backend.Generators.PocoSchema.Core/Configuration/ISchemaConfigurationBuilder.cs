@@ -19,7 +19,7 @@ public interface ISchemaConfigurationBuilder<TSchemaType, TConfigurationType, TS
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> ConfigureEvents(Action<TSchemaEventConfiguration> action);
 
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileDeletionMode(
-		FileDeletionMode fileFileDeletionMode = FileDeletionMode.None);
+		FileDeletionMode fileFileDeletionMode = FileDeletionMode.OverwriteExisting);
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileExtensionInfix(string infix);
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideFileNameNamingFormat(string format);
 	SchemaConfigurationBuilder<TSchemaType, TConfigurationType, TSchemaEventConfiguration> OverrideSchemaNamingFormat(string format);

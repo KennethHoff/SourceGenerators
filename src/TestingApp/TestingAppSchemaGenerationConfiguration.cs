@@ -18,7 +18,7 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 	{
 		var configuration = new ZodSchemaConfigurationBuilder()
 			.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
-			.OverrideFileDeletionMode(FileDeletionMode.None)
+			.OverrideFileDeletionMode(FileDeletionMode.OverwriteExisting)
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
@@ -202,7 +202,7 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 							  "This is most likely due to the files being added or renamed manually, or the naming convention being changed. " + 
 							  Environment.NewLine +
 							  "If you want to regenerate them, you will have to delete them manually, " +
-							  $"or change {nameof(FileDeletionMode)} to {nameof(FileDeletionMode.ForcedAll)} or {nameof(FileDeletionMode.None)}");
+							  $"or change {nameof(FileDeletionMode)} to {nameof(FileDeletionMode.ForcedAll)} or {nameof(FileDeletionMode.OverwriteExisting)}");
 			foreach (var file in directoryContainsFilesWithIncompatibleNamingException.FilesWithInvalidFileExtensions)
 			{
 				ColoredConsole.WriteLine(file, ConsoleColor.Red);
