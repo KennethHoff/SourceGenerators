@@ -2,7 +2,7 @@
 
 public interface ISchemaGenerator
 {
-	/// <summary> Generates all schema files - whatever that entails </summary>
+	/// <summary> Generates all schema files using the specified configuration. </summary>
 	Task GenerateAllAsync();
 
 	/// <summary> Generates a schema file for the given type </summary>
