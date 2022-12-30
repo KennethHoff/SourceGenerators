@@ -233,8 +233,8 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       ```
     * There is a way to do this in Zod, but it's quite complicated and I don't think it's worth it.
         * https://github.com/colinhacks/zod#recursive-types
-    * Note: This is one of the issues that currently is not caught by the code generator, and will generate an invalid schema. 
-* The schema generator doesn't support circular references.
+    * Note: This is one of the issues that currently is not caught by the code generator, and will simply generate an invalid schema. 
+* The schema generator only partially supports circular references.
     * Example:
     * ```csharp
       [SchemaObject]
