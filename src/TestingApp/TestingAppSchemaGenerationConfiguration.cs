@@ -1,4 +1,5 @@
-﻿using AnotherProject;
+﻿using System.Diagnostics;
+using AnotherProject;
 using AnotherProject.Seremonibasen.Models;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
@@ -38,7 +39,7 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 
 		var schema = new ZodSchemaConverter(configuration);
 		var generator = new ZodSchemaGenerator(schema, configuration);
-
+		
 		await generator.CreateFilesAsync();
 	}
 
@@ -159,11 +160,13 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 			Console.WriteLine(" types were resolved successfully.");
 		}
 	}
+	
+	private const string DateTimeFormat = "HH:mm:ss.fff";
 
 	private static void PrintGenerationStarted(GenerationStartedEventArgs eventArgs)
 	{
 		Console.Write("Started generating at ");
-		ColoredConsole.Write(eventArgs.GenerationStartedTime, ConsoleColor.Cyan);
+		ColoredConsole.Write(eventArgs.GenerationStartedTime.ToString(DateTimeFormat), ConsoleColor.Cyan);
 		Console.WriteLine(".");
 		Console.WriteLine();
 	}
@@ -172,8 +175,10 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 	{
 		var duration = eventArgs.GenerationCompletedTime - eventArgs.GenerationStartedTime;
 
-		Console.Write("Generation completed in ");
-		ColoredConsole.Write(duration.TotalMilliseconds, ConsoleColor.Cyan);
+		Console.Write("Generation completed at ");
+		ColoredConsole.Write(eventArgs.GenerationCompletedTime.ToString(DateTimeFormat), ConsoleColor.Cyan);
+		Console.Write(" after ");
+		ColoredConsole.Write(duration.TotalMilliseconds.ToString("0"), ConsoleColor.Cyan);
 		Console.WriteLine(" ms.");
 		Console.WriteLine();
 	}
