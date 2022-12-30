@@ -5,23 +5,98 @@ using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
 public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExtractor
 	where TSchemaEvents : ISchemaEvents
 {
-	private readonly TSchemaEvents _events;
+	private readonly ISchemaConfiguration<TSchemaEvents> _configuration;
 
 	public ConfiguredPocoStructureExtractor(ISchemaConfiguration<TSchemaEvents> configuration)
 	{
-		_events = configuration.Events;
+		_configuration = configuration;
 	}
 
-	public IReadOnlyCollection<IPocoStructure> GetAllFromAssemblies(IReadOnlyCollection<Assembly> assemblies)
-	{
-		var (types, unsupportedTypes) = GetTypeSchemaDictionary(assemblies);
+	#region Interface implementations
 
+	public IReadOnlyCollection<IPocoStructure> Get(IEnumerable<Type> types, bool includeDependencies = true)
+	{
+		var (typeSchemaDictionary, unsupportedTypes) = GetTypeSchemaDictionary(types);
+		
+		var pocoStructures = ParseStructures(typeSchemaDictionary);
+
+		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes.ToArray()));
+		return pocoStructures;
+	}
+
+	public IReadOnlyCollection<IPocoStructure> GetAll()
+	{
+		var (types, unsupportedTypes) = GetTypeSchemaDictionary(_configuration.Assemblies.SelectMany(x => x.GetTypes()));
+		
+		var pocoStructures = ParseStructures(types);
+
+		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes.ToArray()));
+		return pocoStructures;
+	}
+
+	#endregion
+
+	private static void CheckSupport(Type type, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
+	{
+		var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
+		if (schemaTypeAttribute is null)
+		{
+			return;
+		}
+
+		if (IsSupported(type) is { } exception)
+		{
+			unsupported.Add(new UnsupportedType(type, exception));
+			// _configuration.Events.UnsupportedTypeFound?.Invoke(this, new UnsupportedTypeFoundEventArgs(type, exception));
+			return;
+		}
+
+		if (!supported.ContainsKey(schemaTypeAttribute))
+		{
+			supported.Add(schemaTypeAttribute, new List<Type>());
+		}
+
+		supported[schemaTypeAttribute].Add(type);
+	}
+
+	private static TypeSupport GetTypeSchemaDictionary(IEnumerable<Type> types, 
+		IDictionary<SchemaTypeAttribute, List<Type>>? supported = null, 
+		ICollection<UnsupportedType>? unsupported = null)
+	{
+		supported ??= new Dictionary<SchemaTypeAttribute, List<Type>>();
+		unsupported ??= new List<UnsupportedType>();
+		foreach (var type in types)
+		{
+			CheckSupport(type, supported, unsupported);
+		}
+		return new TypeSupport(supported, unsupported);
+	}
+
+	private static Exception? IsSupported(Type type)
+	{
+		if (type.IsGenericType)
+		{
+			return new ArgumentException("Generic types are not supported");
+		}
+
+		var validMemberInfos = type.GetValidSchemaMembers().ToArray();
+		if (!validMemberInfos.Any())
+		{
+			return new ArgumentException("No fields or properties found");
+		}
+
+		return null;
+	}
+
+	private static IReadOnlyCollection<IPocoStructure> ParseStructures(IDictionary<SchemaTypeAttribute, List<Type>> types)
+	{
 		var objectTypes = types
 			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
 			.Value;
@@ -43,66 +118,7 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 			.Select(t => new PocoEnum(t))
 			.Cast<IPocoStructure>()
 			.ToArray();
-
-		var pocoStructures = objects.Concat(enums).ToArray();
-
-		_events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes));
-		return pocoStructures;
+		
+		return objects.Concat(enums).ToArray();
 	}
-
-	public IPocoStructure Get(Type type)
-		=> throw new NotImplementedException();
-
-	public IReadOnlyCollection<IPocoStructure> Get(IEnumerable<Type> types)
-		=> types.Select(Get).ToArray();
-
-	private static (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary(IReadOnlyCollection<Assembly> assemblies)
-	{
-		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
-		var unsupportedTypes = new List<(Type Type, Exception Exception)>();
-		foreach (var assembly in assemblies)
-		{
-			foreach (var type in assembly.GetTypes())
-			{
-				var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
-				if (schemaTypeAttribute is null)
-				{
-					continue;
-				}
-
-				if (IsSupported(type) is { } exception)
-				{
-					unsupportedTypes.Add((type, exception));
-					// _configuration.Events.UnsupportedTypeFound?.Invoke(this, new UnsupportedTypeFoundEventArgs(type, exception));
-					continue;
-				}
-
-				if (!types.ContainsKey(schemaTypeAttribute))
-				{
-					types.Add(schemaTypeAttribute, new List<Type>());
-				}
-
-				types[schemaTypeAttribute].Add(type);
-			}
-		}
-
-		return (types, unsupportedTypes);
-	}
-
-	private static Exception? IsSupported(Type type)
-	{
-		if (type.IsGenericType)
-		{
-			return new ArgumentException("Generic types are not supported");
-		}
-
-		var validMemberInfos = type.GetValidSchemaMembers().ToArray();
-		if (!validMemberInfos.Any())
-		{
-			return new ArgumentException("No fields or properties found");
-		}
-
-		return null;
-	}
-
 }

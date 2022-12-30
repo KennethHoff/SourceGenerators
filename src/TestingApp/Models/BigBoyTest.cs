@@ -5,7 +5,7 @@ using TestingApp.SchemaTypes;
 namespace TestingApp.Models;
 
 [SchemaObject]
-internal abstract class Personerino
+internal abstract class BigBoyTest
 {
 	public IEnumerable<string> Names { get; init; } = Enumerable.Empty<string>();
 	public IEnumerable<string?> NamesNullableUnderlying { get; init; } = Enumerable.Empty<string?>();

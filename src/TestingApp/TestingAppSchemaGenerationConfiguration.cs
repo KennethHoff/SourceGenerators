@@ -19,7 +19,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 	{
 		var configuration = new ZodSchemaConfigurationBuilder()
 			.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
-			.OverrideFileDeletionMode(FileDeletionMode.OverwriteExisting)
+			.OverrideFileDeletionMode(FileDeletionMode.All)
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
@@ -39,6 +39,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 
 		ISchemaGenerator generator = new ZodSchemaGenerator(configuration);
 		await generator.GenerateAllAsync();
+		// await generator.GenerateAsync<BigBoyTest>();
 	}
 
 	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)
@@ -145,16 +146,16 @@ internal static class TestingAppSchemaGenerationConfiguration
 		void PrintSuccessfulStructures()
 		{
 			Console.Write("Successfully resolved ");
-			ColoredConsole.Write(eventArgs.PocoStructures.Length, ConsoleColor.Green);
+			ColoredConsole.Write(eventArgs.PocoStructures.Count, ConsoleColor.Green);
 			Console.Write(" out of ");
-			ColoredConsole.Write(eventArgs.PocoStructures.Length + unsupportedTypes.Count, ConsoleColor.Cyan);
+			ColoredConsole.Write(eventArgs.PocoStructures.Count + unsupportedTypes.Count, ConsoleColor.Cyan);
 			Console.WriteLine(" types.");
 		}
 
 		void PrintAllTypesResolved()
 		{
 			Console.Write("All ");
-			ColoredConsole.Write(eventArgs.PocoStructures.Length, ConsoleColor.Green);
+			ColoredConsole.Write(eventArgs.PocoStructures.Count, ConsoleColor.Green);
 			Console.WriteLine(" types were resolved successfully.");
 		}
 	}

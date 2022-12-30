@@ -10,9 +10,9 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 	where TSchemaEvents : ISchemaEvents
 {
 	private readonly ISchemaConfiguration<TSchemaEvents> _configuration;
-	private readonly ISchemaConverter _schemaConverter;
-	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 	private readonly ISchemaFileCreator _fileCreator;
+	private readonly IPocoStructureExtractor _pocoStructureExtractor;
+	private readonly ISchemaConverter _schemaConverter;
 
 	protected SchemaGenerator(ISchemaConfiguration<TSchemaEvents> configuration, ISchemaConverter schemaConverter, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
 	{
@@ -22,12 +22,14 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 		_fileCreator = fileCreator;
 	}
 
+	#region Interface implementations
+
 	public async Task GenerateAllAsync()
 	{
 		var generationStartedTime = DateTime.Now;
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
-		var pocoStructures = _pocoStructureExtractor.GetAllFromAssemblies(_configuration.Assemblies);
+		var pocoStructures = _pocoStructureExtractor.GetAll();
 		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
 		
 		await _fileCreator.CreateFilesAsync(fileInformations);
@@ -36,18 +38,18 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 		_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
 	}
 
-	public Task GenerateAsync<TPoco>()
-		=> GenerateAsync(typeof(TPoco));
+	public Task GenerateAsync<TPoco>(bool includeDependencies = true)
+		=> GenerateAsync(typeof(TPoco), includeDependencies);
 
-	public Task GenerateAsync(Type pocoType)
-		=> GenerateAsync(new[] { pocoType });
+	public Task GenerateAsync(Type pocoType, bool includeDependencies = true)
+		=> GenerateAsync(new[] { pocoType }, includeDependencies);
 
-	public async Task GenerateAsync(IEnumerable<Type> pocoTypes)
+	public async Task GenerateAsync(IEnumerable<Type> pocoTypes, bool includeDependencies = true)
 	{
 		var generationStartedTime = DateTime.Now;
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
-		var pocoStructures = _pocoStructureExtractor.Get(pocoTypes);
+		var pocoStructures = _pocoStructureExtractor.Get(pocoTypes, includeDependencies);
 		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
 
 		await _fileCreator.CreateFilesAsync(fileInformations);
@@ -55,4 +57,6 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 		var generationCompletedTime = DateTime.Now;
 		_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
 	}
+
+	#endregion
 }
