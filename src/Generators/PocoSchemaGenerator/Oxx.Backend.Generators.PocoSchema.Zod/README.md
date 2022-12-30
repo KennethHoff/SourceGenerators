@@ -189,33 +189,36 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       ```
     * There is a way to do this in Zod, but it's quite complicated and I don't think it's worth it.
         * https://github.com/colinhacks/zod#recursive-types
-    * This also includes circular references.
-      * Examples:
-      * ```csharp
-        [SchemaObject]
-        class MyClass 
-        { 
-            MyClass MyProperty { get; set; } 
-        } 
-        [SchemaObject]
-        class MyOtherClass 
-        { 
-            IEnumerable<MyClass> MyProperties { get; set; } 
-        }
-        
-        // Or
-        
-        [SchemaObject]
-        class MyClass 
-        { 
-            MyOtherClass MyProperty { get; set; } 
-        }
-        [SchemaObject]
-        class MyOtherClass 
-        { 
-            MyClass MyProperty { get; set; } 
-        }
-        ```
+    * Note: This is one of the issues that currently is not caught by the code generator, and will generate an invalid schema. 
+* The schema generator doesn't support circular references.
+    * Example:
+    * ```csharp
+      [SchemaObject]
+      class MyClass
+      {
+          MyClass MyProperty { get; set; }
+      }
+      [SchemaObject]
+      class MyOtherClass
+      {
+          IEnumerable<MyClass> MyOtherProperties { get; set; }
+      }
+
+      // Or
+
+      [SchemaObject]
+      class MyClass
+      {
+          MyOtherClass MyProperty { get; set; }
+      }
+      [SchemaObject]
+      class MyOtherClass
+      {
+          MyClass MyOtherProperty { get; set; }
+      }
+      ```
+  * Note: TypeScript will complain about this, but the schema will still be valid.
+
 
 * The schema generator doesn't support generic types.
     * Example:
