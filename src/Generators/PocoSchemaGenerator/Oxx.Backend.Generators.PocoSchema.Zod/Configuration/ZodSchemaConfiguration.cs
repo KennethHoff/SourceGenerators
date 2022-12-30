@@ -11,7 +11,7 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration>
 {
-	public required IEnumerable<Assembly> Assemblies { get; init; }
+	public required List<Assembly> Assemblies { get; init; }
 	public required FileDeletionMode FileDeletionMode { get; init; }
 	public required ZodSchemaEventConfiguration Events { get; init; }
 	public required string FileExtension { get; init; }

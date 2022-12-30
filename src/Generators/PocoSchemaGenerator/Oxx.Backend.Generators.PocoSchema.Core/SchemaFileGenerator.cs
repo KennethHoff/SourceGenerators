@@ -1,32 +1,28 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using Oxx.Backend.Generators.PocoSchema.Core.Attributes;
-using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
+﻿using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Exceptions;
-using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Files;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
+using Oxx.Backend.Generators.PocoSchema.Core.PocoExtractors;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
-public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
+public abstract class SchemaFileGenerator<TSchemaType, TSchemaEventConfiguration>
 	where TSchemaType : ISchema
 	where TSchemaEventConfiguration : ISchemaEventConfiguration
 {
 	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
 	private readonly ISchemaConverter _schemaConverter;
 	private readonly SemaphoreSlim _semaphoreSlim = new(1);
+	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 
-	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
+	protected SchemaFileGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration, IPocoStructureExtractor pocoStructureExtractor)
 	{
 		_schemaConverter = schemaConverter;
 		_configuration = configuration;
+		_pocoStructureExtractor = pocoStructureExtractor;
 	}
 
 	public async Task CreateFilesAsync()
@@ -35,7 +31,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
 		EnsureDirectoryExists();
-		var pocoStructures = GetPocoStructures();
+		var pocoStructures = _pocoStructureExtractor.GetAll();
 		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
 
 		await GenerateFilesAsync(fileInformations);
@@ -43,6 +39,21 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var generationCompletedTime = DateTime.Now;
 		_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
 	}
+	
+	// public async Task CreateFileAsync<TPoco>()
+	// {
+	// 	var generationStartedTime = DateTime.Now;
+	// 	_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
+	//
+	// 	EnsureDirectoryExists();
+	// 	var pocoStructure = GetPocoStructure<TPoco>();
+	// 	var fileInformation = _schemaConverter.GenerateFileContent(pocoStructure);
+	//
+	// 	await GenerateFileAsync(fileInformation);
+	//
+	// 	var generationCompletedTime = DateTime.Now;
+	// 	_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
+	// }
 
 	private async Task GenerateFilesAsync(List<FileInformation> contents)
 	{
@@ -105,86 +116,5 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration>
 		var exception = new DirectoryContainsFilesWithIncompatibleNamingException(filesWithInvalidNaming);
 		_configuration.Events.DeletingFilesFailed?.Invoke(this, new DeletingFilesFailedEventArgs(directoryInfo, fileInfos, exception));
 		Environment.Exit(1);
-	}
-
-	private IPocoStructure[] GetPocoStructures()
-	{
-		var (types, unsupportedTypes) = GetTypeSchemaDictionary();
-
-		var objectTypes = types
-			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
-			.Value;
-
-		var enumTypes = types
-			.FirstOrDefault(x => x.Key is SchemaEnumAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
-			.Value;
-
-		var objects = objectTypes
-			.Select(t =>
-			{
-				var validSchemaMembers = t.GetValidSchemaMembers();
-				return new PocoObject(t, validSchemaMembers);
-			})
-			.Cast<IPocoStructure>()
-			.ToArray();
-
-		var enums = enumTypes
-			.Select(t => new PocoEnum(t))
-			.Cast<IPocoStructure>()
-			.ToArray();
-
-		var pocoStructures = objects.Concat(enums).ToArray();
-
-		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes));
-		return pocoStructures;
-	}
-
-	private (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary()
-	{
-		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
-		var unsupportedTypes = new List<(Type Type, Exception Exception)>();
-		foreach (var assembly in _configuration.Assemblies)
-		{
-			foreach (var type in assembly.GetTypes())
-			{
-				var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
-				if (schemaTypeAttribute is null)
-				{
-					continue;
-				}
-
-				if (IsSupported(type) is {} exception)
-				{
-					unsupportedTypes.Add((type, exception));
-					// _configuration.Events.UnsupportedTypeFound?.Invoke(this, new UnsupportedTypeFoundEventArgs(type, exception));
-					continue;
-				}
-
-				if (!types.ContainsKey(schemaTypeAttribute))
-				{
-					types.Add(schemaTypeAttribute, new List<Type>());
-				}
-
-				types[schemaTypeAttribute].Add(type);
-			}
-		}
-		
-		return (types, unsupportedTypes);
-	}
-
-	private static Exception? IsSupported(Type type)
-	{
-		if (type.IsGenericType)
-		{
-			return new ArgumentException("Generic types are not supported");
-		}
-
-		var validMemberInfos = type.GetValidSchemaMembers().ToArray();
-		if (!validMemberInfos.Any())
-		{
-			return new ArgumentException("No fields or properties found");
-		}
-
-		return null;
 	}
 }

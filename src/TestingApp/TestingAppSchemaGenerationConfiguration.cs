@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using AnotherProject;
 using AnotherProject.Seremonibasen.Models;
+using AnotherProject.Seremonibasen.Models.WebProject.Models;
+using Oxx.Backend.Generators.PocoSchema.Core;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Exceptions;
@@ -38,8 +40,8 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 			.Build();
 
 		var schema = new ZodSchemaConverter(configuration);
-		var generator = new ZodSchemaGenerator(schema, configuration);
-		
+		var generator = new ZodSchemaFileGenerator(schema, configuration);
+
 		await generator.CreateFilesAsync();
 	}
 

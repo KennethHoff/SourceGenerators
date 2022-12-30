@@ -19,7 +19,7 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 	protected TSchemaEventConfiguration? EventConfiguration;
 	protected DirectoryInfo OutputDirectory = null!;
 
-	protected IList<Assembly> Assemblies { get; } = new List<Assembly>();
+	protected List<Assembly> Assemblies { get; } = new List<Assembly>();
 	protected Action AtomicSchemaApplicationAction { get; private set; } = null!;
 	protected abstract TConfigurationType Configuration { get; }
 	protected FileDeletionMode FileDeletionMode { get; set; }

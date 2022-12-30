@@ -15,7 +15,7 @@ public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : 
 
 public interface ISchemaConfiguration
 {
-	IEnumerable<Assembly> Assemblies { get; }
+	List<Assembly> Assemblies { get; }
 	FileDeletionMode FileDeletionMode { get; }
 	DirectoryInfo OutputDirectory { get; }
 	string SchemaFileNameFormat { get; }
