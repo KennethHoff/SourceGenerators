@@ -16,6 +16,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 	public required ZodSchemaEvents Events { get; init; }
 	public required string FileExtension { get; init; }
 	public required string FileExtensionInfix { get; init; }
+
 	public required DirectoryInfo OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
