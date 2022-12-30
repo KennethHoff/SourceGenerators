@@ -7,12 +7,15 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
-public sealed class ZodSchemaFileGenerator : SchemaFileGenerator<IPartialZodSchema, ZodSchemaEventConfiguration>
+public sealed class ZodSchemaGenerator : SchemaGenerator<IPartialZodSchema, ZodSchemaEventConfiguration>
 {
-	public ZodSchemaFileGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
-		: base(schemaConverter, configuration, CreatePocoStructureExtractor(configuration))
+	public ZodSchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
+		: base(schemaConverter, configuration, CreatePocoStructureExtractor(configuration), CreateSchemaExtractor(configuration))
 	{ }
-	
+
 	private static IPocoStructureExtractor CreatePocoStructureExtractor(ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
 		=> new ZodAssemblyPocoStructureExtractor(configuration.Assemblies, configuration);
+
+	private static ISchemaFileCreator CreateSchemaExtractor(ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
+		=> new ZodSchemaFileCreator(configuration);
 }

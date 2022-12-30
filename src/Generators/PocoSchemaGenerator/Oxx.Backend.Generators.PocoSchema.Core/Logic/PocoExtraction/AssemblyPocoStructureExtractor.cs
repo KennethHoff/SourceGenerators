@@ -25,7 +25,7 @@ public class AssemblyPocoStructureExtractor<TSchemaType, TSchemaEventConfigurati
 	public IPocoStructure Get<T>()
 		=> Get(typeof(T));
 
-	public IPocoStructure[] GetAll()
+	public IReadOnlyCollection<IPocoStructure> GetAll()
 	{
 		var (types, unsupportedTypes) = GetTypeSchemaDictionary();
 

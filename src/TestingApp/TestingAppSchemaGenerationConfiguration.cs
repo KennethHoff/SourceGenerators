@@ -40,9 +40,9 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 			.Build();
 
 		var schema = new ZodSchemaConverter(configuration);
-		var generator = new ZodSchemaFileGenerator(schema, configuration);
+		var generator = new ZodSchemaGenerator(schema, configuration);
 
-		await generator.CreateFilesAsync();
+		await generator.GenerateAllAsync();
 	}
 
 	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)

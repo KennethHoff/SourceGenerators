@@ -14,4 +14,3 @@ internal sealed class ZodAssemblyPocoStructureExtractor : AssemblyPocoStructureE
 		: base(assemblies, configuration)
 	{ }
 }
-
