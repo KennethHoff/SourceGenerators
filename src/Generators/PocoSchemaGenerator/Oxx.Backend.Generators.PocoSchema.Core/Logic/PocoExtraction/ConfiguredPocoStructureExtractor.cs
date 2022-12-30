@@ -45,8 +45,23 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 
 	private static void CheckSupport(Type type, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
 	{
+		if (unsupported.Any(x => x.Type == type))
+		{
+			return;
+		}
+		
 		var schemaTypeAttribute = type.GetCustomAttribute<SchemaTypeAttribute>();
 		if (schemaTypeAttribute is null)
+		{
+			return;
+		}
+
+		if (!supported.ContainsKey(schemaTypeAttribute))
+		{
+			supported.Add(schemaTypeAttribute, new List<Type>());
+		}
+
+		if (supported[schemaTypeAttribute].Contains(type))
 		{
 			return;
 		}
@@ -58,12 +73,12 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 			return;
 		}
 
-		if (!supported.ContainsKey(schemaTypeAttribute))
-		{
-			supported.Add(schemaTypeAttribute, new List<Type>());
-		}
-
 		supported[schemaTypeAttribute].Add(type);
+		
+		foreach (var member in type.GetValidSchemaMembers())
+		{
+			CheckSupport(member.Type, supported, unsupported);
+		}
 	}
 
 	private static TypeSupport GetTypeSchemaDictionary(IEnumerable<Type> types, 
