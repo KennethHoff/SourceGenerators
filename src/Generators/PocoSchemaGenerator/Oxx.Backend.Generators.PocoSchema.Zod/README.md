@@ -279,6 +279,8 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
 
 ## Future plans
 
+* Add support for manually creating exporting individual schemas.
+
 * Add tests - and a lot of them.
 * Improve customizability
     * Add more events
