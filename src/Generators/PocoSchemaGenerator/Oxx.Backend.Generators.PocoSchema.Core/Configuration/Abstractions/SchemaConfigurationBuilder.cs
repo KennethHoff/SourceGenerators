@@ -52,6 +52,10 @@ public abstract class SchemaConfigurationBuilder<TSchemaType, TConfigurationType
 
 	public TConfigurationType Build()
 	{
+		if (OutputDirectory is null)
+		{
+			throw new InvalidOperationException("Output directory is not set.");
+		}
 		AtomicSchemaApplicationAction();
 		return Configuration;
 	}
