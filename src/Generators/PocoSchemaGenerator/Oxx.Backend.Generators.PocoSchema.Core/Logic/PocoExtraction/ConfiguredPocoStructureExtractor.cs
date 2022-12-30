@@ -34,7 +34,7 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 	public IReadOnlyCollection<IPocoStructure> GetAll()
 	{
 		var allTypes = _configuration.Assemblies.SelectMany(x => x.GetTypes());
-		var (types, unsupportedTypes) = GetTypeSchemaDictionary(allTypes, true);
+		var (types, unsupportedTypes) = GetTypeSchemaDictionary(allTypes, false);
 		
 		var pocoStructures = ParseStructures(types);
 
