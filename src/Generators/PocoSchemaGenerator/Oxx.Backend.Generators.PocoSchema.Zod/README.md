@@ -175,6 +175,31 @@ Issues that are less common and/or can be worked around.
         * Additionally, all derived interfaces should extend this schema, and all types that implement this interface should extend this schema.
     * .. Or maybe I should just remove the schema generation for interfaces altogether. I'm not sure if it's really useful.
 
+* The schema generator doesn't support custom schemas for molecular types
+    * Example:
+    * ```csharp
+      [SchemaObject]
+      public sealed class MyClass
+      {
+          string Name { get; set; }
+          int Age { get; set; }
+      }
+      public sealed class MySchema : IMolecularZodSchema
+      {
+          // Schema Stuff
+      }
+
+      // Program.cs
+
+      configuration.ApplyMolecularSchema<MyClass, MySchema>()
+      // The above method doesn't exist, but it should 
+      // And it should probably be renamed to ApplySchema, 
+      // and merged with ApplyAtomicSchema.
+
+      // .. That used to be the case, but it never worked 🤷‍♂️
+      // ..so I renamed it and gave it more constraints 
+      ```
+
 ### Low priority
 
 Issues that are very uncommon and/or can easily be worked around and/or are very difficult to fix.
@@ -231,25 +256,6 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       }
       ```
     * I'm sure it's possible to do this, but I imagine it would be very complicated.
-
-* The schema generator doesn't support custom schemas for molecular types
-    * Example:
-    * ```csharp
-      [SchemaObject]
-      public sealed class MyClass
-      {
-          string Name { get; set; }
-          int Age { get; set; }
-      }
-      public sealed class MySchema : IZodSchema
-      {
-          // Schema Stuff
-      }
-      
-      // Program.cs
-      configuration.ApplyAtomicSchema<MyClass, MySchema>()
-      // The above does not work as it's not possible to apply a schema to a molecular type using the ApplyAtomicSchema method.
-      ```
 
 I'm sure there are tons of other issues, but these are the ones I'm aware of.
 
