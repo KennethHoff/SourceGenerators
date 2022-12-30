@@ -14,6 +14,8 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 	private readonly ISchemaConverter _schemaConverter;
 
+	private bool _alreadyGenerated;
+
 	protected SchemaGenerator(ISchemaConfiguration<TSchemaEvents> configuration, ISchemaConverter schemaConverter, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
 	{
 		_schemaConverter = schemaConverter;
@@ -26,6 +28,8 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 
 	public async Task GenerateAllAsync()
 	{
+		EnsureNotAlreadyGenerated();
+
 		var generationStartedTime = DateTime.Now;
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
@@ -42,10 +46,15 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 		=> GenerateAsync(typeof(TPoco), includeDependencies);
 
 	public Task GenerateAsync(Type pocoType, bool includeDependencies = true)
-		=> GenerateAsync(new[] { pocoType }, includeDependencies);
+		=> GenerateAsync(new[]
+		{
+			pocoType,
+		}, includeDependencies);
 
 	public async Task GenerateAsync(IEnumerable<Type> pocoTypes, bool includeDependencies = true)
 	{
+		EnsureNotAlreadyGenerated();
+
 		var generationStartedTime = DateTime.Now;
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
@@ -59,4 +68,14 @@ public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
 	}
 
 	#endregion
+	
+	private void EnsureNotAlreadyGenerated()
+	{
+		if (_alreadyGenerated)
+		{
+			throw new InvalidOperationException("Schema generation has already been performed. Create a new instance of the generator to perform another generation.");
+		}
+
+		_alreadyGenerated = true;
+	}
 }
