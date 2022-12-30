@@ -36,12 +36,4 @@ public readonly struct SchemaMemberInfo
 
 		_memberInfo = memberInfo;
 	}
-
-	public object? GetValue(object o)
-		=> _memberInfo switch
-		{
-			PropertyInfo propertyInfo => propertyInfo.GetValue(o),
-			FieldInfo fieldInfo       => fieldInfo.GetValue(o),
-			_                         => throw new UnreachableException(),
-		};
 }
