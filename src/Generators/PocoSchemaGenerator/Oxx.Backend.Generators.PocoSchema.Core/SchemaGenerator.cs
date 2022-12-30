@@ -1,21 +1,20 @@
 ﻿using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.PocoExtractors;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.FileCreation;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
-public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration> : ISchemaGenerator
-	where TSchemaType : ISchema
-	where TSchemaEventConfiguration : ISchemaEventConfiguration
+public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
+	where TSchemaEvents : ISchemaEvents
 {
-	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
+	private readonly ISchemaConfiguration<TSchemaEvents> _configuration;
 	private readonly ISchemaConverter _schemaConverter;
 	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 	private readonly ISchemaFileCreator _fileCreator;
 
-	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
+	protected SchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<TSchemaEvents> configuration, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
 	{
 		_schemaConverter = schemaConverter;
 		_configuration = configuration;
@@ -28,7 +27,7 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration> : 
 		var generationStartedTime = DateTime.Now;
 		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
 
-		var pocoStructures = _pocoStructureExtractor.GetAll();
+		var pocoStructures = _pocoStructureExtractor.GetAllFromAssemblies(_configuration.Assemblies);
 		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
 		
 		await _fileCreator.CreateFilesAsync(fileInformations);
@@ -38,8 +37,22 @@ public abstract class SchemaGenerator<TSchemaType, TSchemaEventConfiguration> : 
 	}
 
 	public Task GenerateAsync<TPoco>()
-		=> throw new NotImplementedException();
+		=> GenerateAsync(typeof(TPoco));
 
 	public Task GenerateAsync(Type pocoType)
-		=> throw new NotImplementedException();
+		=> GenerateAsync(new[] { pocoType });
+
+	public async Task GenerateAsync(IEnumerable<Type> pocoTypes)
+	{
+		var generationStartedTime = DateTime.Now;
+		_configuration.Events.GenerationStarted?.Invoke(this, new GenerationStartedEventArgs(generationStartedTime));
+
+		var pocoStructures = _pocoStructureExtractor.Get(pocoTypes);
+		var fileInformations = _schemaConverter.GenerateFileContent(pocoStructures).ToList();
+
+		await _fileCreator.CreateFilesAsync(fileInformations);
+
+		var generationCompletedTime = DateTime.Now;
+		_configuration.Events.GenerationCompleted?.Invoke(this, new GenerationCompletedEventArgs(generationStartedTime, generationCompletedTime));
+	}
 }

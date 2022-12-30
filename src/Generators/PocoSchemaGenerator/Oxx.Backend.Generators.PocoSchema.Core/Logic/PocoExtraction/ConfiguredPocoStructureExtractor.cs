@@ -5,29 +5,25 @@ using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Extensions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Pocos.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
-namespace Oxx.Backend.Generators.PocoSchema.Core.PocoExtractors;
+namespace Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
-public class AssemblyPocoStructureExtractor<TSchemaType, TSchemaEventConfiguration> : IPocoStructureExtractor
-	where TSchemaType : ISchema
-	where TSchemaEventConfiguration : ISchemaEventConfiguration
+public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExtractor
+	where TSchemaEvents : ISchemaEvents
 {
-	private readonly IReadOnlyCollection<Assembly> _assemblies;
-	private readonly ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> _configuration;
+	private readonly TSchemaEvents _events;
 
-	public AssemblyPocoStructureExtractor(IReadOnlyCollection<Assembly> assemblies, ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> configuration)
+	public ConfiguredPocoStructureExtractor(ISchemaConfiguration<TSchemaEvents> configuration)
 	{
-		_assemblies = assemblies;
-		_configuration = configuration;
+		_events = configuration.Events;
 	}
 
 	public IPocoStructure Get<T>()
 		=> Get(typeof(T));
 
-	public IReadOnlyCollection<IPocoStructure> GetAll()
+	public IReadOnlyCollection<IPocoStructure> GetAllFromAssemblies(IReadOnlyCollection<Assembly> assemblies)
 	{
-		var (types, unsupportedTypes) = GetTypeSchemaDictionary();
+		var (types, unsupportedTypes) = GetTypeSchemaDictionary(assemblies);
 
 		var objectTypes = types
 			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
@@ -53,18 +49,21 @@ public class AssemblyPocoStructureExtractor<TSchemaType, TSchemaEventConfigurati
 
 		var pocoStructures = objects.Concat(enums).ToArray();
 
-		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes));
+		_events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes));
 		return pocoStructures;
 	}
 
 	public IPocoStructure Get(Type type)
 		=> throw new NotImplementedException();
 
-	private (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary()
+	public IReadOnlyCollection<IPocoStructure> Get(IEnumerable<Type> types)
+		=> throw new NotImplementedException();
+
+	private static (Dictionary<SchemaTypeAttribute, List<Type>> types, List<(Type Type, Exception Exception)> unsupportedTypes) GetTypeSchemaDictionary(IReadOnlyCollection<Assembly> assemblies)
 	{
 		var types = new Dictionary<SchemaTypeAttribute, List<Type>>();
 		var unsupportedTypes = new List<(Type Type, Exception Exception)>();
-		foreach (var assembly in _configuration.Assemblies)
+		foreach (var assembly in assemblies)
 		{
 			foreach (var type in assembly.GetTypes())
 			{

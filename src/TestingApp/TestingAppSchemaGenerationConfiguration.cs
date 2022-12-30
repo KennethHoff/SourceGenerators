@@ -43,6 +43,8 @@ internal sealed class TestingAppSchemaGenerationConfiguration
 		var generator = new ZodSchemaGenerator(schema, configuration);
 
 		await generator.GenerateAllAsync();
+
+		// await generator.GenerateAsync<User>();
 	}
 
 	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)

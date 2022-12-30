@@ -9,11 +9,11 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfiguration : ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration>
+public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 {
 	public required List<Assembly> Assemblies { get; init; }
 	public required FileDeletionMode FileDeletionMode { get; init; }
-	public required ZodSchemaEventConfiguration Events { get; init; }
+	public required ZodSchemaEvents Events { get; init; }
 	public required string FileExtension { get; init; }
 	public required string FileExtensionInfix { get; init; }
 	public required DirectoryInfo OutputDirectory { get; init; }

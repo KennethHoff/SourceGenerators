@@ -1,19 +1,18 @@
-﻿using Oxx.Backend.Generators.PocoSchema.Core;
-using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
+﻿using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 using Oxx.Backend.Generators.PocoSchema.Core.Exceptions;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.FileCreation;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Files;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
 internal sealed class ZodSchemaFileCreator : ISchemaFileCreator
 {
-	private readonly ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> _configuration;
+	private readonly ISchemaConfiguration<ZodSchemaEvents> _configuration;
 
-	public ZodSchemaFileCreator(ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
+	public ZodSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents> configuration)
 	{
 		_configuration = configuration;
 	}

@@ -2,15 +2,13 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration> : ISchemaConfiguration
-	where TSchemaType : ISchema
-	where TSchemaEventConfiguration : ISchemaEventConfiguration
+public interface ISchemaConfiguration<out TSchemaEvents> : ISchemaConfiguration
+	where TSchemaEvents : ISchemaEvents
 {
-	TSchemaEventConfiguration Events { get; }
+	TSchemaEvents Events { get; }
 }
 
 public interface ISchemaConfiguration

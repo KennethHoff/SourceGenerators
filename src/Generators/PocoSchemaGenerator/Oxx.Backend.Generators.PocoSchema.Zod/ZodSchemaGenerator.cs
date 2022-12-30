@@ -1,21 +1,21 @@
 using Oxx.Backend.Generators.PocoSchema.Core;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Contracts;
-using Oxx.Backend.Generators.PocoSchema.Core.PocoExtractors;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.FileCreation;
+using Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
-using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
-public sealed class ZodSchemaGenerator : SchemaGenerator<IPartialZodSchema, ZodSchemaEventConfiguration>
+public sealed class ZodSchemaGenerator : SchemaGenerator<ZodSchemaEvents>
 {
-	public ZodSchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
+	public ZodSchemaGenerator(ISchemaConverter schemaConverter, ISchemaConfiguration<ZodSchemaEvents> configuration)
 		: base(schemaConverter, configuration, CreatePocoStructureExtractor(configuration), CreateSchemaExtractor(configuration))
 	{ }
 
-	private static IPocoStructureExtractor CreatePocoStructureExtractor(ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
-		=> new ZodAssemblyPocoStructureExtractor(configuration.Assemblies, configuration);
+	private static IPocoStructureExtractor CreatePocoStructureExtractor(ISchemaConfiguration<ZodSchemaEvents> configuration)
+		=> new ZodConfiguredPocoStructureExtractor(configuration);
 
-	private static ISchemaFileCreator CreateSchemaExtractor(ISchemaConfiguration<IPartialZodSchema, ZodSchemaEventConfiguration> configuration)
+	private static ISchemaFileCreator CreateSchemaExtractor(ISchemaConfiguration<ZodSchemaEvents> configuration)
 		=> new ZodSchemaFileCreator(configuration);
 }

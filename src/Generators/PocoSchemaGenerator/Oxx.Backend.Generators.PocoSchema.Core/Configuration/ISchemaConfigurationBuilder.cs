@@ -6,16 +6,16 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaConfigurationBuilder<out TSelf, in TSchemaType, out TConfigurationType, out TSchemaEventConfiguration> where TSchemaType : class, ISchema
-	where TSelf : ISchemaConfigurationBuilder<TSelf, TSchemaType, TConfigurationType, TSchemaEventConfiguration>
-	where TConfigurationType : ISchemaConfiguration<TSchemaType, TSchemaEventConfiguration>
-	where TSchemaEventConfiguration : ISchemaEventConfiguration, new()
+public interface ISchemaConfigurationBuilder<out TSelf, in TSchema, out TSchemaConfiguraton, out TSchemaEvents> where TSchema : class, ISchema
+	where TSelf : ISchemaConfigurationBuilder<TSelf, TSchema, TSchemaConfiguraton, TSchemaEvents>
+	where TSchemaConfiguraton : ISchemaConfiguration<TSchemaEvents>
+	where TSchemaEvents : ISchemaEvents, new()
 {
-	TSelf ApplyAtomicSchema<TType, TSchema>(Func<TSchema>? schemaFactory = null)
-		where TSchema : TSchemaType, IAtomicSchema, new();
+	TSelf ApplyAtomicSchema<TType, TAtomicSchema>(Func<TAtomicSchema>? schemaFactory = null)
+		where TAtomicSchema : TSchema, IAtomicSchema, new();
 	TSelf ApplyGenericSchema(Type genericType, Type genericSchema);
-	TConfigurationType Build();
-	TSelf ConfigureEvents(Action<TSchemaEventConfiguration> action);
+	TSchemaConfiguraton Build();
+	TSelf ConfigureEvents(Action<TSchemaEvents> action);
 	TSelf OverrideFileDeletionMode(FileDeletionMode fileFileDeletionMode);
 	TSelf OverrideFileExtensionInfix(string infix);
 	TSelf OverrideFileNameNamingFormat(string format);

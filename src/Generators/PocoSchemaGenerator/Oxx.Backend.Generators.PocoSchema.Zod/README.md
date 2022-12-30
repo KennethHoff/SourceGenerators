@@ -96,7 +96,7 @@ The following options are available:
     * Note: The number of generic parameters must match.
     * Note: The number of generic arguments must match.
 
-* `ConfigureEvents(Action<TSchemaEventConfiguration> action)` - Configures the events that are fired during the generation process.
+* `ConfigureEvents(Action<TSchemaEvents> action)` - Configures the events that are fired during the generation process.
     * Example: `ConfigureEvents(x => x.FileCreated += (sender, args) => { /* Do something */ })`
 
 * `ResolveTypesFromAssemblyContaining<TType>()` - Resolves types from the assembly containing the specified type.

@@ -2,7 +2,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public sealed class ZodSchemaEventConfiguration : ISchemaEventConfiguration
+public sealed class ZodSchemaEvents : ISchemaEvents
 {
 	public EventHandler<FileCreatedEventArgs>? FileCreated { get; set; }
 	public EventHandler<FileCreatingEventArgs>? FileCreating { get; set; }
