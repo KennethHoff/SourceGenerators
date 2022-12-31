@@ -2,8 +2,8 @@
 
 public class DirectoryOutputConfiguration
 {
-	public string Atomics { get; set; } = string.Empty;
-	public DirectoryInfo AtomicsDirectoryInfo => new(GetPathFromRoot(Atomics));
+	public string Atoms { get; set; } = string.Empty;
+	public DirectoryInfo AtomsDirectoryInfo => new(GetPathFromRoot(Atoms));
 	public string Enums { get; set; } = string.Empty;
 	public DirectoryInfo EnumsDirectoryInfo => new(GetPathFromRoot(Enums));
 	public string Molecules { get; set; } = string.Empty;
@@ -13,14 +13,14 @@ public class DirectoryOutputConfiguration
 	public DirectoryInfo RootDirectoryInfo => new(Root);
 	
 	private string RootDirectoryFullName => Path.GetDirectoryName(RootDirectoryInfo.FullName)!;
-	private bool AtomicsParentIsRoot => string.Equals(AtomicsDirectoryInfo.Parent!.FullName, RootDirectoryFullName, StringComparison.OrdinalIgnoreCase);
+	private bool AtomsParentIsRoot => string.Equals(AtomsDirectoryInfo.Parent!.FullName, RootDirectoryFullName, StringComparison.OrdinalIgnoreCase);
 	private bool EnumsParentIsRoot => string.Equals(EnumsDirectoryInfo.Parent!.FullName, RootDirectoryFullName, StringComparison.OrdinalIgnoreCase);
 	private bool MoleculesParentIsRoot => string.Equals(MoleculesDirectoryInfo.Parent!.FullName, RootDirectoryFullName, StringComparison.OrdinalIgnoreCase);
 
-	public bool Valid => Configured && AtomicsParentIsRoot && EnumsParentIsRoot && MoleculesParentIsRoot;
+	public bool Valid => Configured && AtomsParentIsRoot && EnumsParentIsRoot && MoleculesParentIsRoot;
 
 	private bool Configured => string.IsNullOrWhiteSpace(Root) == false
-							&& string.IsNullOrWhiteSpace(Atomics) == false
+							&& string.IsNullOrWhiteSpace(Atoms) == false
 							&& string.IsNullOrWhiteSpace(Enums) == false
 							&& string.IsNullOrWhiteSpace(Molecules) == false;
 
@@ -45,6 +45,6 @@ public class DirectoryOutputConfiguration
 		=> GetTraversalPath(relativeFromRoot, EnumsDirectoryInfo);
 	public string GetTraversalFromMolecules(string relativeFromRoot)
 		=> GetTraversalPath(relativeFromRoot, MoleculesDirectoryInfo);
-	public string GetTraversalFromAtomics(string relativeFromRoot)
-		=> GetTraversalPath(relativeFromRoot, AtomicsDirectoryInfo);
+	public string GetTraversalFromAtoms(string relativeFromRoot)
+		=> GetTraversalPath(relativeFromRoot, AtomsDirectoryInfo);
 }

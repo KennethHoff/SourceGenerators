@@ -22,7 +22,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 			{
 				x.Root = "C:/OXX/Projects/Suppehue/Suppehue.Frontend.NextJS/src/zod/";
 				x.Enums = "enums/";
-				x.Atomics = "atomics/";
+				x.Atoms = "atoms/";
 				x.Molecules = "molecules/";
 			})
 			.OverrideFileDeletionMode(FileDeletionMode.All)

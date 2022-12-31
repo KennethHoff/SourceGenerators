@@ -14,7 +14,9 @@ Add the generator to your project.
 ```csharp
 // Program.cs
 var configuration = new ZodSchemaConfigurationBuilder()
-	.SetRootDirectory(<path to the schema output directory>)
+	.SetDirectories(x => {
+	    x.Root = ..
+	})
 	// Various other options
 	.Build();
 
@@ -32,14 +34,21 @@ The configuration is done using the `ZodSchemaConfigurationBuilder` class.
 
 ```csharp
 var configuration = new ZodSchemaConfigurationBuilder()
-    .SetRootDirectory(<path to the schema output directory>)
-    // Various other options
-    .Build();
+    .SetDirectories(x => {
+	    x.Root = ..
+	})
+	// Various other options
+	.Build();
 ```
 
 The following options are available:
 
-* `SetRootDirectory(string path)` - Sets the root directory for the schema files. This is required.
+* `SetDirectories(Action<DirectoryOutputConfiguration>)` - Configure the output directories for the generated files. This is required
+  * `Root` - The root directory for the generated files.
+  * `Enums` - The directory for the generated enums.
+  * `Atoms` - The directory for the generated atoms.
+  * `Molecules` - The directory for the generated molecules.
+  * Note: All non-`Root` directories are relative to the `Root` directory, and has to be a direct child of the `Root` directory.
 
 * `OverrideFileDeletionMode(FileDeletionMode)` - Sets the file deletion mode.
     * Default: `FileDeletionMode.OverwriteExisting`

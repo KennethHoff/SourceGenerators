@@ -136,7 +136,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 		{
 			IBuiltInAtomicZodSchema                          => DirectoryOutputConfiguration.RootDirectoryInfo,
 			IEnumZodSchema                                   => DirectoryOutputConfiguration.EnumsDirectoryInfo,
-			IAtomicZodSchema                                 => DirectoryOutputConfiguration.AtomicsDirectoryInfo,
+			IAtomicZodSchema                                 => DirectoryOutputConfiguration.AtomsDirectoryInfo,
 			IMolecularZodSchema or PartialMolecularZodSchema => DirectoryOutputConfiguration.MoleculesDirectoryInfo,
 			_                                                => throw new UnreachableException("What kind of schema is this?"),
 		};
@@ -154,7 +154,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 	{
 		var filePathWithoutExtension = FormatFilePath(schemaToImport);
 		var relativeFromRoot = DirectoryOutputConfiguration.GetRelativeFromRoot(filePathWithoutExtension);
-		var traversalPath = DirectoryOutputConfiguration.GetTraversalFromAtomics(relativeFromRoot);
+		var traversalPath = DirectoryOutputConfiguration.GetTraversalFromAtoms(relativeFromRoot);
 
 		var schemaName = FormatSchemaName(schemaToImport);
 		return new ZodImport

@@ -49,7 +49,7 @@ internal sealed class ZodSchemaFileCreator : ISchemaFileCreator
 	{
 		var directoryConfiguration = _configuration.DirectoryOutputConfiguration;
 		directoryConfiguration.RootDirectoryInfo.Create();
-		directoryConfiguration.AtomicsDirectoryInfo.Create();
+		directoryConfiguration.AtomsDirectoryInfo.Create();
 		directoryConfiguration.EnumsDirectoryInfo.Create();
 		directoryConfiguration.MoleculesDirectoryInfo.Create();
 		if (_configuration.FileDeletionMode is FileDeletionMode.OverwriteExisting)
@@ -58,7 +58,7 @@ internal sealed class ZodSchemaFileCreator : ISchemaFileCreator
 		}
 		
 		EnsureDirectoryIsEmpty(directoryConfiguration.RootDirectoryInfo);
-		EnsureDirectoryIsEmpty(directoryConfiguration.AtomicsDirectoryInfo);
+		EnsureDirectoryIsEmpty(directoryConfiguration.AtomsDirectoryInfo);
 		EnsureDirectoryIsEmpty(directoryConfiguration.EnumsDirectoryInfo);
 		EnsureDirectoryIsEmpty(directoryConfiguration.MoleculesDirectoryInfo);
 	}
