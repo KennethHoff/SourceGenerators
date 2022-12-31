@@ -24,6 +24,10 @@ internal static class TestingAppSchemaGenerationConfiguration
 				x.Enums = "enums/";
 				x.Atoms = "atoms/";
 				x.Molecules = "molecules/";
+				x.TypeScript = new TypeScriptConfiguration
+				{
+					Alias = "@/zod/",
+				};
 			})
 			.OverrideFileDeletionMode(FileDeletionMode.All)
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
@@ -34,12 +38,12 @@ internal static class TestingAppSchemaGenerationConfiguration
 			.ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 			.ConfigureEvents(events =>
 			{
-				events.PocoStructuresCreated += (_, args) => PrintPocoStructuresCreated(args);
-				events.MoleculeSchemasCreated += (_, args) => PrintMoleculeSchemasCreated(args);
-				events.GenerationCompleted += (_, args) => PrintGenerationCompleted(args);
-				events.GenerationStarted += (_, args) => PrintGenerationStarted(args);
-				events.DeletingFiles += (_, args) => PrintDeletingFiles(args);
-				events.DeletingFilesFailed += (_, args) => PrintDeletingFilesFailed(args);
+				events.PocoStructuresCreated += (_, args) => PocoStructuresCreatedEventHandler(args);
+				events.MoleculeSchemasCreated += (_, args) => MoleculeSchemasCreatedEventHandler(args);
+				events.GenerationCompleted += (_, args) => GenerationCompletedEventHandler(args);
+				events.GenerationStarted += (_, args) => GenerationStartedEventHandler(args);
+				events.DeletingFiles += (_, args) => DeletingFilesEventHandler(args);
+				events.DeletingFilesFailed += (_, args) => DeletingFilesFailedEventHandler(args);
 			})
 			.Build();
 
@@ -47,8 +51,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		await generator.GenerateAllAsync();
 		// await generator.GenerateAsync<ArrayTests>();
 	}
-
-	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)
+	private static void MoleculeSchemasCreatedEventHandler(MoleculeSchemasCreatedEventArgs eventArgs)
 	{
 		var informations = eventArgs.Informations;
 
@@ -116,7 +119,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		}
 	}
 
-	private static void PrintPocoStructuresCreated(PocoStructuresCreatedEventArgs eventArgs)
+	private static void PocoStructuresCreatedEventHandler(PocoStructuresCreatedEventArgs eventArgs)
 	{
 		var unsupportedTypes = eventArgs.UnsupportedTypes;
 
@@ -168,7 +171,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 	
 	private const string DateTimeFormat = "HH:mm:ss.fff";
 
-	private static void PrintGenerationStarted(GenerationStartedEventArgs eventArgs)
+	private static void GenerationStartedEventHandler(GenerationStartedEventArgs eventArgs)
 	{
 		Console.Write("Started generating at ");
 		ColoredConsole.Write(eventArgs.GenerationStartedTime.ToString(DateTimeFormat), ConsoleColor.Cyan);
@@ -176,7 +179,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		Console.WriteLine();
 	}
 
-	private static void PrintGenerationCompleted(GenerationCompletedEventArgs eventArgs)
+	private static void GenerationCompletedEventHandler(GenerationCompletedEventArgs eventArgs)
 	{
 		var duration = eventArgs.GenerationCompletedTime - eventArgs.GenerationStartedTime;
 
@@ -188,7 +191,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		Console.WriteLine();
 	}
 
-	private static void PrintDeletingFiles(DeletingFilesEventArgs eventArgs)
+	private static void DeletingFilesEventHandler(DeletingFilesEventArgs eventArgs)
 	{
 		Console.Write("Deleting directory ");
 		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);
@@ -197,7 +200,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		Console.WriteLine(" files.");
 	}
 
-	private static void PrintDeletingFilesFailed(DeletingFilesFailedEventArgs eventArgs)
+	private static void DeletingFilesFailedEventHandler(DeletingFilesFailedEventArgs eventArgs)
 	{
 		ColoredConsole.Write("Failed to delete directory ", ConsoleColor.Red);
 		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);

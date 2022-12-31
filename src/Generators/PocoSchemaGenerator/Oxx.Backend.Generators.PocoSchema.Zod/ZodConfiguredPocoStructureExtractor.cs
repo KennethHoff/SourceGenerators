@@ -7,7 +7,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
-internal sealed class ZodConfiguredPocoStructureExtractor : ConfiguredPocoStructureExtractor<ZodSchemaConfiguration, ZodSchemaEvents>
+internal sealed class ZodConfiguredPocoStructureExtractor : ConfiguredPocoStructureExtractor<ZodSchemaConfiguration, ZodSchemaEvents, ZodDirectoryOutputConfiguration>
 {
 	public ZodConfiguredPocoStructureExtractor(ZodSchemaConfiguration configuration)
 		: base(configuration)

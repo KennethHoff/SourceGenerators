@@ -10,9 +10,9 @@ namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
 internal sealed class ZodSchemaFileCreator : ISchemaFileCreator
 {
-	private readonly ISchemaConfiguration<ZodSchemaEvents> _configuration;
+	private readonly ISchemaConfiguration<ZodSchemaEvents, ZodDirectoryOutputConfiguration> _configuration;
 
-	public ZodSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents> configuration)
+	public ZodSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents, ZodDirectoryOutputConfiguration> configuration)
 	{
 		_configuration = configuration;
 	}
@@ -52,6 +52,7 @@ internal sealed class ZodSchemaFileCreator : ISchemaFileCreator
 		directoryConfiguration.AtomsDirectoryInfo.Create();
 		directoryConfiguration.EnumsDirectoryInfo.Create();
 		directoryConfiguration.MoleculesDirectoryInfo.Create();
+
 		if (_configuration.FileDeletionMode is FileDeletionMode.OverwriteExisting)
 		{
 			return;

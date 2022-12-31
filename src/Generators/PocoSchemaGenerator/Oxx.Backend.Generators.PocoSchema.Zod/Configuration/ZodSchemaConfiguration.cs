@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
-using Oxx.Backend.Generators.PocoSchema.Core.Models.Schemas.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
-using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn.Contracts;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts;
@@ -13,10 +10,10 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
+public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents, ZodDirectoryOutputConfiguration>
 {
 	public required IEnumerable<Assembly> Assemblies { get; init; }
-	public required DirectoryOutputConfiguration DirectoryOutputConfiguration { get; init; }
+	public required ZodDirectoryOutputConfiguration DirectoryOutputConfiguration { get; init; }
 	public required ZodSchemaEvents Events { get; init; }
 	public required FileDeletionMode FileDeletionMode { get; init; }
 	public required string FileExtension { get; init; }
@@ -46,7 +43,7 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 		{
 			throw new InvalidOperationException($"Could not find schema for array element type {elementType.Name}.");
 		}
-		
+
 		var arraySchemaType = typeof(ArrayBuiltInAtomicZodSchema<>).MakeGenericType(elementSchema.GetType());
 		var arraySchema = (IGenericZodSchema)Activator.CreateInstance(arraySchemaType)!;
 
@@ -104,11 +101,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInAtomicZodSchema                          => ZodImport.None,
-			IMolecularZodSchema or PartialMolecularZodSchema => CreateMolecularImport(schema),
-			IEnumZodSchema                                   => CreateEnumImport(schema),
-			IAtomicSchema                                    => CreateAtomicImport(schema),
-			_                                                => throw new UnreachableException("What kind of schema is this?"),
+			IBuiltInAtomicZodSchema                                          => ZodImport.None,
+			IPartialMolecularZodSchema or IEnumZodSchema or IAtomicZodSchema => DirectoryOutputConfiguration.CreateImport(schema, FormatSchemaName(schema)),
+			_                                                                => throw new UnreachableException("What kind of schema is this?"),
 		};
 
 	public string FormatEnumName(IEnumZodSchema schema)
@@ -134,62 +129,10 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 	public DirectoryInfo GetOutputDirectory(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInAtomicZodSchema                          => DirectoryOutputConfiguration.RootDirectoryInfo,
-			IEnumZodSchema                                   => DirectoryOutputConfiguration.EnumsDirectoryInfo,
-			IAtomicZodSchema                                 => DirectoryOutputConfiguration.AtomsDirectoryInfo,
-			IMolecularZodSchema or PartialMolecularZodSchema => DirectoryOutputConfiguration.MoleculesDirectoryInfo,
-			_                                                => throw new UnreachableException("What kind of schema is this?"),
+			IBuiltInAtomicZodSchema    => DirectoryOutputConfiguration.RootDirectoryInfo,
+			IEnumZodSchema             => DirectoryOutputConfiguration.EnumsDirectoryInfo,
+			IAtomicZodSchema           => DirectoryOutputConfiguration.AtomsDirectoryInfo,
+			IPartialMolecularZodSchema => DirectoryOutputConfiguration.MoleculesDirectoryInfo,
+			_                          => throw new UnreachableException("What kind of schema is this?"),
 		};
-
-	private string FormatFilePath(IPartialZodSchema schema)
-	{
-		var directory = GetOutputDirectory(schema);
-		var fileNameWithoutExtension = $"{FormatSchemaName(schema)}{FileExtensionInfix}";
-
-		var filePathWithoutExtension = Path.Combine(directory.FullName, fileNameWithoutExtension);
-		return filePathWithoutExtension;
-	}
-
-	private ZodImport CreateAtomicImport(IPartialZodSchema schemaToImport)
-	{
-		var filePathWithoutExtension = FormatFilePath(schemaToImport);
-		var relativeFromRoot = DirectoryOutputConfiguration.GetRelativeFromRoot(filePathWithoutExtension);
-		var traversalPath = DirectoryOutputConfiguration.GetTraversalFromAtoms(relativeFromRoot);
-
-		var schemaName = FormatSchemaName(schemaToImport);
-		return new ZodImport
-		{
-			FilePath = traversalPath,
-			SchemaName = schemaName,
-		};
-	}
-	
-	private ZodImport CreateMolecularImport(IPartialZodSchema schemaToImport)
-	{
-		var filePathWithoutExtension = FormatFilePath(schemaToImport);
-		var relativeFromRoot = DirectoryOutputConfiguration.GetRelativeFromRoot(filePathWithoutExtension);
-		var traversalPath = DirectoryOutputConfiguration.GetTraversalFromMolecules(relativeFromRoot);
-
-		var schemaName = FormatSchemaName(schemaToImport);
-		return new ZodImport
-		{
-			FilePath = traversalPath,
-			SchemaName = schemaName,
-		};
-	}
-
-	private ZodImport CreateEnumImport(IPartialZodSchema schemaToImport)
-	{
-		var filePathWithoutExtension = FormatFilePath(schemaToImport);
-		var relativeFromRoot = DirectoryOutputConfiguration.GetRelativeFromRoot(filePathWithoutExtension);
-		var traversalPath = DirectoryOutputConfiguration.GetTraversalFromEnums(relativeFromRoot);
-
-		var schemaName = FormatSchemaName(schemaToImport);
-		return new ZodImport
-		{
-			FilePath = traversalPath,
-			SchemaName = schemaName,
-		};
-	}
-
 }

@@ -1,4 +1,3 @@
-using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.BuiltIn;
@@ -7,9 +6,8 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Custom;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartialZodSchema, IAtomicZodSchema, ZodSchemaConfiguration, ZodSchemaEvents>
+public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<ZodSchemaConfigurationBuilder, IPartialZodSchema, IAtomicZodSchema, ZodSchemaConfiguration, ZodSchemaEvents, ZodDirectoryOutputConfiguration>
 {
-
 	protected override ZodSchemaConfiguration Configuration => new()
 	{
 		GenericSchemasDictionary = GenericSchemasDictionary,
@@ -54,7 +52,6 @@ public class ZodSchemaConfigurationBuilder : SchemaConfigurationBuilder<IPartial
 		{
 			dictionary.Add(key, value);
 		}
-
 		return dictionary;
 	}
 }

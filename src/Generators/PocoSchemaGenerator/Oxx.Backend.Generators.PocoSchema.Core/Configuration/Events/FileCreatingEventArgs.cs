@@ -4,7 +4,7 @@ namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
 public sealed class FileCreatingEventArgs : EventArgs
 {
-	public readonly FileInformation SchemaInformation;
+	public FileInformation SchemaInformation { get; }
 
 	public bool Skip { get; set; }
 

@@ -5,17 +5,17 @@ using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Events;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 
-public interface ISchemaConfiguration<out TSchemaEvents> : ISchemaConfiguration
+public interface ISchemaConfiguration<out TSchemaEvents, out TDirectoryOutputConfiguration> : ISchemaConfiguration
 	where TSchemaEvents : ISchemaEvents
 {
 	TSchemaEvents Events { get; }
+	TDirectoryOutputConfiguration DirectoryOutputConfiguration { get; }
 }
 
 public interface ISchemaConfiguration
 {
 	IEnumerable<Assembly> Assemblies { get; }
 	FileDeletionMode FileDeletionMode { get; }
-	DirectoryOutputConfiguration DirectoryOutputConfiguration { get; }
 	string SchemaFileNameFormat { get; }
 	string SchemaNamingFormat { get; }
 	string SchemaTypeNamingFormat { get; }

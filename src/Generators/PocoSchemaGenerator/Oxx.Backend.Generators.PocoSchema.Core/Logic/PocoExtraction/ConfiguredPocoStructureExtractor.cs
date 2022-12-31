@@ -9,9 +9,10 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
-public abstract class ConfiguredPocoStructureExtractor<TSchemaConfiguration, TSchemaEvents> : IPocoStructureExtractor
-	where TSchemaConfiguration: ISchemaConfiguration<TSchemaEvents>
+public abstract class ConfiguredPocoStructureExtractor<TSchemaConfiguration, TSchemaEvents, TDirectoryOutputConfiguration> : IPocoStructureExtractor
+	where TSchemaConfiguration: ISchemaConfiguration<TSchemaEvents, TDirectoryOutputConfiguration>
 	where TSchemaEvents : ISchemaEvents
+	where TDirectoryOutputConfiguration: IDirectoryOutputConfiguration
 {
 	protected readonly TSchemaConfiguration Configuration;
 

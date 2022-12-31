@@ -5,7 +5,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Abstractions;
 
-public class PartialMolecularZodSchema : IPartialZodSchema
+public class PartialMolecularZodSchema : IPartialMolecularZodSchema
 {
 	public SchemaBaseName SchemaBaseName { get; init; }
 

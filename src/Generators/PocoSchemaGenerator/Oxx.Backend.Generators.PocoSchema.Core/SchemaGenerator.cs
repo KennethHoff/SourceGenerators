@@ -6,17 +6,18 @@ using Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core;
 
-public abstract class SchemaGenerator<TSchemaEvents> : ISchemaGenerator
+public abstract class SchemaGenerator<TSchemaEvents, TDirectoryOutputConfiguration> : ISchemaGenerator
 	where TSchemaEvents : ISchemaEvents
+	where TDirectoryOutputConfiguration : IDirectoryOutputConfiguration
 {
-	private readonly ISchemaConfiguration<TSchemaEvents> _configuration;
+	private readonly ISchemaConfiguration<TSchemaEvents, TDirectoryOutputConfiguration> _configuration;
 	private readonly ISchemaFileCreator _fileCreator;
 	private readonly IPocoStructureExtractor _pocoStructureExtractor;
 	private readonly ISchemaConverter _schemaConverter;
 
 	private bool _alreadyGenerated;
 
-	protected SchemaGenerator(ISchemaConfiguration<TSchemaEvents> configuration, ISchemaConverter schemaConverter, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
+	protected SchemaGenerator(ISchemaConfiguration<TSchemaEvents, TDirectoryOutputConfiguration> configuration, ISchemaConverter schemaConverter, IPocoStructureExtractor pocoStructureExtractor, ISchemaFileCreator fileCreator)
 	{
 		_schemaConverter = schemaConverter;
 		_configuration = configuration;
