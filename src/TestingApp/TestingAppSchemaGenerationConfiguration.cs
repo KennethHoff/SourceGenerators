@@ -18,7 +18,13 @@ internal static class TestingAppSchemaGenerationConfiguration
 	public static async Task GenerateSchemaAsync()
 	{
 		var configuration = new ZodSchemaConfigurationBuilder()
-			.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
+			.SetDirectories(x =>
+			{
+				x.Root = "C:/OXX/Projects/Suppehue/Suppehue.Frontend.NextJS/src/zod/";
+				x.Enums = "enums/";
+				x.Atomics = "atomics/";
+				x.Molecules = "molecules/";
+			})
 			.OverrideFileDeletionMode(FileDeletionMode.All)
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
@@ -189,7 +195,6 @@ internal static class TestingAppSchemaGenerationConfiguration
 		Console.Write(" containing ");
 		ColoredConsole.Write(eventArgs.Files.Count, ConsoleColor.Cyan);
 		Console.WriteLine(" files.");
-		Console.WriteLine();
 	}
 
 	private static void PrintDeletingFilesFailed(DeletingFilesFailedEventArgs eventArgs)

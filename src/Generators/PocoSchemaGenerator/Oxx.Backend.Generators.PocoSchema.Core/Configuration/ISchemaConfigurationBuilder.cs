@@ -25,8 +25,4 @@ public interface ISchemaConfigurationBuilder<out TSelf, in TSchema, in TAtomicSc
 	TSelf OverrideSchemaTypeNamingFormat(string format);
 	TSelf OverrideSchemaEnumNamingFormat(string format);
 	TSelf ResolveTypesFromAssemblyContaining<TType>();
-
-	/// <param name="rootDirectory">Either absolute path, or a path relative to the file where this method is called.</param>
-	/// <param name="callerFilePath">Automatically passed by the compiler.</param>
-	TSelf SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "");
 }

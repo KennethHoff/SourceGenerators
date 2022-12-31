@@ -55,18 +55,19 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private FileInformation GenerateAtom(PocoAtom pocoAtom)
 	{
-		var atomSchema = _configuration.CreatedSchemasDictionary[pocoAtom.Type];
-		_generatedSchemas.Add(pocoAtom.Type, atomSchema);
+		var schema = _configuration.CreatedSchemasDictionary[pocoAtom.Type];
+		_generatedSchemas.Add(pocoAtom.Type, schema);
 
-		if (atomSchema is IBuiltInAtomicZodSchema)
+		if (schema is IBuiltInAtomicZodSchema)
 		{
 			return FileInformation.None;
 		}
 
 		return new FileInformation
 		{
-			Content = GenerateFileContent(atomSchema),
-			Name = GenerateFileName(atomSchema),
+			Content = GenerateFileContent(schema),
+			Name = _configuration.FormatFileName(schema),
+			OutputDirectory = _configuration.GetOutputDirectory(schema),
 		};
 	}
 
@@ -87,13 +88,14 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private FileInformation GenerateEnum(PocoEnum pocoEnum)
 	{
-		var enumSchema = new EnumZodSchema(pocoEnum.EnumType);
-		_generatedSchemas.Add(pocoEnum.EnumType, enumSchema);
+		var schema = new EnumZodSchema(pocoEnum.EnumType);
+		_generatedSchemas.Add(pocoEnum.EnumType, schema);
 
 		var generateEnum = new FileInformation
 		{
-			Content = GenerateFileContent(enumSchema),
-			Name = GenerateFileName(enumSchema),
+			Content = GenerateFileContent(schema),
+			Name = _configuration.FormatFileName(schema),
+			OutputDirectory = _configuration.GetOutputDirectory(schema),
 		};
 
 		return generateEnum;
@@ -139,9 +141,6 @@ public class ZodSchemaConverter : ISchemaConverter
 			IMolecularZodSchema molecularZodSchema => GenerateMolecularFileContent(molecularZodSchema),
 			_                                      => FileContent.None,
 		};
-
-	private FileName GenerateFileName(IPartialZodSchema schemaValue)
-		=> new(string.Format(_configuration.SchemaFileNameFormat, schemaValue.SchemaBaseName));
 
 	private FileContent GenerateMolecularFileContent(IMolecularZodSchema molecularZodSchema)
 		=> new($$"""
@@ -204,17 +203,18 @@ public class ZodSchemaConverter : ISchemaConverter
 
 	private (FileInformation FileInformation, CreatedSchemaInformation SchemaInformation) GenerateMolecule(PocoObject pocoObject)
 	{
-		var (molecularSchema, invalidProperties) = GenerateMolecularSchema(pocoObject);
+		var (schema, invalidProperties) = GenerateMolecularSchema(pocoObject);
 
-		_generatedSchemas.Update(pocoObject.ObjectType, molecularSchema);
+		_generatedSchemas.Update(pocoObject.ObjectType, schema);
 
 		var fileInformation = new FileInformation
 		{
-			Content = GenerateFileContent(molecularSchema),
-			Name = GenerateFileName(molecularSchema),
+			Content = GenerateFileContent(schema),
+			Name = _configuration.FormatFileName(schema),
+			OutputDirectory = _configuration.GetOutputDirectory(schema),
 		};
 
-		var schemaInformation = new CreatedSchemaInformation(pocoObject.ObjectType, molecularSchema, invalidProperties);
+		var schemaInformation = new CreatedSchemaInformation(pocoObject.ObjectType, schema, invalidProperties);
 		_configuration.Events.MoleculeSchemaCreated?.Invoke(this, new MoleculeSchemaCreatedEventArgs(schemaInformation));
 		return (fileInformation, schemaInformation);
 	}

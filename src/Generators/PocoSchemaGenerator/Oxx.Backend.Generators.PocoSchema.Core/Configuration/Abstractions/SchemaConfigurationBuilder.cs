@@ -16,7 +16,7 @@ public abstract class SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchema
 {
 	protected readonly TypeTypeDictionary GenericSchemasDictionary = new();
 	protected TSchemaEvents? EventConfiguration;
-	protected DirectoryInfo OutputDirectory = null!;
+	public DirectoryOutputConfiguration DirectoryOutputConfiguration { get; set; } = new();
 
 	protected ICollection<Assembly> Assemblies { get; } = new List<Assembly>();
 	public TypeSchemaDictionary<TAtomicSchema> AtomDictionary { get; set; } = new();
@@ -51,9 +51,9 @@ public abstract class SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchema
 
 	public TSchemaConfiguration Build()
 	{
-		if (OutputDirectory is null)
+		if (!DirectoryOutputConfiguration.Valid)
 		{
-			throw new InvalidOperationException("Output directory is not set.");
+			throw new InvalidOperationException("Output directory is invalid.");
 		}
 		return Configuration;
 	}
@@ -112,18 +112,27 @@ public abstract class SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchema
 		return this;
 	}
 
-	public SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents> SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "")
-	{
-		var callerDirectory = Path.GetDirectoryName(callerFilePath);
-		OutputDirectory = new DirectoryInfo(Path.Combine(callerDirectory!, rootDirectory));
+	// public SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents> SetRootDirectory(string rootDirectory, [CallerFilePath] string callerFilePath = "")
+	// {
+	// 	var callerDirectory = Path.GetDirectoryName(callerFilePath);
+	// 	
+	// 	DirectoryOutputConfiguration.Root = new DirectoryInfo(Path.Combine(callerDirectory!, rootDirectory));
+	//
+	// 	if (!DirectoryOutputConfiguration.Configured)
+	// 	{
+	// 		throw new InvalidOperationException("Output directory is not configured.");
+	// 	}
+	// 	return this;
+	// }
 
-		if (OutputDirectory.Parent?.Exists is not true)
-		{
-			throw new InvalidOperationException($"Directory {OutputDirectory.Parent?.FullName} does not exist");
-		}
+	public SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents> SetDirectories(Action<DirectoryOutputConfiguration> action)
+	{
+		var directoryOutputConfiguration = new DirectoryOutputConfiguration();
+		action(directoryOutputConfiguration);
+		DirectoryOutputConfiguration = directoryOutputConfiguration;
+
 		return this;
 	}
-
 	#endregion
 
 	private void UpsertGenericSchemaTypeDictionary(Type genericType, Type genericSchema)
@@ -204,4 +213,5 @@ public abstract class SchemaConfigurationBuilder<TSchema, TAtomicSchema, TSchema
 
 		return format;
 	}
+
 }
