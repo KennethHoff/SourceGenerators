@@ -26,9 +26,6 @@ public class ZodDirectoryOutputConfiguration : IDirectoryOutputConfiguration
 	}
 
 	public bool Valid => string.IsNullOrWhiteSpace(Root) is false
-					  && string.IsNullOrWhiteSpace(Atoms) is false
-					  && string.IsNullOrWhiteSpace(Enums) is false
-					  && string.IsNullOrWhiteSpace(Molecules) is false
 					  && TypeScript.Valid;
 
 	private string GetAliasRoot(IPartialZodSchema schemaToImport)

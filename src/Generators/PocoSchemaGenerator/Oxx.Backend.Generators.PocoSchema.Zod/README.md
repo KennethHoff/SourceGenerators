@@ -43,12 +43,13 @@ var configuration = new ZodSchemaConfigurationBuilder()
 
 The following options are available:
 
-* `SetDirectories(Action<DirectoryOutputConfiguration>)` - Configure the output directories for the generated files. This is required
-  * `Root` - The root directory for the generated files.
+* `SetDirectories(Action<DirectoryOutputConfiguration>)` - Configure the output directories for the generated files.
+  * `Root` - The root directory for the generated files. <b><u>This is required.</b></u>
   * `Enums` - The directory for the generated enums.
   * `Atoms` - The directory for the generated atoms.
   * `Molecules` - The directory for the generated molecules.
-  * Note: All non-`Root` directories are relative to the `Root` directory, and has to be a direct child of the `Root` directory.
+  * `TypeScript` - Contains options for the TypeScript output.
+    * `Alias` - The alias for the TypeScript output. <b><u>This is required.</b></u>
 
 * `OverrideFileDeletionMode(FileDeletionMode)` - Sets the file deletion mode.
     * Default: `FileDeletionMode.OverwriteExisting`

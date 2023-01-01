@@ -2,12 +2,10 @@
 
 public sealed class DeletingFilesEventArgs : EventArgs
 {
-	public DeletingFilesEventArgs(DirectoryInfo directory, IReadOnlyCollection<FileInfo> files)
-	{
-		Directory = directory;
-		Files = files;
-	}
+	public Dictionary<DirectoryInfo, FileInfo[]> Dictionary { get; }
 
-	public DirectoryInfo Directory { get; }
-	public IReadOnlyCollection<FileInfo> Files { get; }
+	public DeletingFilesEventArgs(Dictionary<DirectoryInfo, FileInfo[]> dictionary)
+	{
+		Dictionary = dictionary;
+	}
 }

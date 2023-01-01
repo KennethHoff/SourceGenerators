@@ -58,7 +58,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		var informationsWithInvalidMembers = informations
 			.Where(x => x.InvalidMembers.Any())
 			.ToArray();
-
+		
 		switch (informationsWithInvalidMembers.Length)
 		{
 			case 0:
@@ -69,6 +69,8 @@ internal static class TestingAppSchemaGenerationConfiguration
 				PrintTypesWithoutSchemas();
 				break;
 		}
+		
+		
 
 		Console.WriteLine();
 
@@ -76,7 +78,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		{
 			var invalidTypesAmount = informationsWithInvalidMembers.Length;
 			ColoredConsole.Write(informations.Count, ConsoleColor.Cyan);
-			Console.Write(" type-schemas were resolved, of which ");
+			Console.Write(" non-atoms were resolved, of which ");
 			ColoredConsole.Write(informations.Count - invalidTypesAmount, ConsoleColor.Green);
 			Console.WriteLine(" were resolved fully.");
 		}
@@ -89,11 +91,10 @@ internal static class TestingAppSchemaGenerationConfiguration
 				.Distinct()
 				.ToArray();
 
-			var invalidSchemasAmount = typesWithoutSchemas.Length;
 			Console.Write("The following ");
-			ColoredConsole.Write(invalidSchemasAmount, ConsoleColor.Red);
+			ColoredConsole.Write(typesWithoutSchemas.Length, ConsoleColor.Red);
 			Console.Write(" schemas could not be resolved in ");
-			ColoredConsole.Write(typesWithoutSchemas.Length, ConsoleColor.Cyan);
+			ColoredConsole.Write(informationsWithInvalidMembers.Length, ConsoleColor.Cyan);
 			Console.WriteLine(" type-schemas:");
 			foreach (var type in typesWithoutSchemas)
 			{
@@ -193,11 +194,21 @@ internal static class TestingAppSchemaGenerationConfiguration
 
 	private static void DeletingFilesEventHandler(DeletingFilesEventArgs eventArgs)
 	{
-		Console.Write("Deleting directory ");
-		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);
-		Console.Write(" containing ");
-		ColoredConsole.Write(eventArgs.Files.Count, ConsoleColor.Cyan);
-		Console.WriteLine(" files.");
+		Console.WriteLine("Deleting directories:");
+		var hmm = eventArgs.Dictionary.Select(x => x);
+		foreach (var (directory, files) in hmm)
+		{
+			PrintDirectory(directory, files);
+		}
+
+		void PrintDirectory(DirectoryInfo directory, IEnumerable<FileInfo> files)
+		{
+			Console.Write("'");
+			ColoredConsole.Write(directory.FullName, ConsoleColor.Cyan);
+			Console.Write("' (");
+			ColoredConsole.Write(files.Count().ToString(), ConsoleColor.Cyan);
+			Console.WriteLine(" files)");
+		}
 	}
 
 	private static void DeletingFilesFailedEventHandler(DeletingFilesFailedEventArgs eventArgs)
