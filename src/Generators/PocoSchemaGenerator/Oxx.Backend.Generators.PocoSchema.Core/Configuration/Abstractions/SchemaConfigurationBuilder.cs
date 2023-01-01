@@ -6,7 +6,7 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
 
-public abstract class SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents, TDirectoryOutputConfiguration> 
+public abstract partial class SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents, TDirectoryOutputConfiguration> 
 	: ISchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents, TDirectoryOutputConfiguration>
 	where TSelf : SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, TSchemaConfiguration, TSchemaEvents, TDirectoryOutputConfiguration>
 	where TSchema : class, ISchema
@@ -52,12 +52,11 @@ public abstract class SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, 
 
 	public TSchemaConfiguration Build()
 	{
-		if (!DirectoryOutputConfiguration.Valid)
-		{
-			throw new InvalidOperationException("Output directory is invalid.");
-		}
+		EnsureValidConfiguration();
 		return Configuration;
 	}
+
+	protected abstract void EnsureValidConfiguration();
 
 	public TSelf ConfigureEvents(Action<TSchemaEvents> action)
 	{
@@ -80,25 +79,25 @@ public abstract class SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, 
 
 	public TSelf OverrideFileNameNamingFormat(string format)
 	{
-		FileNameFormat = EnsureValidFormat(format);
+		FileNameFormat = EnsureValidFormat(format, "FileNameFormat");
 		return (TSelf)this;
 	}
 
 	public TSelf OverrideSchemaEnumNamingFormat(string format)
 	{
-		SchemaEnumNamingFormat = EnsureValidFormat(format);
+		SchemaEnumNamingFormat = EnsureValidFormat(format, "SchemaEnumNamingFormat");
 		return (TSelf)this;
 	}
 
 	public TSelf OverrideSchemaNamingFormat(string format)
 	{
-		SchemaNamingFormat = EnsureValidFormat(format);
+		SchemaNamingFormat = EnsureValidFormat(format, "SchemaNamingFormat");
 		return (TSelf)this;
 	}
 
 	public TSelf OverrideSchemaTypeNamingFormat(string format)
 	{
-		SchemaTypeNamingFormat = EnsureValidFormat(format);
+		SchemaTypeNamingFormat = EnsureValidFormat(format, "SchemaTypeNamingFormat");
 		return (TSelf)this;
 	}
 
@@ -180,18 +179,17 @@ public abstract class SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, 
 		}
 	}
 
-	private static string EnsureValidFormat(string format)
+	private static string EnsureValidFormat(string format, string formatType)
 	{
-		var regex = new Regex(@"\{[\d]+\}", RegexOptions.Compiled);
 		var exceptions = new List<Exception>();
 		if (!format.Contains("{0}"))
 		{
-			exceptions.Add(new ArgumentException("The format must contain a {0} placeholder"));
+			exceptions.Add(new ArgumentException($"The format <{formatType}> must contain a {{0}} placeholder"));
 		}
 
-		if (regex.IsMatch(format))
+		if (PlaceholderRegex().IsMatch(format))
 		{
-			exceptions.Add(new ArgumentException("The format must not contain any other placeholders than {0}"));
+			exceptions.Add(new ArgumentException($"The format <{formatType}> must not contain any other placeholders than {0}"));
 		}
 
 		if (exceptions.Any())
@@ -201,4 +199,7 @@ public abstract class SchemaConfigurationBuilder<TSelf, TSchema, TAtomicSchema, 
 
 		return format;
 	}
+
+	[GeneratedRegex("""\{[1-9]+\}""", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+    private static partial Regex PlaceholderRegex();
 }

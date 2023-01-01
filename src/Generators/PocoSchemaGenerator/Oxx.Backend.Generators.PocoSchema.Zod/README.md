@@ -54,7 +54,9 @@ The following options are available:
 * `OverrideFileDeletionMode(FileDeletionMode)` - Sets the file deletion mode.
     * Default: `FileDeletionMode.OverwriteExisting`
     * `FileDeletionMode.OverwriteExisting` - Overwrites existing files.
-    * `FileDeletionMode.All` - Deletes all files in the root directory. Will immediately quit if any of the files contained within does not match the schema.
+    * `FileDeletionMode.All` - Deletes all files(recursively) from the root directory. First checks if all files match naming convention. If not, immediately stops the program.
+      * <b><u>Warning</u></b>: This naming convention" check does not work if you make the naming convention shorter than the previous one. 
+        * Example: if you change the naming convention from `{0}Schema` to `{0}`, the check will pass even though it should fail as the old convention fulfills the new one.
     * `FileDeletionMode.ForcedAll` - Deletes all files in the root directory. Will not check if the files match the schema.
 
 * `OverrideSchemaNamingFormat(string)` - Overrides the naming format for the schemas.

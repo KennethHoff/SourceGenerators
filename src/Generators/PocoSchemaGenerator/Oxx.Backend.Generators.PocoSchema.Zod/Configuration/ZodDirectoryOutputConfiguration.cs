@@ -37,10 +37,10 @@ public class ZodDirectoryOutputConfiguration : IDirectoryOutputConfiguration
 			_                          => throw new UnreachableException("What kind of schema is this?"),
 		};
 	
-	public ZodImport CreateImport(IPartialZodSchema schemaToImport, string schemaName)
+	public ZodImport CreateImport(IPartialZodSchema schemaToImport, string schemaName, string fileName)
 		=> new()
 		{
-			FilePath = GetAliasRoot(schemaToImport) + schemaName,
+			FilePath = GetAliasRoot(schemaToImport) + fileName,
 			SchemaName = schemaName,
 		};
 }

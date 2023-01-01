@@ -30,6 +30,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 				};
 			})
 			.OverrideFileDeletionMode(FileDeletionMode.All)
+			.OverrideFileNameNamingFormat("{0}Schema")
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()

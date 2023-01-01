@@ -101,9 +101,10 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents, ZodD
 	public ZodImport CreateStandardImport(IPartialZodSchema schema)
 		=> schema switch
 		{
-			IBuiltInAtomicZodSchema                                          => ZodImport.None,
-			IPartialMolecularZodSchema or IEnumZodSchema or IAtomicZodSchema => DirectoryOutputConfiguration.CreateImport(schema, FormatSchemaName(schema)),
-			_                                                                => throw new UnreachableException("What kind of schema is this?"),
+			IBuiltInAtomicZodSchema => ZodImport.None,
+			IPartialMolecularZodSchema or IEnumZodSchema or IAtomicZodSchema 
+				=> DirectoryOutputConfiguration.CreateImport(schema, FormatSchemaName(schema), FormatFullFileName(schema)),
+			_ => throw new UnreachableException("What kind of schema is this?"),
 		};
 
 	public string FormatEnumName(IEnumZodSchema schema)
@@ -111,6 +112,9 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents, ZodD
 
 	public string FormatFileName(IPartialZodSchema schema)
 		=> string.Format(SchemaFileNameFormat, schema.SchemaBaseName);
+	
+	public string FormatFullFileName(IPartialZodSchema schema)
+		=> string.Format(SchemaFileNameFormat, schema.SchemaBaseName) + FileExtensionInfix;
 
 	public string FormatSchemaName(IPartialZodSchema schema)
 		=> schema switch
