@@ -7,7 +7,7 @@ using Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod;
 
-public sealed class ZodSchemaGenerator : SchemaGenerator<ZodSchemaEvents>
+public sealed class ZodSchemaGenerator : SchemaGenerator<ZodSchemaEvents, ZodDirectoryOutputConfiguration>
 {
 	public ZodSchemaGenerator(
 		ZodSchemaConfiguration configuration,
@@ -20,10 +20,10 @@ public sealed class ZodSchemaGenerator : SchemaGenerator<ZodSchemaEvents>
 			schemaFileCreator ?? CreateSchemaFileCreator(configuration))
 	{ }
 
-	private static IPocoStructureExtractor CreatePocoStructureExtractor(ISchemaConfiguration<ZodSchemaEvents> configuration)
+	private static IPocoStructureExtractor CreatePocoStructureExtractor(ZodSchemaConfiguration configuration)
 		=> new ZodConfiguredPocoStructureExtractor(configuration);
 
-	private static ISchemaFileCreator CreateSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents> configuration)
+	private static ISchemaFileCreator CreateSchemaFileCreator(ISchemaConfiguration<ZodSchemaEvents, ZodDirectoryOutputConfiguration> configuration)
 		=> new ZodSchemaFileCreator(configuration);
 
 	private static ISchemaConverter CreateSchemaConverter(ZodSchemaConfiguration configuration)

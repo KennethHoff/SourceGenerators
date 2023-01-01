@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration;
 using Oxx.Backend.Generators.PocoSchema.Core.Configuration.Abstractions;
@@ -9,25 +10,18 @@ using Oxx.Backend.Generators.PocoSchema.Zod.SchemaTypes.Contracts.Models;
 
 namespace Oxx.Backend.Generators.PocoSchema.Zod.Configuration;
 
-public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
+public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents, ZodDirectoryOutputConfiguration>
 {
 	public required IEnumerable<Assembly> Assemblies { get; init; }
-	public required FileDeletionMode FileDeletionMode { get; init; }
+	public required ZodDirectoryOutputConfiguration DirectoryOutputConfiguration { get; init; }
 	public required ZodSchemaEvents Events { get; init; }
+	public required FileDeletionMode FileDeletionMode { get; init; }
 	public required string FileExtension { get; init; }
 	public required string FileExtensionInfix { get; init; }
 
-	public required DirectoryInfo OutputDirectory { get; init; }
 	public required string SchemaFileNameFormat { get; init; }
 	public required string SchemaNamingFormat { get; init; }
 	public required string SchemaTypeNamingFormat { get; init; }
-
-	/// <summary>
-	///     Dictionary containing the non-generic types that will be generated <br />
-	///     Don't use this if you want to find the schema to use for other types. <br />
-	///     Use <see cref="CreatedSchemasDictionary" /> instead.
-	/// </summary>
-	public required TypeSchemaDictionary<IPartialZodSchema> AtomicSchemasToCreateDictionary { get; init; }
 
 	/// <summary>
 	///     Dictionary containing fully created schemas
@@ -40,6 +34,23 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 	public required TypeTypeDictionary GenericSchemasDictionary { get; init; }
 
 	public required string SchemaEnumNamingFormat { get; init; }
+
+	public IPartialZodSchema CreateArraySchema(SchemaMemberInfo schemaMemberInfo)
+	{
+		var elementType = schemaMemberInfo.Type.GetElementType()!;
+		var elementSchema = CreatedSchemasDictionary.GetSchemaForType(elementType);
+		if (elementSchema is null)
+		{
+			throw new InvalidOperationException($"Could not find schema for array element type {elementType.Name}.");
+		}
+
+		var arraySchemaType = typeof(ArrayBuiltInAtomicZodSchema<>).MakeGenericType(elementSchema.GetType());
+		var arraySchema = (IGenericZodSchema)Activator.CreateInstance(arraySchemaType)!;
+
+		arraySchema.Configuration = this;
+		arraySchema.MemberInfo = schemaMemberInfo;
+		return arraySchema;
+	}
 
 	public IPartialZodSchema CreateGenericSchema(SchemaMemberInfo memberInfo)
 	{
@@ -91,14 +102,19 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 		=> schema switch
 		{
 			IBuiltInAtomicZodSchema => ZodImport.None,
-			_                       => new ZodImport(FormatSchemaName(schema), FormatFilePath(schema)),
+			IPartialMolecularZodSchema or IEnumZodSchema or IAtomicZodSchema 
+				=> DirectoryOutputConfiguration.CreateImport(schema, FormatSchemaName(schema), FormatFullFileName(schema)),
+			_ => throw new UnreachableException("What kind of schema is this?"),
 		};
 
 	public string FormatEnumName(IEnumZodSchema schema)
 		=> string.Format(SchemaEnumNamingFormat, schema.SchemaBaseName);
 
-	public string FormatFilePath(IPartialZodSchema schema)
-		=> $"./{FormatSchemaName(schema)}{FileExtensionInfix}";
+	public string FormatFileName(IPartialZodSchema schema)
+		=> string.Format(SchemaFileNameFormat, schema.SchemaBaseName);
+	
+	public string FormatFullFileName(IPartialZodSchema schema)
+		=> string.Format(SchemaFileNameFormat, schema.SchemaBaseName) + FileExtensionInfix;
 
 	public string FormatSchemaName(IPartialZodSchema schema)
 		=> schema switch
@@ -114,20 +130,13 @@ public class ZodSchemaConfiguration : ISchemaConfiguration<ZodSchemaEvents>
 			_                       => string.Format(SchemaTypeNamingFormat, schema.SchemaBaseName),
 		};
 
-	public IPartialZodSchema CreateArraySchema(SchemaMemberInfo schemaMemberInfo)
-	{
-		var elementType = schemaMemberInfo.Type.GetElementType()!;
-		var elementSchema = CreatedSchemasDictionary.GetSchemaForType(elementType);
-		if (elementSchema is null)
+	public DirectoryInfo GetOutputDirectory(IPartialZodSchema schema)
+		=> schema switch
 		{
-			throw new InvalidOperationException($"Could not find schema for array element type {elementType.Name}.");
-		}
-		
-		var arraySchemaType = typeof(ArrayBuiltInAtomicZodSchema<>).MakeGenericType(elementSchema.GetType());
-		var arraySchema = (IGenericZodSchema)Activator.CreateInstance(arraySchemaType)!;
-
-		arraySchema.Configuration = this;
-		arraySchema.MemberInfo = schemaMemberInfo;
-		return arraySchema;
-	}
+			IBuiltInAtomicZodSchema    => DirectoryOutputConfiguration.RootDirectoryInfo,
+			IEnumZodSchema             => DirectoryOutputConfiguration.EnumsDirectoryInfo,
+			IAtomicZodSchema           => DirectoryOutputConfiguration.AtomsDirectoryInfo,
+			IPartialMolecularZodSchema => DirectoryOutputConfiguration.MoleculesDirectoryInfo,
+			_                          => throw new UnreachableException("What kind of schema is this?"),
+		};
 }

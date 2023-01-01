@@ -18,8 +18,19 @@ internal static class TestingAppSchemaGenerationConfiguration
 	public static async Task GenerateSchemaAsync()
 	{
 		var configuration = new ZodSchemaConfigurationBuilder()
-			.SetRootDirectory("""C:\OXX\Projects\Suppehue\Suppehue.Frontend.NextJS\src\zod""")
+			.SetDirectories(x =>
+			{
+				x.Root = "C:/OXX/Projects/Suppehue/Suppehue.Frontend.NextJS/src/zod/";
+				x.Enums = "enums/";
+				x.Atoms = "atoms/";
+				x.Molecules = "molecules/";
+				x.TypeScript = new TypeScriptConfiguration
+				{
+					Alias = "@/zod/",
+				};
+			})
 			.OverrideFileDeletionMode(FileDeletionMode.All)
+			.OverrideFileNameNamingFormat("{0}Schema")
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
 			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
@@ -28,28 +39,27 @@ internal static class TestingAppSchemaGenerationConfiguration
 			.ApplyAtomicSchema<ClampedNumber, ClampedNumberAtomicZodSchema>(() => new ClampedNumberAtomicZodSchema(..10))
 			.ConfigureEvents(events =>
 			{
-				events.PocoStructuresCreated += (_, args) => PrintPocoStructuresCreated(args);
-				events.MoleculeSchemasCreated += (_, args) => PrintMoleculeSchemasCreated(args);
-				events.GenerationCompleted += (_, args) => PrintGenerationCompleted(args);
-				events.GenerationStarted += (_, args) => PrintGenerationStarted(args);
-				events.DeletingFiles += (_, args) => PrintDeletingFiles(args);
-				events.DeletingFilesFailed += (_, args) => PrintDeletingFilesFailed(args);
+				events.PocoStructuresCreated += (_, args) => PocoStructuresCreatedEventHandler(args);
+				events.MoleculeSchemasCreated += (_, args) => MoleculeSchemasCreatedEventHandler(args);
+				events.GenerationCompleted += (_, args) => GenerationCompletedEventHandler(args);
+				events.GenerationStarted += (_, args) => GenerationStartedEventHandler(args);
+				events.DeletingFiles += (_, args) => DeletingFilesEventHandler(args);
+				events.DeletingFilesFailed += (_, args) => DeletingFilesFailedEventHandler(args);
 			})
 			.Build();
 
 		ISchemaGenerator generator = new ZodSchemaGenerator(configuration);
 		await generator.GenerateAllAsync();
-		// await generator.GenerateAsync<BigBoiTest>();
+		// await generator.GenerateAsync<ArrayTests>();
 	}
-
-	private static void PrintMoleculeSchemasCreated(MoleculeSchemasCreatedEventArgs eventArgs)
+	private static void MoleculeSchemasCreatedEventHandler(MoleculeSchemasCreatedEventArgs eventArgs)
 	{
 		var informations = eventArgs.Informations;
 
 		var informationsWithInvalidMembers = informations
 			.Where(x => x.InvalidMembers.Any())
 			.ToArray();
-
+		
 		switch (informationsWithInvalidMembers.Length)
 		{
 			case 0:
@@ -60,6 +70,8 @@ internal static class TestingAppSchemaGenerationConfiguration
 				PrintTypesWithoutSchemas();
 				break;
 		}
+		
+		
 
 		Console.WriteLine();
 
@@ -67,7 +79,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		{
 			var invalidTypesAmount = informationsWithInvalidMembers.Length;
 			ColoredConsole.Write(informations.Count, ConsoleColor.Cyan);
-			Console.Write(" type-schemas were resolved, of which ");
+			Console.Write(" non-atoms were resolved, of which ");
 			ColoredConsole.Write(informations.Count - invalidTypesAmount, ConsoleColor.Green);
 			Console.WriteLine(" were resolved fully.");
 		}
@@ -80,11 +92,10 @@ internal static class TestingAppSchemaGenerationConfiguration
 				.Distinct()
 				.ToArray();
 
-			var invalidSchemasAmount = typesWithoutSchemas.Length;
 			Console.Write("The following ");
-			ColoredConsole.Write(invalidSchemasAmount, ConsoleColor.Red);
+			ColoredConsole.Write(typesWithoutSchemas.Length, ConsoleColor.Red);
 			Console.Write(" schemas could not be resolved in ");
-			ColoredConsole.Write(typesWithoutSchemas.Length, ConsoleColor.Cyan);
+			ColoredConsole.Write(informationsWithInvalidMembers.Length, ConsoleColor.Cyan);
 			Console.WriteLine(" type-schemas:");
 			foreach (var type in typesWithoutSchemas)
 			{
@@ -110,7 +121,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		}
 	}
 
-	private static void PrintPocoStructuresCreated(PocoStructuresCreatedEventArgs eventArgs)
+	private static void PocoStructuresCreatedEventHandler(PocoStructuresCreatedEventArgs eventArgs)
 	{
 		var unsupportedTypes = eventArgs.UnsupportedTypes;
 
@@ -162,7 +173,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 	
 	private const string DateTimeFormat = "HH:mm:ss.fff";
 
-	private static void PrintGenerationStarted(GenerationStartedEventArgs eventArgs)
+	private static void GenerationStartedEventHandler(GenerationStartedEventArgs eventArgs)
 	{
 		Console.Write("Started generating at ");
 		ColoredConsole.Write(eventArgs.GenerationStartedTime.ToString(DateTimeFormat), ConsoleColor.Cyan);
@@ -170,7 +181,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		Console.WriteLine();
 	}
 
-	private static void PrintGenerationCompleted(GenerationCompletedEventArgs eventArgs)
+	private static void GenerationCompletedEventHandler(GenerationCompletedEventArgs eventArgs)
 	{
 		var duration = eventArgs.GenerationCompletedTime - eventArgs.GenerationStartedTime;
 
@@ -182,17 +193,26 @@ internal static class TestingAppSchemaGenerationConfiguration
 		Console.WriteLine();
 	}
 
-	private static void PrintDeletingFiles(DeletingFilesEventArgs eventArgs)
+	private static void DeletingFilesEventHandler(DeletingFilesEventArgs eventArgs)
 	{
-		Console.Write("Deleting directory ");
-		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);
-		Console.Write(" containing ");
-		ColoredConsole.Write(eventArgs.Files.Count, ConsoleColor.Cyan);
-		Console.WriteLine(" files.");
-		Console.WriteLine();
+		Console.WriteLine("Deleting directories:");
+		var hmm = eventArgs.Dictionary.Select(x => x);
+		foreach (var (directory, files) in hmm)
+		{
+			PrintDirectory(directory, files);
+		}
+
+		void PrintDirectory(DirectoryInfo directory, IEnumerable<FileInfo> files)
+		{
+			Console.Write("'");
+			ColoredConsole.Write(directory.FullName, ConsoleColor.Cyan);
+			Console.Write("' (");
+			ColoredConsole.Write(files.Count().ToString(), ConsoleColor.Cyan);
+			Console.WriteLine(" files)");
+		}
 	}
 
-	private static void PrintDeletingFilesFailed(DeletingFilesFailedEventArgs eventArgs)
+	private static void DeletingFilesFailedEventHandler(DeletingFilesFailedEventArgs eventArgs)
 	{
 		ColoredConsole.Write("Failed to delete directory ", ConsoleColor.Red);
 		ColoredConsole.Write(eventArgs.Directory, ConsoleColor.Cyan);

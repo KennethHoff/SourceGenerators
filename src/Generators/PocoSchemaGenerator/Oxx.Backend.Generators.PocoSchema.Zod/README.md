@@ -14,7 +14,9 @@ Add the generator to your project.
 ```csharp
 // Program.cs
 var configuration = new ZodSchemaConfigurationBuilder()
-	.SetRootDirectory(<path to the schema output directory>)
+	.SetDirectories(x => {
+	    x.Root = ..
+	})
 	// Various other options
 	.Build();
 
@@ -32,19 +34,29 @@ The configuration is done using the `ZodSchemaConfigurationBuilder` class.
 
 ```csharp
 var configuration = new ZodSchemaConfigurationBuilder()
-    .SetRootDirectory(<path to the schema output directory>)
-    // Various other options
-    .Build();
+    .SetDirectories(x => {
+	    x.Root = ..
+	})
+	// Various other options
+	.Build();
 ```
 
 The following options are available:
 
-* `SetRootDirectory(string path)` - Sets the root directory for the schema files. This is required.
+* `SetDirectories(Action<DirectoryOutputConfiguration>)` - Configure the output directories for the generated files.
+  * `Root` - The root directory for the generated files. <b><u>This is required.</b></u>
+  * `Enums` - The directory for the generated enums.
+  * `Atoms` - The directory for the generated atoms.
+  * `Molecules` - The directory for the generated molecules.
+  * `TypeScript` - Contains options for the TypeScript output.
+    * `Alias` - The alias for the TypeScript output. <b><u>This is required.</b></u>
 
 * `OverrideFileDeletionMode(FileDeletionMode)` - Sets the file deletion mode.
     * Default: `FileDeletionMode.OverwriteExisting`
     * `FileDeletionMode.OverwriteExisting` - Overwrites existing files.
-    * `FileDeletionMode.All` - Deletes all files in the root directory. Will immediately quit if any of the files contained within does not match the schema.
+    * `FileDeletionMode.All` - Deletes all files(recursively) from the root directory. First checks if all files match naming convention. If not, immediately stops the program.
+      * <b><u>Warning</u></b>: This naming convention" check does not work if you make the naming convention shorter than the previous one. 
+        * Example: if you change the naming convention from `{0}Schema` to `{0}`, the check will pass even though it should fail as the old convention fulfills the new one.
     * `FileDeletionMode.ForcedAll` - Deletes all files in the root directory. Will not check if the files match the schema.
 
 * `OverrideSchemaNamingFormat(string)` - Overrides the naming format for the schemas.
@@ -263,7 +275,6 @@ Issues that are very uncommon and/or can easily be worked around and/or are very
       ```
   * Note: TypeScript will complain about this, but the schema will still be valid.
 
-
 * The schema generator doesn't support generic types.
     * Example:
     * ```csharp
@@ -286,10 +297,11 @@ I'm sure there are tons of other issues, but these are the ones I'm aware of.
     * Add more ways to customize the schemas
         * Currently there's no way to only apply a schema to the non-nullable type without doing the "Apply all, override nullable" workaround.
         * Currently there's no way to apply a schema to a specific property without creating a new schema for the type.
-        *
+
     * Add more ways to customize the schema generator
         * for example, add a way to specify "only generate elements with this accessibility" - public, internal, etc.
             * This would then be added to the Attribute itself, so you could do `[SchemaGenerator(BindingFlags = BindingFlags.Public | BindingFlags.Internal)]`
+
     * Add more ways to customize the types
     * Add more ways to customize the output
         * Everything currently gets its own file, but it would be nice to be able to customize this.

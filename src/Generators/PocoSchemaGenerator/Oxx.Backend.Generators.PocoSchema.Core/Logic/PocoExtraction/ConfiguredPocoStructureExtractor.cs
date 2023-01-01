@@ -9,42 +9,27 @@ using Oxx.Backend.Generators.PocoSchema.Core.Models.Types;
 
 namespace Oxx.Backend.Generators.PocoSchema.Core.Logic.PocoExtraction;
 
-public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExtractor
+public abstract class ConfiguredPocoStructureExtractor<TSchemaConfiguration, TSchemaEvents, TDirectoryOutputConfiguration> : IPocoStructureExtractor
+	where TSchemaConfiguration: ISchemaConfiguration<TSchemaEvents, TDirectoryOutputConfiguration>
 	where TSchemaEvents : ISchemaEvents
+	where TDirectoryOutputConfiguration: IDirectoryOutputConfiguration
 {
-	private readonly ISchemaConfiguration<TSchemaEvents> _configuration;
+	protected readonly TSchemaConfiguration Configuration;
 
-	public ConfiguredPocoStructureExtractor(ISchemaConfiguration<TSchemaEvents> configuration)
+	protected ConfiguredPocoStructureExtractor(TSchemaConfiguration configuration)
 	{
-		_configuration = configuration;
+		Configuration = configuration;
 	}
 
 	#region Interface implementations
 
-	public IReadOnlyCollection<IPocoStructure> Get(IEnumerable<Type> types, bool includeDependencies = true)
-	{
-		var (typeSchemaDictionary, unsupportedTypes) = GetTypeSchemaDictionary(types, includeDependencies);
-		
-		var pocoStructures = ParseStructures(typeSchemaDictionary);
+	public abstract IReadOnlyCollection<IPocoStructure> Get(IEnumerable<Type> requestedTypes, bool includeDependencies = true);
 
-		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes.ToArray()));
-		return pocoStructures;
-	}
-
-	public IReadOnlyCollection<IPocoStructure> GetAll()
-	{
-		var allTypes = _configuration.Assemblies.SelectMany(x => x.GetTypes());
-		var (types, unsupportedTypes) = GetTypeSchemaDictionary(allTypes, false);
-		
-		var pocoStructures = ParseStructures(types);
-
-		_configuration.Events.PocoStructuresCreated?.Invoke(this, new PocoStructuresCreatedEventArgs(pocoStructures, unsupportedTypes.ToArray()));
-		return pocoStructures;
-	}
+	public abstract IReadOnlyCollection<IPocoStructure> GetAll();
 
 	#endregion
 
-	private void CheckSupport(Type type, bool includeDependencies, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
+	private void CheckSupport(Type type, bool includeDependencies, TypeCollectionTypeDictionary supported, ICollection<UnsupportedType> unsupported)
 	{
 		if (unsupported.Any(x => x.Type == type))
 		{
@@ -63,12 +48,13 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 			return;
 		}
 
-		if (!supported.ContainsKey(schemaTypeAttribute))
+		var pocoStructure = schemaTypeAttribute.UnderlyingType;
+		if (!supported.ContainsKey(pocoStructure))
 		{
-			supported.Add(schemaTypeAttribute, new List<Type>());
+			supported.Add(pocoStructure, new List<Type>());
 		}
 
-		if (supported[schemaTypeAttribute].Contains(type))
+		if (supported[pocoStructure].Contains(type))
 		{
 			return;
 		}
@@ -85,10 +71,10 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 			return;
 		}
 
-		supported[schemaTypeAttribute].Add(type);
+		supported[pocoStructure].Add(type);
 	}
 
-	private void CheckSupportForDependencies(Type type, bool includeDependencies, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
+	private void CheckSupportForDependencies(Type type, bool includeDependencies, TypeCollectionTypeDictionary supported, ICollection<UnsupportedType> unsupported)
 	{
 		foreach (var member in type.GetValidSchemaMembers())
 		{
@@ -96,7 +82,7 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		}
 	}
 
-	private void CheckSupportForGenerics(Type type, bool includeDependencies, IDictionary<SchemaTypeAttribute, List<Type>> supported, ICollection<UnsupportedType> unsupported)
+	private void CheckSupportForGenerics(Type type, bool includeDependencies, TypeCollectionTypeDictionary supported, ICollection<UnsupportedType> unsupported)
 	{
 		var genericArguments = type.GetGenericArguments();
 		foreach (var genericArgument in genericArguments)
@@ -105,12 +91,12 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		}
 	}
 
-	private TypeSupport GetTypeSchemaDictionary(IEnumerable<Type> types,
+	protected TypeSupport GetTypeSchemaDictionary(IEnumerable<Type> types,
 		bool includeDependencies,
-		IDictionary<SchemaTypeAttribute, List<Type>>? supported = null, 
+		TypeCollectionTypeDictionary? supported = null, 
 		ICollection<UnsupportedType>? unsupported = null)
 	{
-		supported ??= new Dictionary<SchemaTypeAttribute, List<Type>>();
+		supported ??= new TypeCollectionTypeDictionary();
 		unsupported ??= new List<UnsupportedType>();
 		foreach (var type in types)
 		{
@@ -129,15 +115,29 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 		return null;
 	}
 
-	private static IReadOnlyCollection<IPocoStructure> ParseStructures(IDictionary<SchemaTypeAttribute, List<Type>> types)
+	protected static IReadOnlyCollection<IPocoStructure> ParseStructures(TypeCollectionTypeDictionary typesCollection)
 	{
-		var objectTypes = types
-			.FirstOrDefault(x => x.Key is SchemaObjectAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
+		var objectTypes = typesCollection
+			.FirstOrDefault(x => x.Key == typeof(PocoObject), new KeyValuePair<Type, List<Type>>(default!, new List<Type>()))
 			.Value;
 
-		var enumTypes = types
-			.FirstOrDefault(x => x.Key is SchemaEnumAttribute, new KeyValuePair<SchemaTypeAttribute, List<Type>>(default!, new List<Type>()))
+		var enumTypes = typesCollection
+			.FirstOrDefault(x => x.Key == typeof(PocoEnum), new KeyValuePair<Type, List<Type>>(default!, new List<Type>()))
 			.Value;
+		
+		var atomTypes = typesCollection
+			.FirstOrDefault(x => x.Key == typeof(PocoAtom), new KeyValuePair<Type, List<Type>>(default!, new List<Type>()))
+			.Value;
+
+		var atoms = atomTypes
+			.Select(t => new PocoAtom(t))
+			.Cast<IPocoStructure>()
+			.ToArray();
+
+		var enums = enumTypes
+			.Select(t => new PocoEnum(t))
+			.Cast<IPocoStructure>()
+			.ToArray();
 
 		var objects = objectTypes
 			.Select(t =>
@@ -147,12 +147,10 @@ public class ConfiguredPocoStructureExtractor<TSchemaEvents> : IPocoStructureExt
 			})
 			.Cast<IPocoStructure>()
 			.ToArray();
-
-		var enums = enumTypes
-			.Select(t => new PocoEnum(t))
-			.Cast<IPocoStructure>()
-			.ToArray();
 		
-		return objects.Concat(enums).ToArray();
+		return atoms
+			.Concat(enums)
+			.Concat(objects)
+			.ToArray();
 	}
 }
