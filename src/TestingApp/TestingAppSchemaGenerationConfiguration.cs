@@ -20,7 +20,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 		var configuration = new ZodSchemaConfigurationBuilder()
 			.SetDirectories(x =>
 			{
-				x.Root = "C:/OXX/Projects/Suppehue/Suppehue.Frontend.NextJS/src/zod/";
+				x.Root = "/home/kennethhoff/Documents/Development/OXX/Suppehue/Frontend/Suppehue.Frontend.NextJS/src/zod/";
 				x.Enums = "enums/";
 				x.Atoms = "atoms/";
 				x.Molecules = "molecules/";
@@ -32,7 +32,7 @@ internal static class TestingAppSchemaGenerationConfiguration
 			.OverrideFileDeletionMode(FileDeletionMode.All)
 			.OverrideFileNameNamingFormat("{0}Schema")
 			.ResolveTypesFromAssemblyContaining<ITestingAppAssemblyMarker>()
-			.ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
+			// .ResolveTypesFromAssemblyContaining<IAnotherProjectAssemblyMarker>()
 			.ApplyAtomicSchema<Localization, StringBuiltInAtomicZodSchema>()
 			.ApplyAtomicSchema<PersonId, TypedIdAtomicZodSchema<PersonId>>()
 			.ApplyAtomicSchema<CeremonyId, TypedIdAtomicZodSchema<CeremonyId>>()
