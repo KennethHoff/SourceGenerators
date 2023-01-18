@@ -15,5 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AnotherProject\AnotherProject.csproj" />
     <ProjectReference Include="..\Generators\PocoSchemaGenerator\Oxx.Backend.Generators.PocoSchema.Zod\Oxx.Backend.Generators.PocoSchema.Zod.csproj" />
+    <ProjectReference Include="..\Generators\TypedValues\Oxx.Backend.Generators.TypedValues.Generator\Oxx.Backend.Generators.TypedValues.Generator.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

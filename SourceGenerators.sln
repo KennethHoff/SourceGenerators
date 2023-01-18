@@ -30,8 +30,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnotherProject", "src\Anoth
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypedValues", "TypedValues", "{E2345E79-F6B5-47EB-AB22-09F9F1DED956}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.TypedValues", "src\Generators\TypedValues\Oxx.Backend.Generators.TypedValues\Oxx.Backend.Generators.TypedValues.csproj", "{68C1BEEC-2E18-4DC7-8392-5BAEC891D4FB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxx.Backend.Generators.TypedValues.Generator", "src\Generators\TypedValues\Oxx.Backend.Generators.TypedValues.Generator\Oxx.Backend.Generators.TypedValues.Generator.csproj", "{75ED9AF9-372E-4A78-94D1-2814F0C53907}"
 EndProject
 Global
@@ -50,7 +48,6 @@ Global
 		{E2F93D7A-76C7-4AA2-8C59-E13B8D078669} = {3EA39158-9948-4558-BA59-EEAF16C3E6D2}
 		{DCDB0850-743C-4168-A779-3498DE511DBE} = {AF36F164-DA64-4E7A-ACD4-84959132BEFB}
 		{E2345E79-F6B5-47EB-AB22-09F9F1DED956} = {BECB8F33-F39E-4CE1-B1FB-4AB68D621318}
-		{68C1BEEC-2E18-4DC7-8392-5BAEC891D4FB} = {E2345E79-F6B5-47EB-AB22-09F9F1DED956}
 		{75ED9AF9-372E-4A78-94D1-2814F0C53907} = {E2345E79-F6B5-47EB-AB22-09F9F1DED956}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -78,10 +75,6 @@ Global
 		{DCDB0850-743C-4168-A779-3498DE511DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCDB0850-743C-4168-A779-3498DE511DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCDB0850-743C-4168-A779-3498DE511DBE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68C1BEEC-2E18-4DC7-8392-5BAEC891D4FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68C1BEEC-2E18-4DC7-8392-5BAEC891D4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68C1BEEC-2E18-4DC7-8392-5BAEC891D4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68C1BEEC-2E18-4DC7-8392-5BAEC891D4FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75ED9AF9-372E-4A78-94D1-2814F0C53907}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75ED9AF9-372E-4A78-94D1-2814F0C53907}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75ED9AF9-372E-4A78-94D1-2814F0C53907}.Release|Any CPU.ActiveCfg = Release|Any CPU
